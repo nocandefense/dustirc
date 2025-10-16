@@ -37,7 +37,7 @@ Create and release a VS Code extension that connects reliably to legacy and mode
 
 - Solo time availability supports ~25–30 focused hours per week.
 - Access to representative IRC servers or transcripts for testing.
-- Node.js/TypeScript toolchain remains stable during project window.
+- Node.js 22.x LTS + TypeScript toolchain remains stable during project window.
 - No budget for external contractors or paid infrastructure.
 
 ## 8. Risks & High-Level Mitigations

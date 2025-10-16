@@ -4,6 +4,7 @@
   "description": "An IRC client for Visual Studio Code.",
   "version": "0.0.1",
   "engines": {
+    "node": "22.x",
     "vscode": "^1.105.0"
   },
   "categories": [

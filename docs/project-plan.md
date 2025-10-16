@@ -10,7 +10,7 @@
 
 - **In Scope:** Core connection management, capability negotiation, SASL PLAIN authentication, account tags, away notifications, server timestamps, message tags, VS Code UI surfaces (channel list, message stream, command input), observability hooks, documentation.
 - **Out of Scope (Phase 1):** Optional IRCv3 capabilities (batch, sts, chghost, labeled-response), client certificate auth, advanced UI features (threading, reactions), marketplace marketing assets beyond essentials.
-- **Assumptions:** Solo developer with 12-week schedule, network captures accessible, target IRC servers support negotiated capability set, no external dependency upgrades mid-cycle.
+- **Assumptions:** Solo developer with 12-week schedule, network captures accessible, target IRC servers support negotiated capability set, Node.js 22.x LTS available on development machines, no external dependency upgrades mid-cycle.
 - **Constraints:** Single contributor capacity, limited integration environments, no production telemetry storage.
 
 ## 3. Deliverables
@@ -62,7 +62,7 @@
 
 - **Team:** 1 developer (project lead, engineer, tester).
 - **Ceremonies:** Daily written standup log, weekly planning + retro, monthly roadmap review.
-- **Tools:** VS Code, WeKan board, Node.js toolchain, mock IRC server harness.
+- **Tools:** VS Code, WeKan board, Node.js 22.x LTS toolchain, mock IRC server harness.
 - **Time Allocation:** 70% feature implementation, 20% testing/QA, 10% documentation and PM overhead; adjust weekly based on burndown.
 
 ## 7. Risk Management

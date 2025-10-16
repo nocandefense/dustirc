@@ -19,6 +19,7 @@
 - Must function when IRC server lacks CAP support, falling back gracefully.
 - Network environments may enforce strict auth (SASL) and logging policies.
 - No direct access to external telemetry backends; logs remain local by default.
+- Development environment standardized on Node.js 22.x LTS for tooling and build tasks.
 
 ## 4. Functional Requirements
 
@@ -83,7 +84,7 @@ FR-8 Documentation & Support
 - **NFR-2 Performance:** Initial connection and capability negotiation should complete within 5 seconds on typical networks (<200 ms latency).
 - **NFR-3 Security:** Credentials handled in memory only; no plaintext logging of passwords; respect VS Code secret storage APIs if used.
 - **NFR-4 Usability:** UI must meet VS Code accessibility guidelines (keyboard navigation, ARIA labels, high-contrast themes).
-- **NFR-5 Maintainability:** Codebase adheres to TypeScript strict mode, lint rules, and includes unit/integration tests covering core flows.
+- **NFR-5 Maintainability:** Codebase adheres to TypeScript strict mode, lint rules, and includes unit/integration tests covering core flows; build tooling targets Node.js 22.x LTS.
 - **NFR-6 Compatibility:** Support IRC servers conforming to RFC 1459/2810-2813 and mandatory IRCv3 capabilities listed in ADR-0001.
 - **NFR-7 Documentation Completeness:** All user-facing flows documented before release; docs updated within one working day of feature change.
 
