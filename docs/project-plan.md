@@ -62,7 +62,7 @@
 
 - **Team:** 1 developer (project lead, engineer, tester).
 - **Ceremonies:** Daily written standup log, weekly planning + retro, monthly roadmap review.
-- **Tools:** VS Code, WeKan board, Node.js 22.x LTS toolchain, mock IRC server harness.
+- **Tools:** VS Code, WeKan board, Volta-managed Node.js 22.x LTS toolchain, mock IRC server harness.
 - **Time Allocation:** 70% feature implementation, 20% testing/QA, 10% documentation and PM overhead; adjust weekly based on burndown.
 
 ## 7. Risk Management
