@@ -1,6 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import { IrcConnection } from './irc/connection';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -19,8 +20,42 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.window.showInformationMessage('Hello World from dust!');
 	});
 
+	const connection = new IrcConnection();
+
+	const statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
+	statusBar.text = 'Dust: disconnected';
+	statusBar.show();
+
+	connection.on('connect', () => {
+		statusBar.text = 'Dust: connected';
+	});
+
+	connection.on('disconnect', () => {
+		statusBar.text = 'Dust: disconnected';
+	});
+
+	const connectDisposable = vscode.commands.registerCommand('dustirc.connect', async () => {
+		const host = await vscode.window.showInputBox({ prompt: 'IRC host', placeHolder: 'irc.example.com' });
+		if (!host) {
+			vscode.window.showInformationMessage('Connection cancelled');
+			return;
+		}
+		const portInput = await vscode.window.showInputBox({ prompt: 'Port', value: '6667' });
+		const port = portInput ? parseInt(portInput, 10) : 6667;
+		const nick = await vscode.window.showInputBox({ prompt: 'Nickname', value: 'dust' });
+
+		try {
+			await connection.connect(host, port, nick || 'dust');
+			vscode.window.showInformationMessage(`Connected to ${host}:${port} as ${nick}`);
+		} catch (err: any) {
+			vscode.window.showErrorMessage(`Connection failed: ${err?.message ?? err}`);
+		}
+	});
+
+	context.subscriptions.push(connectDisposable);
+
 	context.subscriptions.push(disposable);
 }
 
 // This method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() { }
