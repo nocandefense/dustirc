@@ -26,6 +26,9 @@ jobs:
           npm ci
           npm run prepare || true
 
+      - name: Markdown lint
+        run: npm run lint:md
+
       - name: Build (compile & webpack)
         run: |
           npm run compile-tests
