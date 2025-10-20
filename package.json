@@ -54,6 +54,9 @@
     "lint-staged": "^13.0.0",
     "markdownlint-cli": "^0.34.0"
   },
+  "overrides": {
+    "micromatch": "^4.0.8"
+  },
   "lint-staged": {
     "src/**/*.{ts,tsx,js,jsx,json,md}": [
       "eslint --fix",
