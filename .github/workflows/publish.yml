@@ -1,0 +1,41 @@
+name: publish
+
+on:
+    release:
+        types: [published]
+
+permissions:
+    contents: read
+    packages: write
+    id-token: write
+
+jobs:
+    package-and-publish:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check out
+              uses: actions/checkout@v4
+
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "22"
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Build
+              run: npm run compile
+
+            - name: Create VSIX
+              run: npx vsce package --y
+
+            - name: Publish VSIX
+              env:
+                  VSCE_TOKEN: ${{ secrets.VSCE_TOKEN }}
+              run: |
+                  if [ -z "${VSCE_TOKEN}" ]; then
+                    echo "VSCE_TOKEN is not set. Skipping publish. Create a repository secret named VSCE_TOKEN that contains a Personal Access Token or a publisher token.";
+                    exit 1;
+                  fi
+                  npx vsce publish --packagePath *.vsix --y
