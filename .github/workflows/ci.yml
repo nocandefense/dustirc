@@ -39,10 +39,11 @@ jobs:
           npm run lint:fix || true
           npm run lint
 
-      - name: Run tests (inside Xvfb)
+      - name: Setup headless display
+        uses: pyvista/setup-headless-display-action@v4
+
+      - name: Run tests (inside headless display)
         run: |
-          # Install X virtual framebuffer so Electron/VS Code can start in CI
-          sudo apt-get update
-          sudo apt-get install -y xvfb
-          # Run tests under xvfb so the VS Code test host has a DISPLAY
-          xvfb-run --auto-servernum --server-args='-screen 0 1280x1024x24' npm test
+          # The setup-headless-display action configures a DISPLAY for the runner.
+          # Run the test runner normally; the action ensures a headless X server is available.
+          npm test
