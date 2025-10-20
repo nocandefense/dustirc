@@ -66,21 +66,7 @@ There are no known issues at this time. If you find a bug, please open an issue 
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
+See `CHANGELOG.md` for release notes and version history.
 
 ## Following extension guidelines
 
