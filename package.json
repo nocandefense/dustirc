@@ -31,6 +31,7 @@
     "compile-tests": "tsc -p . --outDir out",
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "lint:md": "markdownlint -c .markdownlint.json README.md",
     "lint": "eslint src",
     "lint:fix": "eslint --fix src",
     "prepare": "husky install",
@@ -50,7 +51,8 @@
     "@vscode/test-cli": "^0.0.11",
     "@vscode/test-electron": "^2.5.2",
     "husky": "^8.0.0",
-    "lint-staged": "^13.0.0"
+    "lint-staged": "^13.0.0",
+    "markdownlint-cli": "^0.34.0"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx,js,jsx,json,md}": [
