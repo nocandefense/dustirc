@@ -18,6 +18,40 @@ npm run prepare
 
 This will install dev hooks (Husky) so that staged files are auto-fixed by `lint-staged` on commit.
 
+## Run & test
+
+Run the extension's test suite and build locally:
+
+```bash
+npm run compile
+npm test
+```
+
+To run the extension in the VS Code debugger, open this folder in VS Code and use the "Run Extension" launch configuration.
+
+## Publishing
+
+To publish the extension to the VS Code Marketplace you'll typically:
+
+1. Bump the version in `package.json`.
+2. Build the extension with `npm run compile`.
+3. Create a VSIX and publish with `vsce` or the `@vscode/vsce` CLI.
+
+Example (local):
+
+```bash
+npm run compile
+npx vsce package
+# then publish using vsce or through the Marketplace web UI
+```
+
+## Contributing
+
+See `CONTRIBUTING.md` for development setup and contribution guidelines. In short:
+
+- Run `npm ci` then `npm run prepare` to enable Husky git hooks locally.
+- The repo includes a pre-commit hook that runs `lint-staged` to auto-fix staged files.
+
 ## Running tests
 
 Run the test suite locally with:
