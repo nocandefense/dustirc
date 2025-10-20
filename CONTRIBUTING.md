@@ -27,3 +27,8 @@ npm test
 
 - Open small, focused PRs and reference any related issues.
 - CI runs build, lint, and tests on PRs. Ensure these pass before requesting review.
+
+## Git hooks
+
+- The repository includes a Husky pre-commit hook at `.husky/pre-commit` that runs `lint-staged`.
+- After running `npm ci`, run `npm run prepare` to install the hooks locally. The hook file in the repo is executable so Git will run it on commits.
