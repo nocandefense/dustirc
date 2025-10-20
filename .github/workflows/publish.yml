@@ -1,0 +1,104 @@
+name: publish
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+
+jobs:
+  package-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run compile
+
+      - name: Create VSIX
+        run: npx vsce package --y
+
+      - name: Upload VSIX artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vsix
+          path: '*.vsix'
+
+      - name: Determine tag/PR/label
+        id: detect
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          TAG=${{ github.event.release.tag_name }}
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          git fetch --depth=1 origin "refs/tags/${TAG}:refs/tags/${TAG}" || true
+          SHA=$(git rev-parse refs/tags/${TAG}^{}) || true
+          echo "sha=$SHA" >> $GITHUB_OUTPUT
+
+          if [ -z "$SHA" ]; then
+            echo "pr=" >> $GITHUB_OUTPUT
+            echo "has_label=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          PR_API_URL="https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${SHA}/pulls"
+          PR_JSON=$(curl -s -H "Accept: application/vnd.github.groot-preview+json" -H "Authorization: Bearer $GITHUB_TOKEN" "$PR_API_URL")
+          PR_NUM=$(python3 -c "import sys,json; j=json.load(sys.stdin); print(j[0]['number'] if len(j)>0 else '')" <<< "$PR_JSON")
+          echo "pr=$PR_NUM" >> $GITHUB_OUTPUT
+
+          if [ -z "$PR_NUM" ]; then
+            echo "has_label=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          PR_JSON2=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${PR_NUM}")
+          HAS_LABEL=$(python3 -c "import sys,json; j=json.load(sys.stdin); print('true' if any(l.get('name','')=='release:publish' for l in j.get('labels',[])) else '')" <<< "$PR_JSON2")
+          if [ "$HAS_LABEL" = "true" ]; then
+            echo "has_label=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_label=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Publish VSIX (guarded)
+        env:
+          VSCE_TOKEN: ${{ secrets.VSCE_TOKEN }}
+          TAG: ${{ github.event.release.tag_name }}
+          PR: ${{ steps.detect.outputs.pr }}
+          HAS_LABEL: ${{ steps.detect.outputs.has_label }}
+          PRERELEASE: ${{ github.event.release.prerelease }}
+        run: |
+          echo "Publish guard values: TAG=$TAG, PR=$PR, HAS_LABEL=$HAS_LABEL, PRERELEASE=$PRERELEASE"
+          if [ "$HAS_LABEL" != "true" ]; then
+            echo "Skipping publish: PR missing label 'release:publish'"
+            exit 0
+          fi
+          if [ -z "$VSCE_TOKEN" ]; then
+            echo "Skipping publish: VSCE_TOKEN not set"
+            exit 0
+          fi
+          case "$TAG" in
+            v*) ;;
+            *)
+              echo "Skipping publish: tag does not start with 'v'"
+              exit 0
+              ;;
+          esac
+          if [ "$PRERELEASE" = "true" ]; then
+            echo "Skipping publish: release marked prerelease"
+            exit 0
+          fi
+          echo "Conditions met; publishing VSIX..."
+          npx vsce publish --packagePath *.vsix --y
