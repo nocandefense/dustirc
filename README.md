@@ -1,4 +1,6 @@
-# dustirc
+# [![CI](https://github.com/<owner>/<repo>/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/<owner>/<repo>/actions/workflows/ci.yml)
+
+Dust is an IRC client for Visual Studio Code.
 
 Dust is an IRC client for Visual Studio Code.
 
