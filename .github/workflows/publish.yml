@@ -30,12 +30,60 @@ jobs:
             - name: Create VSIX
               run: npx vsce package --y
 
+            - name: Upload VSIX artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: vsix
+                  path: "*.vsix"
+            - name: Install gh CLI
+              uses: cli/gh-action@v2
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Get tag commit SHA
+              id: tag_sha
+              run: |
+                  TAG=${{ github.event.release.tag_name }}
+                  echo "Fetching tag $TAG"
+                  git fetch --depth=1 origin "refs/tags/${TAG}:refs/tags/${TAG}" || true
+                  SHA=$(git rev-parse refs/tags/${TAG}^{})
+                  echo "sha=$SHA" >> $GITHUB_OUTPUT
+
+            - name: Find PR for commit
+              id: find_pr
+              run: |
+                  SHA=${{ steps.tag_sha.outputs.sha }}
+                  PR_NUM=$(gh api repos/${{ github.repository }}/commits/$SHA/pulls -H "Accept: application/vnd.github.groot-preview+json" --jq '.[0].number' || echo "")
+                  echo "pr=$PR_NUM" >> $GITHUB_OUTPUT
+
+            - name: Check PR label
+              id: check_label
+              run: |
+                  PR=${{ steps.find_pr.outputs.pr }}
+                  if [ -z "$PR" ]; then
+                    echo "has_label=false" >> $GITHUB_OUTPUT
+                    exit 0
+                  fi
+                  has_label=$(gh api repos/${{ github.repository }}/pulls/$PR --jq '.labels[].name' | grep -x 'release:publish' || true)
+                  if [ -z "$has_label" ]; then
+                    echo "has_label=false" >> $GITHUB_OUTPUT
+                    exit 0
+                  fi
+                  echo "has_label=true" >> $GITHUB_OUTPUT
+
             - name: Publish VSIX
+              if: ${{ steps.check_label.outputs.has_label == 'true' && secrets.VSCE_TOKEN != '' && startsWith(github.event.release.tag_name, 'v') && github.event.release.prerelease == false }}
               env:
                   VSCE_TOKEN: ${{ secrets.VSCE_TOKEN }}
               run: |
-                  if [ -z "${VSCE_TOKEN}" ]; then
-                    echo "VSCE_TOKEN is not set. Skipping publish. Create a repository secret named VSCE_TOKEN that contains a Personal Access Token or a publisher token.";
-                    exit 1;
-                  fi
+                  echo "Label and conditions verified — publishing VSIX..."
                   npx vsce publish --packagePath *.vsix --y
+
+            - name: Publish skipped (conditions not met)
+              if: ${{ !(steps.check_label.outputs.has_label == 'true' && secrets.VSCE_TOKEN != '' && startsWith(github.event.release.tag_name, 'v') && github.event.release.prerelease == false) }}
+              run: |
+                  echo "Publish skipped. To publish from CI, ensure all conditions are met:";
+                  echo "  - The PR that introduced this release tag has the label 'release:publish'";
+                  echo "  - The release tag starts with 'v' (example: v1.2.3)";
+                  echo "  - The release is NOT marked as a prerelease";
+                  echo "  - Repository secret VSCE_TOKEN is set to a valid publisher token";
