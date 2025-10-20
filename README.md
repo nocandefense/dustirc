@@ -62,7 +62,7 @@ npm test
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+There are no known issues at this time. If you find a bug, please open an issue on the repository.
 
 ## Release Notes
 
