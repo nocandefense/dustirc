@@ -55,4 +55,32 @@ suite('IrcConnection', () => {
         assert.strictEqual(c.isConnected(), true);
         c.disconnect();
     });
+
+    test('sendMessage emits message and throws when disconnected', async () => {
+        const c = new IrcConnection();
+
+        // When disconnected, sendMessage should throw
+        assert.throws(() => {
+            (c as any).sendMessage('hello');
+        }, /Not connected/);
+
+        // Connect and listen for message event
+        await c.connect('irc.example.org', 6667, 'sender-test');
+
+        let received: any = null;
+        c.on('message', (m: any) => {
+            received = m;
+        });
+
+        // send a message and expect an event
+        (c as any).sendMessage('hi there');
+        // event is synchronous in this implementation, but wait a tick to be safe
+        await new Promise((r) => setTimeout(r, 10));
+
+        assert.ok(received, 'expected to receive a message event');
+        assert.strictEqual(received.from, 'sender-test');
+        assert.strictEqual(received.text, 'hi there');
+
+        c.disconnect();
+    });
 });

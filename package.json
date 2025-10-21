@@ -20,6 +20,14 @@
       {
         "command": "dustirc.connect",
         "title": "Dust: Connect"
+      },
+      {
+        "command": "dustirc.say",
+        "title": "Dust: Say..."
+      },
+      {
+        "command": "dustirc.openOutput",
+        "title": "Dust: Open Output"
       }
     ]
   },
