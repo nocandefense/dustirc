@@ -1,4 +1,4 @@
-# [![CI](https://github.com/nocandefense/dustirc/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/nocandefense/dustirc/actions/workflows/ci.yml)
+# [![CI](https://github.com/nocandefense/dustirc/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/nocandefense/dustirc/actions/workflows/ci.yml) [![Codecov](https://codecov.io/gh/nocandefense/dustirc/branch/main/graph/badge.svg?token=CODECOV_TOKEN)](https://codecov.io/gh/nocandefense/dustirc)
 
 Dust is an IRC client for Visual Studio Code.
 
