@@ -22,6 +22,8 @@ export function activate(context: vscode.ExtensionContext) {
 
 	const connection = new IrcConnection();
 
+	const output = vscode.window.createOutputChannel('Dust IRC');
+
 	const statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
 	statusBar.text = 'Dust: disconnected';
 	statusBar.show();
@@ -32,6 +34,10 @@ export function activate(context: vscode.ExtensionContext) {
 
 	connection.on('disconnect', () => {
 		statusBar.text = 'Dust: disconnected';
+	});
+
+	connection.on('message', (m: any) => {
+		output.appendLine(`${m.from}: ${m.text}`);
 	});
 
 	const connectDisposable = vscode.commands.registerCommand('dustirc.connect', async () => {
@@ -52,7 +58,23 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
+	const sayDisposable = vscode.commands.registerCommand('dustirc.say', async () => {
+		const text = await vscode.window.showInputBox({ prompt: 'Message to send' });
+		if (!text) { return; }
+		try {
+			connection.sendMessage(text);
+		} catch (err: any) {
+			vscode.window.showErrorMessage(`Send failed: ${err?.message ?? err}`);
+		}
+	});
+
+	const openOutputDisposable = vscode.commands.registerCommand('dustirc.openOutput', () => {
+		output.show(true);
+	});
+
 	context.subscriptions.push(connectDisposable);
+	context.subscriptions.push(sayDisposable);
+	context.subscriptions.push(openOutputDisposable);
 
 	context.subscriptions.push(disposable);
 }

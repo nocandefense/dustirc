@@ -7,7 +7,7 @@ export class IrcConnection {
     private nick: string | null = null;
     private emitter = new EventEmitter();
 
-    on(event: 'connect' | 'disconnect' | 'error', listener: () => void) {
+    on(event: 'connect' | 'disconnect' | 'error' | 'message', listener: (...args: any[]) => void) {
         this.emitter.on(event, listener);
     }
 
@@ -71,6 +71,16 @@ export class IrcConnection {
             }
         }
         return false;
+    }
+
+    /**
+     * Send a message (mocked) — emits a local 'message' event for UI.
+     */
+    sendMessage(text: string): void {
+        if (!this.connected) { throw new Error('Not connected'); }
+        // In a real implementation we'd write to the socket; here we immediately emit
+        // a message event to simulate server echo/ack.
+        this.emitter.emit('message', { from: this.nick ?? 'me', text });
     }
 
     isConnected(): boolean {
