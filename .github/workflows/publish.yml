@@ -3,6 +3,9 @@ name: publish
 on:
   release:
     types: [published]
+  push:
+    tags:
+      - 'v*'
 
 permissions:
   contents: read
@@ -42,7 +45,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
-          TAG=${{ github.event.release.tag_name }}
+          # Determine tag from release event or tag push
+          if [ "${{ github.event_name }}" = "release" ]; then
+            TAG=${{ github.event.release.tag_name }}
+          else
+            # For push on tag, GITHUB_REF looks like refs/tags/v1.2.3
+            TAG=${GITHUB_REF#refs/tags/}
+          fi
           echo "tag=$TAG" >> $GITHUB_OUTPUT
           git fetch --depth=1 origin "refs/tags/${TAG}:refs/tags/${TAG}" || true
           SHA=$(git rev-parse refs/tags/${TAG}^{}) || true
@@ -75,10 +84,11 @@ jobs:
       - name: Publish VSIX (guarded)
         env:
           VSCE_TOKEN: ${{ secrets.VSCE_TOKEN }}
-          TAG: ${{ github.event.release.tag_name }}
+          # If run is a release event, github.event.release.tag_name is set; otherwise use the detected tag
+          TAG: ${{ github.event.release.tag_name || steps.detect.outputs.tag }}
           PR: ${{ steps.detect.outputs.pr }}
           HAS_LABEL: ${{ steps.detect.outputs.has_label }}
-          PRERELEASE: ${{ github.event.release.prerelease }}
+          PRERELEASE: ${{ github.event.release.prerelease || 'false' }}
         run: |
           echo "Publish guard values: TAG=$TAG, PR=$PR, HAS_LABEL=$HAS_LABEL, PRERELEASE=$PRERELEASE"
           if [ "$HAS_LABEL" != "true" ]; then
