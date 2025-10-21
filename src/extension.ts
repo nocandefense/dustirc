@@ -63,7 +63,6 @@ export function activate(context: vscode.ExtensionContext) {
 		if (!text) { return; }
 		try {
 			connection.sendMessage(text);
-			output.appendLine(`You: ${text}`);
 		} catch (err: any) {
 			vscode.window.showErrorMessage(`Send failed: ${err?.message ?? err}`);
 		}
