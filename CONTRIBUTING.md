@@ -95,6 +95,8 @@ We recommend protecting `main` with these rules (set in repository settings):
 - Require status checks to pass (CI job).
 - Optionally require at least one approving review for non-trivial changes.
 
+For more developer-focused details (CI, tests, coverage, releases) see `docs/development.md`.
+
 ## Git hooks
 
 - The repository includes a Husky pre-commit hook at `.husky/pre-commit` that runs `lint-staged`.
