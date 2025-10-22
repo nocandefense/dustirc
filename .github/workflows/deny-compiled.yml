@@ -1,0 +1,20 @@
+name: Deny compiled artifacts
+
+on:
+    pull_request:
+        types: [opened, synchronize, reopened]
+
+jobs:
+    deny-compiled:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  cache: "npm"
+                  node-version: "18"
+            - name: Install
+              run: npm ci
+            - name: Check for compiled artifacts
+              run: npm run check:no-compiled
