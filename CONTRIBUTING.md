@@ -101,3 +101,15 @@ For more developer-focused details (CI, tests, coverage, releases) see `docs/dev
 
 - The repository includes a Husky pre-commit hook at `.husky/pre-commit` that runs `lint-staged`.
 - After running `npm ci`, run `npm run prepare` to install the hooks locally. The hook file in the repo is executable so Git will run it on commits.
+
+## Built artifacts
+
+Please avoid committing built or compiled artifacts (for example, `*.js`/`*.js.map` generated from TypeScript). Tests and CI run from the TypeScript sources. If you need to run tests locally, use the TypeScript sources and the project's scripts:
+
+```bash
+npm ci
+npm run build # if you need to rebuild TypeScript outputs locally
+npm test
+```
+
+If you accidentally commit built files, remove them and add appropriate `.gitignore` entries in your branch (a maintainer can help if needed).
