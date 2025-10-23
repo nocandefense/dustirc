@@ -28,7 +28,7 @@ const fakeVscode: any = {
     StatusBarAlignment: { Left: 1 }
 };
 // stub createStatusBarItem used by extension.activate
-fakeVscode.createStatusBarItem = (align: any, priority?: number) => ({
+fakeVscode.window.createStatusBarItem = (align: any, priority?: number) => ({
     text: '',
     show: sinon.fake(),
     dispose: sinon.fake()
