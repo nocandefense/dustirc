@@ -27,6 +27,12 @@ const fakeVscode: any = {
     },
     StatusBarAlignment: { Left: 1 }
 };
+// stub createStatusBarItem used by extension.activate
+fakeVscode.createStatusBarItem = (align: any, priority?: number) => ({
+    text: '',
+    show: sinon.fake(),
+    dispose: sinon.fake()
+});
 
 // Replace the `vscode` import in the extension module by loading it with a mocked require cache entry.
 // Use createRequire so this test runs under ESM (where `require` is not defined).
