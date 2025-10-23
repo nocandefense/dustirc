@@ -1,0 +1,49 @@
+name: Auto-create PR on branch create
+
+on:
+    create:
+        # runs when a branch or tag is created; we'll filter branches in the job
+        types: [created]
+
+permissions:
+    contents: read
+    pull-requests: write
+
+jobs:
+    open-pr:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Open PR for new branch
+              uses: actions/github-script@v6
+              with:
+                  script: |
+                      const branch = context.ref.replace('refs/heads/','');
+                      // skip protected branches and dependabot
+                      if (['main','master'].includes(branch) || branch.startsWith('dependabot/')) {
+                        core.info(`Skipping auto PR for branch ${branch}`);
+                        return;
+                      }
+
+                      // Check for existing PRs from this branch
+                      const existing = await github.rest.pulls.list({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        head: `${context.repo.owner}:${branch}`,
+                        state: 'open'
+                      });
+                      if (existing.data.length > 0) {
+                        core.info(`PR already exists for ${branch}, skipping`);
+                        return;
+                      }
+
+                      const title = `chore: open PR for ${branch}`;
+                      const body = `Auto-created pull request for branch **${branch}**.`;
+                      const pr = await github.rest.pulls.create({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        title,
+                        head: branch,
+                        base: 'main',
+                        body
+                      });
+                      core.info(`Created PR: ${pr.data.html_url}`);
