@@ -84,7 +84,7 @@ export function activate(context: vscode.ExtensionContext) {
 		try {
 			connection.sendMessage(text);
 			// Log outgoing message to workspace
-			import('./logging').then((m) => m.appendOutgoingMessage(workspaceRoot, text));
+			import('./logging.js').then((m) => m.appendOutgoingMessage(workspaceRoot, text));
 		} catch (err: any) {
 			vscode.window.showErrorMessage(`Send failed: ${err?.message ?? err}`);
 		}
