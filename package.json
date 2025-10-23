@@ -12,6 +12,16 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "configuration": {
+      "type": "object",
+      "properties": {
+        "dustirc.autoReconnect": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically try to reconnect when the connection is lost."
+        }
+      }
+    },
     "commands": [
       {
         "command": "dustirc.helloWorld",

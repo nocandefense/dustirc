@@ -74,6 +74,19 @@ export class IrcConnection {
     }
 
     /**
+     * Simulate a ping to the server and return round-trip time in ms.
+     * If not connected, throws an error.
+     */
+    async ping(): Promise<number> {
+        if (!this.connected) { throw new Error('Not connected'); }
+        const start = Date.now();
+        // Simulate a small network RTT for tests
+        await new Promise((r) => setTimeout(r, 10));
+        const end = Date.now();
+        return end - start;
+    }
+
+    /**
      * Send a message (mocked) — emits a local 'message' event for UI.
      */
     sendMessage(text: string): void {

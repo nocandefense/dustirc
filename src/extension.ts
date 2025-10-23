@@ -24,6 +24,9 @@ export function activate(context: vscode.ExtensionContext) {
 
 	const output = vscode.window.createOutputChannel('Dust IRC');
 
+	const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+
+
 	const statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
 	statusBar.text = 'Dust: disconnected';
 	statusBar.show();
@@ -34,6 +37,23 @@ export function activate(context: vscode.ExtensionContext) {
 
 	connection.on('disconnect', () => {
 		statusBar.text = 'Dust: disconnected';
+
+		// Auto-reconnect if enabled in settings
+		const cfg = vscode.workspace.getConfiguration();
+		const auto = !!cfg.get('dustirc.autoReconnect');
+		if (auto) {
+			// fire-and-forget
+			connection.reconnect().then((ok) => {
+				if (ok) { vscode.window.showInformationMessage('Reconnected (auto)'); }
+			}).catch(() => { });
+		}
+	});
+
+	// Listen for configuration changes so users can toggle autoReconnect
+	vscode.workspace.onDidChangeConfiguration((e) => {
+		if (e.affectsConfiguration && (e.affectsConfiguration('dustirc.autoReconnect'))) {
+			// no-op for now; behavior reads configuration on disconnect
+		}
 	});
 
 	connection.on('message', (m: any) => {
@@ -63,8 +83,29 @@ export function activate(context: vscode.ExtensionContext) {
 		if (!text) { return; }
 		try {
 			connection.sendMessage(text);
+			// Log outgoing message to workspace
+			import('./logging.js').then((m) => m.appendOutgoingMessage(workspaceRoot, text));
 		} catch (err: any) {
 			vscode.window.showErrorMessage(`Send failed: ${err?.message ?? err}`);
+		}
+	});
+
+	const pingDisposable = vscode.commands.registerCommand('dustirc.ping', async () => {
+		try {
+			const rtt = await connection.ping();
+			vscode.window.showInformationMessage(`Ping RTT: ${rtt}ms`);
+		} catch (err: any) {
+			vscode.window.showErrorMessage(`Ping failed: ${err?.message ?? err}`);
+		}
+	});
+
+	const reconnectDisposable = vscode.commands.registerCommand('dustirc.reconnect', async () => {
+		try {
+			const ok = await connection.reconnect();
+			if (ok) { vscode.window.showInformationMessage('Reconnected'); }
+			else { vscode.window.showWarningMessage('Reconnect failed'); }
+		} catch (err: any) {
+			vscode.window.showErrorMessage(`Reconnect failed: ${err?.message ?? err}`);
 		}
 	});
 
@@ -74,6 +115,8 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(connectDisposable);
 	context.subscriptions.push(sayDisposable);
+	context.subscriptions.push(pingDisposable);
+	context.subscriptions.push(reconnectDisposable);
 	context.subscriptions.push(openOutputDisposable);
 
 	context.subscriptions.push(disposable);

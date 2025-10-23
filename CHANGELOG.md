@@ -6,7 +6,9 @@ This project follows the "Keep a Changelog" format and uses semantic versioning.
 
 ## [Unreleased]
 
-- (ongoing changes)
+- Added ping and reconnect commands (`dustirc.ping`, `dustirc.reconnect`).
+- Log outgoing messages to `.vscode/dust-outgoing.log` when using `dustirc.say`.
+- Added `dustirc.autoReconnect` setting to auto-reconnect on disconnect.
 
 ## [1.1.0] - 2025-10-20
 
