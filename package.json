@@ -36,6 +36,14 @@
         "title": "Dust: Say..."
       },
       {
+        "command": "dustirc.ping",
+        "title": "Dust: Ping"
+      },
+      {
+        "command": "dustirc.reconnect",
+        "title": "Dust: Reconnect"
+      },
+      {
         "command": "dustirc.openOutput",
         "title": "Dust: Open Output"
       }
