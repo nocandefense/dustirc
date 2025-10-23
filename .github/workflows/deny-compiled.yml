@@ -1,0 +1,51 @@
+name: Deny compiled artifacts
+
+on:
+    pull_request:
+        types: [opened, synchronize, reopened]
+
+jobs:
+    deny-compiled:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  cache: "npm"
+                  node-version: "18"
+            - name: Install
+              run: npm ci
+            - name: Check for compiled artifacts
+              id: check
+              run: |
+                  npm run check:no-compiled || true
+                  # Collect offending files (explicit patterns)
+                  git ls-files 'test/**/*.js' 'test/**/*.js.map' > compiled-files.txt || true
+                  if [ -s compiled-files.txt ]; then
+                    echo "compiled=true" >> $GITHUB_OUTPUT
+                  else
+                    echo "compiled=false" >> $GITHUB_OUTPUT
+                  fi
+
+            - name: Comment on PR with offending files
+              if: steps.check.outputs.compiled == 'true'
+              uses: peter-evans/create-or-update-comment@v4
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  repository: ${{ github.repository }}
+                  issue-number: ${{ github.event.pull_request.number }}
+                  body: |
+                      :warning: This pull request contains compiled/generated files that should not be committed. Please remove them from the branch (for example, `git rm --cached <file>`).
+
+                      Offending files:
+
+                      ```
+                      ${{ steps.check.outputs.compiled }}
+                      ```
+
+                      Files detected by the workflow (run locally to reproduce):
+
+                      ```
+                      $(cat compiled-files.txt || echo "(none)")
+                      ```

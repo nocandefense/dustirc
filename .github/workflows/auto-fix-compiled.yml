@@ -1,0 +1,64 @@
+name: auto-fix-compiled-artifacts
+
+on:
+    issue_comment:
+        types: [created]
+
+jobs:
+    auto-fix:
+        if: ${{ github.event.issue.pull_request != null }}
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            pull-requests: write
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Validate trigger phrase
+              id: validate
+              run: |
+                  BODY='${{ github.event.comment.body }}'
+                  echo "$BODY" | grep -iq "please auto-fix" || (echo "Trigger phrase not found; exiting" && exit 78)
+                  echo "pr_number=${{ github.event.issue.number }}" >> $GITHUB_OUTPUT
+
+            - name: Detect compiled artifacts
+              id: detect
+              run: |
+                  git ls-files 'test/**/*.js' 'test/**/*.js.map' > compiled-files.txt || true
+                  if [ -s compiled-files.txt ]; then
+                    echo "found=true" >> $GITHUB_OUTPUT
+                  else
+                    echo "found=false" >> $GITHUB_OUTPUT
+                  fi
+
+            - name: Create fix branch and remove compiled files
+              if: steps.detect.outputs.found == 'true'
+              run: |
+                  PR_NUM=${{ steps.validate.outputs.pr_number }}
+                  BRANCH=fix/remove-compiled-pr-${PR_NUM}
+                  git config user.name "github-actions[bot]"
+                  git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                  git checkout -b "$BRANCH"
+                  xargs -a compiled-files.txt -r git rm --cached
+                  grep -qxF 'test/**/*.js' .gitignore || echo 'test/**/*.js' >> .gitignore
+                  grep -qxF 'test/**/*.js.map' .gitignore || echo 'test/**/*.js.map' >> .gitignore
+                  git add .gitignore
+                  git commit -m "chore: remove compiled test artifacts detected in PR #${PR_NUM}" || echo "No changes to commit"
+                  git push --set-upstream origin "$BRANCH"
+
+            - name: Create pull request with fix
+              if: steps.detect.outputs.found == 'true'
+              uses: peter-evans/create-pull-request@v4
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  commit-message: "chore: remove compiled test artifacts detected in PR #${{ steps.validate.outputs.pr_number }}"
+                  title: "chore: remove compiled test artifacts (auto-fix for PR #${{ steps.validate.outputs.pr_number }})"
+                  body: |
+                      This PR was created automatically in response to a request to auto-fix compiled artifacts detected in PR #${{ steps.validate.outputs.pr_number }}.
+
+                      It removes compiled/generated files (e.g. `test/**/*.js`, `test/**/*.js.map`) from the repository index and updates `.gitignore` so they won't be re-added.
+
+                      Please review and merge if everything looks good.
+                  base: main
+                  branch: fix/remove-compiled-pr-${{ steps.validate.outputs.pr_number }}

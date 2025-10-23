@@ -3,3 +3,8 @@ dist
 node_modules
 .vscode-test/
 *.vsix
+
+# Ignore compiled JavaScript and sourcemaps produced by TypeScript tests/build in the test folder
+test/**/*.js
+test/**/*.js.map
+*.tsbuildinfo

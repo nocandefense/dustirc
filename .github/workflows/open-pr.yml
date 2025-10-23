@@ -1,0 +1,40 @@
+name: Open PR from chore/remove-compiled-tests
+
+on:
+    workflow_dispatch: {}
+
+jobs:
+    create-pr:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            pull-requests: write
+        steps:
+            - name: Create PR if missing
+              id: create_pr
+              uses: actions/github-script@v7
+              with:
+                  script: |
+                      const owner = context.repo.owner;
+                      const repo = context.repo.repo;
+                      const head = 'chore/remove-compiled-tests';
+                      const base = 'main';
+                      const title = 'chore: remove compiled tests and add detection + auto-fix workflow';
+                      const body = 'This PR removes tracked compiled test artifacts and prevents future additions.\n\nChanges included:\n- Removed compiled test artifacts and added .gitignore entries.\n- Added scripts/check-for-compiled.js and Husky pre-commit hook to detect compiled files locally.\n- Added deny-compiled.yml CI workflow to detect and comment on PRs that include compiled artifacts.\n- Added an opt-in action auto-fix-compiled.yml that will create a fix PR when someone comments "please auto-fix" on a PR (only runs for same-repo PRs).\n\nPlease review and merge if acceptable.';
+
+                      // Check for existing open PR from this head -> base
+                      const headRef = owner + ':' + head;
+                      const existing = await github.rest.pulls.list({ owner, repo, head: headRef, base, state: 'open' });
+                      if (existing.data && existing.data.length > 0) {
+                        console.log('Existing PR found: ' + existing.data[0].html_url);
+                        return existing.data[0].html_url;
+                      }
+
+                      // Create PR
+                      const pr = await github.rest.pulls.create({ owner, repo, head, base, title, body, maintainer_can_modify: true });
+                      console.log('Created PR: ' + pr.data.html_url);
+                      return pr.data.html_url;
+
+            - name: Show result
+              run: |
+                  echo "PR URL: ${{ steps.create_pr.outputs.result }}"
