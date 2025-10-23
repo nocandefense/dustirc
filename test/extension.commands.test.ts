@@ -1,5 +1,6 @@
 import { strict as assert } from 'assert';
 import * as sinon from 'sinon';
+import { createRequire } from 'module';
 
 // Create a fake vscode module surface that the extension can use during activation.
 const registeredCommands: Record<string, Function> = {};
@@ -23,7 +24,8 @@ const fakeVscode: any = {
 };
 
 // Replace the `vscode` import in the extension module by loading it with a mocked require cache entry.
-// This is a light-weight approach to simulate activation without running the full VS Code test host.
+// Use createRequire so this test runs under ESM (where `require` is not defined).
+const require = createRequire(import.meta.url);
 const Module = require('module');
 const originalLoad = Module._load;
 Module._load = function (request: string, parent: any, isMain: boolean) {
