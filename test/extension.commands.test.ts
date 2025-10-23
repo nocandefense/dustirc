@@ -14,7 +14,12 @@ const fakeVscode: any = {
     },
     window: {
         showInformationMessage: sinon.fake(),
-        showErrorMessage: sinon.fake()
+        showErrorMessage: sinon.fake(),
+        createOutputChannel: (name: string) => ({
+            appendLine: sinon.fake(),
+            show: sinon.fake(),
+            dispose: sinon.fake()
+        })
     },
     workspace: {
         workspaceFolders: [{ uri: { fsPath: process.cwd() } }],
