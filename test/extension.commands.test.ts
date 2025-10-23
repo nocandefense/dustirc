@@ -23,7 +23,8 @@ const fakeVscode: any = {
     },
     workspace: {
         workspaceFolders: [{ uri: { fsPath: process.cwd() } }],
-        getConfiguration: () => ({ get: () => false })
+        getConfiguration: () => ({ get: () => false }),
+        onDidChangeConfiguration: (cb: Function) => ({ dispose: sinon.fake() })
     },
     StatusBarAlignment: { Left: 1 }
 };
