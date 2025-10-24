@@ -8,3 +8,7 @@ node_modules
 test/**/*.js
 test/**/*.js.map
 *.tsbuildinfo
+
+# Coverage and nyc output
+.nyc_output/
+coverage/
