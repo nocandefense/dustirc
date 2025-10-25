@@ -1,4 +1,20 @@
 import { EventEmitter } from 'events';
+import { parseLine } from './parser';
+import { IrcMessage } from './types';
+
+export type IrcEvents =
+    | 'connect'
+    | 'disconnect'
+    | 'error'
+    | 'message' // legacy event for simple UI message objects
+    | 'raw' // raw line received
+    | 'privmsg'
+    | 'notice'
+    | 'join'
+    | 'part'
+    | 'nick'
+    | 'ping'
+    | 'numeric';
 
 export class IrcConnection {
     private connected = false;
@@ -7,7 +23,11 @@ export class IrcConnection {
     private nick: string | null = null;
     private emitter = new EventEmitter();
 
-    on(event: 'connect' | 'disconnect' | 'error' | 'message', listener: (...args: any[]) => void) {
+    // outbound queue for rate-limiting (not strictly enforced for tests)
+    private sendQueue: string[] = [];
+    private sendInterval: NodeJS.Timeout | null = null;
+
+    on(event: IrcEvents, listener: (...args: any[]) => void) {
         this.emitter.on(event, listener);
     }
 
@@ -28,6 +48,8 @@ export class IrcConnection {
             this.port = port;
             this.nick = nick;
             this.emitter.emit('connect');
+            // start send pump with a modest rate (5 messages/sec)
+            this.startSendPump();
         } catch (err) {
             // Emit an error event for consumers
             this.emitter.emit('error');
@@ -45,6 +67,7 @@ export class IrcConnection {
         this.port = null;
         this.nick = null;
         this.emitter.emit('disconnect');
+        this.stopSendPump();
     }
 
     /**
@@ -89,11 +112,67 @@ export class IrcConnection {
     /**
      * Send a message (mocked) — emits a local 'message' event for UI.
      */
+    /**
+     * Send a user-visible message. This emits a legacy 'message' event immediately
+     * (keeps existing behavior for the UI) and enqueues a raw PRIVMSG for the send
+     * pump which would write to the socket in a real implementation.
+     */
     sendMessage(text: string): void {
         if (!this.connected) { throw new Error('Not connected'); }
-        // In a real implementation we'd write to the socket; here we immediately emit
-        // a message event to simulate server echo/ack.
+        // legacy immediate UI event
         this.emitter.emit('message', { from: this.nick ?? 'me', text });
+        // enqueue raw PRIVMSG to be sent (simulated)
+        const target = '#local';
+        const raw = `PRIVMSG ${target} :${text}`;
+        this.enqueueRaw(raw);
+    }
+
+    /** Enqueue a raw line to the outbound queue */
+    enqueueRaw(line: string) {
+        this.sendQueue.push(line);
+    }
+
+    private startSendPump() {
+        if (this.sendInterval) { return; }
+        this.sendInterval = setInterval(() => {
+            if (this.sendQueue.length === 0) { return; }
+            const line = this.sendQueue.shift()!;
+            // in a real client we'd write to the socket; here we simulate loopback by
+            // treating the sent line as if received from the server (for tests/demo)
+            this.handleInboundLine(line);
+        }, 200);
+    }
+
+    private stopSendPump() {
+        if (this.sendInterval) {
+            clearInterval(this.sendInterval);
+            this.sendInterval = null;
+        }
+        this.sendQueue = [];
+    }
+
+    /**
+     * Feed a raw line into the parser and emit typed events. Useful for tests
+     * or when reading from a socket.
+     */
+    handleInboundLine(line: string) {
+        // emit raw
+        this.emitter.emit('raw', line);
+        let msg: IrcMessage;
+        try {
+            msg = parseLine(line);
+        } catch (err) {
+            this.emitter.emit('error', err);
+            return;
+        }
+
+        // Emit a generic 'message' event for compatibility when it's a PRIVMSG
+        if (msg.type === 'privmsg') {
+            this.emitter.emit('message', { from: msg.from, text: msg.trailing, target: msg.params[0] });
+        }
+
+        // Emit typed event
+        this.emitter.emit(msg.type, msg);
     }
 
     isConnected(): boolean {
