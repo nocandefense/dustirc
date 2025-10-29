@@ -20,7 +20,7 @@ This document explains the supported release workflows: a curated GitHub Release
 gh release create v1.2.0 --notes-file CHANGELOG.md
 ```
 
-3. The repository's `publish` workflow will run on `release.published`. The workflow checks the guard conditions and will publish the VSIX if they pass.
+1. The repository's `publish` workflow will run on `release.published`. The workflow checks the guard conditions and will publish the VSIX if they pass.
 
 ## Quick: Tag push (fast flow)
 
@@ -32,7 +32,7 @@ git tag -a v1.2.0 -m "Release v1.2.0"
 git push origin v1.2.0
 ```
 
-2. The repository's `publish` workflow also triggers on pushed tags matching `v*`. It will perform the same guard checks and publish if allowed.
+1. The repository's `publish` workflow also triggers on pushed tags matching `v*`. It will perform the same guard checks and publish if allowed.
 
 ## Verification and post-release
 
