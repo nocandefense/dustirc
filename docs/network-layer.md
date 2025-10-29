@@ -23,6 +23,10 @@ await conn.connect(host, port = 6667, nick = 'dust', { real: true, tls: true });
 - `real?: boolean` - When `true` opens a real TCP (or TLS) socket. Default: `false`.
 - `tls?: boolean` - When `true` uses TLS for the connection; also inferred for
   port `6697` if not specified.
+- `tlsOptions?: tls.ConnectionOptions` - Optional low-level TLS options passed
+  directly to Node's `tls.connect`. Useful to provide custom CA certificates,
+  client certificates (`cert`/`key`), SNI, or to adjust `rejectUnauthorized`.
+  Use with care — these options affect TLS verification and security.
 - `timeout?: number` - Optional socket connect timeout in milliseconds.
 - `autoRegister?: boolean` - If `true`, automatically send PASS/NICK/USER after connect using provided registration fields.
 - `user?: string` - Username for the USER command (used by autoRegister or register()).
@@ -91,6 +95,20 @@ await conn.connect('irc.libera.chat', 6697, 'myNick', {
 - TLS mode uses Node's `tls.connect`. No certificate validation overrides are
   provided; the default Node behavior is used. For production usage you may
   want to surface TLS options (SNI, CA, cert/key) via the `ConnectOptions`.
+  The library now exposes `tlsOptions` which are forwarded to `tls.connect`.
+  Example:
+
+```ts
+await conn.connect('irc.libera.chat', 6697, 'myNick', {
+  real: true,
+  tls: true,
+  autoRegister: true,
+  user: 'myuser',
+  realname: 'Real Name',
+  password: 'pw',
+  tlsOptions: { rejectUnauthorized: false }, // opt-out only for testing
+});
+```
 
 ## Possible next improvements
 

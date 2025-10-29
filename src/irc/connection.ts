@@ -4,6 +4,12 @@ import { IrcMessage } from './types';
 import * as net from 'net';
 import * as tls from 'tls';
 
+// Export a thin indirection to allow tests to replace the TLS connect helper
+// without modifying Node's `tls` module (some environments mark its
+// properties as non-writable). Tests can replace `tlsConnect` to observe
+// or simulate connections.
+export let tlsConnect = tls.connect;
+
 /**
  * Options to enable a real network connection. By default the existing simulated
  * in-memory behavior is used (for tests and demos). Callers that want to open
@@ -12,6 +18,10 @@ import * as tls from 'tls';
 export interface ConnectOptions {
     real?: boolean; // open a real TCP/TLS connection when true
     tls?: boolean; // use TLS for the connection (if real)
+    // Low-level TLS options that will be forwarded to `tls.connect` when
+    // `tls` is enabled. Most callers won't need this, but it allows supplying
+    // custom CA, client cert/key, SNI, or to adjust `rejectUnauthorized`.
+    tlsOptions?: tls.ConnectionOptions;
     // optional timeout in ms for socket connect
     timeout?: number;
     // If true, automatically send PASS/NICK/USER after connect using the
@@ -145,7 +155,9 @@ export class IrcConnection {
             };
 
             if (useTls) {
-                socket = tls.connect({ host, port }, () => onConnect());
+                // Merge user-supplied TLS options (if any) with host/port.
+                const tlsOpts = Object.assign({ host, port }, options?.tlsOptions || {});
+                socket = tlsConnect(tlsOpts, () => onConnect());
             } else {
                 socket = net.connect(connectOpts, () => onConnect());
             }
