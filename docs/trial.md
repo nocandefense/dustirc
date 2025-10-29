@@ -29,7 +29,6 @@ that writes to `.vscode/dust-outgoing.log`.
 }
 ```
 
-
 ## Notes and troubleshooting
 
 - The outgoing log write is best-effort. If VS Code or the environment prevents writing into `.vscode/`, the extension will silently ignore write errors.
