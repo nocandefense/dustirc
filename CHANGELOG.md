@@ -9,6 +9,7 @@ This project follows the "Keep a Changelog" format and uses semantic versioning.
 - Added ping and reconnect commands (`dustirc.ping`, `dustirc.reconnect`).
 - Log outgoing messages to `.vscode/dust-outgoing.log` when using `dustirc.say`.
 - Added `dustirc.autoReconnect` setting to auto-reconnect on disconnect.
+- Added an IRC core: TypeScript types, a robust line parser, and an event-emitting `IrcConnection` with a send queue/pump and typed events (`privmsg`, `notice`, `join`, `part`, `numeric`, and legacy `message`). Includes unit tests and documentation. (See PR #12)
 
 ## [1.1.0] - 2025-10-20
 
