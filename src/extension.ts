@@ -2,6 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { IrcConnection } from './irc/connection';
+import type { IrcMessage } from './irc/types';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -56,8 +57,33 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
+	// legacy message event (immediate UI feedback)
 	connection.on('message', (m: any) => {
 		output.appendLine(`${m.from}: ${m.text}`);
+	});
+
+	// typed events from the new IRC core
+	connection.on('privmsg', (m: IrcMessage) => {
+		const target = m.params[0] ?? '';
+		output.appendLine(`[${target}] ${m.from}: ${m.trailing}`);
+	});
+
+	connection.on('join', (m: IrcMessage) => {
+		const target = m.params[0] ?? '';
+		output.appendLine(`${m.from} joined ${target}`);
+	});
+
+	connection.on('part', (m: IrcMessage) => {
+		const target = m.params[0] ?? '';
+		output.appendLine(`${m.from} left ${target}`);
+	});
+
+	connection.on('notice', (m: IrcMessage) => {
+		output.appendLine(`[NOTICE] ${m.from}: ${m.trailing}`);
+	});
+
+	connection.on('numeric', (m: IrcMessage) => {
+		output.appendLine(`[${m.numeric}] ${m.trailing ?? ''}`);
 	});
 
 	const connectDisposable = vscode.commands.registerCommand('dustirc.connect', async () => {
