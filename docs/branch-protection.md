@@ -39,6 +39,7 @@ gh api --method PUT \
 ```
 
 Notes and best practices
+
 - Combine server-side branch protection rules with client-side hooks (we added a Husky pre-push hook) so that accidental direct pushes are blocked both locally and on GitHub.
 - Keep CI job names stable; if you rename a job you'll need to update the required status checks in the protection rule.
 - For open-source/public repositories, consider requiring at least 2 reviewers for changes that alter behavior or security-sensitive code.

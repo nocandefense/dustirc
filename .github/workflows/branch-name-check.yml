@@ -1,30 +1,30 @@
 name: PR branch-name check
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+    pull_request:
+        types: [opened, synchronize, reopened]
 
 jobs:
-  validate-branch-name:
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Check PR head branch name
-        env:
-          HEAD_REF: ${{ github.event.pull_request.head.ref }}
-        run: |
-          echo "PR head ref: '$HEAD_REF'"
-          if [[ -z "$HEAD_REF" ]]; then
-            echo "Unable to determine PR head ref. Failing to be conservative."
-            exit 1
-          fi
+    validate-branch-name:
+        runs-on: ubuntu-22.04
+        steps:
+            - name: Check PR head branch name
+              env:
+                  HEAD_REF: ${{ github.event.pull_request.head.ref }}
+              run: |
+                  echo "PR head ref: '$HEAD_REF'"
+                  if [[ -z "$HEAD_REF" ]]; then
+                    echo "Unable to determine PR head ref. Failing to be conservative."
+                    exit 1
+                  fi
 
-          # Allowed prefixes: feature/, fix/, chore/, hotfix/, docs/, release/, dependabot/
-          if [[ "$HEAD_REF" =~ ^(feature|fix|chore|hotfix|docs|release)\/.* ]] || [[ "$HEAD_REF" =~ ^dependabot\/.* ]]; then
-            echo "Branch name allowed: $HEAD_REF"
-            exit 0
-          else
-            echo "ERROR: PR source branch '$HEAD_REF' does not follow the required naming convention." >&2
-            echo "Allowed prefixes: feature/, fix/, chore/, hotfix/, docs/, release/, dependabot/" >&2
-            echo "Please rename your branch or open a PR from a correctly-named branch (e.g., feature/my-change)." >&2
-            exit 1
-          fi
+                  # Allowed prefixes: feature/, fix/, chore/, hotfix/, docs/, release/, dependabot/
+                  if [[ "$HEAD_REF" =~ ^(feature|fix|chore|hotfix|docs|release)\/.* ]] || [[ "$HEAD_REF" =~ ^dependabot\/.* ]]; then
+                    echo "Branch name allowed: $HEAD_REF"
+                    exit 0
+                  else
+                    echo "ERROR: PR source branch '$HEAD_REF' does not follow the required naming convention." >&2
+                    echo "Allowed prefixes: feature/, fix/, chore/, hotfix/, docs/, release/, dependabot/" >&2
+                    echo "Please rename your branch or open a PR from a correctly-named branch (e.g., feature/my-change)." >&2
+                    exit 1
+                  fi
