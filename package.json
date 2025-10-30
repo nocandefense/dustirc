@@ -59,7 +59,7 @@
     "test:unit": "mocha -u tdd -r ts-node/register 'test/**/*.test.ts'",
     "test:coverage": "nyc --reporter=lcov --reporter=text npm run test:unit",
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
-    "lint:md": "markdownlint -c .markdownlint.json README.md",
+    "lint:md": "markdownlint -c .markdownlint.json README.md docs/**/*.md",
     "lint": "eslint src",
     "lint:fix": "eslint --fix src",
     "prepare": "husky install",

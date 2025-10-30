@@ -83,6 +83,11 @@ export function parseLine(line: string): IrcMessage {
         msg.type = 'notice';
     } else if (cmd === 'PING') {
         msg.type = 'ping';
+    } else if (cmd === 'PONG') {
+        // Treat PONG as a ping-type reply for RTT handling (server replies with PONG
+        // to client PINGs). We map it to the same 'ping' type so consumers can
+        // handle RTT/ping responses uniformly.
+        msg.type = 'ping';
     } else if (cmd === 'JOIN') {
         msg.type = 'join';
     } else if (cmd === 'PART') {
