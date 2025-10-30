@@ -3,7 +3,6 @@
 import * as vscode from 'vscode';
 import { IrcConnection } from './irc/connection';
 import type { IrcMessage } from './irc/types';
-import { RoomsProvider } from './views/roomsProvider';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -32,10 +31,6 @@ export function activate(context: vscode.ExtensionContext) {
 	const statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
 	statusBar.text = 'Dust: disconnected';
 	statusBar.show();
-
-	// Rooms side panel
-	const roomsProvider = new RoomsProvider();
-	vscode.window.registerTreeDataProvider('dustirc.rooms', roomsProvider);
 
 	connection.on('connect', () => {
 		statusBar.text = 'Dust: connected';
@@ -76,17 +71,11 @@ export function activate(context: vscode.ExtensionContext) {
 	connection.on('join', (m: IrcMessage) => {
 		const target = m.params[0] ?? '';
 		output.appendLine(`${m.from} joined ${target}`);
-		roomsProvider.addRoom(target);
 	});
 
 	connection.on('part', (m: IrcMessage) => {
 		const target = m.params[0] ?? '';
 		output.appendLine(`${m.from} left ${target}`);
-		roomsProvider.removeRoom(target);
-	});
-
-	connection.on('connect', () => {
-		roomsProvider.clear();
 	});
 
 	connection.on('notice', (m: IrcMessage) => {

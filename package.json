@@ -47,15 +47,7 @@
         "command": "dustirc.openOutput",
         "title": "Dust: Open Output"
       }
-    ],
-    "views": {
-      "explorer": [
-        {
-          "id": "dustirc.rooms",
-          "name": "Dust Rooms"
-        }
-      ]
-    }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
