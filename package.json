@@ -46,6 +46,10 @@
       {
         "command": "dustirc.openOutput",
         "title": "Dust: Open Output"
+      },
+      {
+        "command": "dustirc.openRoom",
+        "title": "Dust: Open Room"
       }
     ],
     "views": {

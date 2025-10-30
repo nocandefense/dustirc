@@ -1,8 +1,20 @@
-import * as vscode from 'vscode';
+import type * as vscode from 'vscode';
+
+// Lightweight emitter so this module can be unit-tested outside of VS Code.
+class Emitter<T> {
+    private listeners: Array<(e: T) => void> = [];
+    readonly event = (listener: (e: T) => any) => {
+        this.listeners.push(listener);
+        return { dispose: () => { this.listeners = this.listeners.filter(l => l !== listener); } };
+    };
+    fire(e: T) {
+        for (const l of this.listeners) { try { l(e); } catch (_) { /* ignore */ } }
+    }
+}
 
 export class RoomsProvider implements vscode.TreeDataProvider<string> {
-    private _onDidChangeTreeData: vscode.EventEmitter<string | void | null> = new vscode.EventEmitter<string | void | null>();
-    readonly onDidChangeTreeData: vscode.Event<string | void | null> = this._onDidChangeTreeData.event;
+    private _onDidChangeTreeData = new Emitter<string | void | null>();
+    readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
 
     private rooms: Set<string> = new Set();
 
@@ -24,10 +36,14 @@ export class RoomsProvider implements vscode.TreeDataProvider<string> {
     }
 
     getTreeItem(element: string): vscode.TreeItem {
-        const item = new vscode.TreeItem(element, vscode.TreeItemCollapsibleState.None);
-        item.contextValue = 'dustirc.room';
-        item.iconPath = new vscode.ThemeIcon('comment-discussion');
-        return item;
+        // Return a minimal TreeItem-like object. Type assertion keeps the API shape
+        const item: any = {
+            label: element,
+            collapsibleState: 0,
+            contextValue: 'dustirc.room',
+            iconPath: undefined
+        };
+        return item as vscode.TreeItem;
     }
 
     getChildren(): Thenable<string[]> {
@@ -39,3 +55,4 @@ export class RoomsProvider implements vscode.TreeDataProvider<string> {
         this._onDidChangeTreeData.fire();
     }
 }
+

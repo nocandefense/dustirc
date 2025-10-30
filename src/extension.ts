@@ -33,9 +33,21 @@ export function activate(context: vscode.ExtensionContext) {
 	statusBar.text = 'Dust: disconnected';
 	statusBar.show();
 
-	// Rooms side panel
+	// Rooms side panel (guarded so tests running in Node won't fail)
 	const roomsProvider = new RoomsProvider();
-	vscode.window.registerTreeDataProvider('dustirc.rooms', roomsProvider);
+	if (typeof vscode.window.registerTreeDataProvider === 'function') {
+		vscode.window.registerTreeDataProvider('dustirc.rooms', roomsProvider);
+	}
+
+	const openRoomDisposable = vscode.commands.registerCommand('dustirc.openRoom', async (room?: string) => {
+		if (!room) { return; }
+		// For now, bring the output channel forward and log an entry for the room.
+		output.show(true);
+		output.appendLine(`Opened room: ${room}`);
+		vscode.window.showInformationMessage(`Opened ${room}`);
+	});
+
+	context.subscriptions.push(openRoomDisposable);
 
 	connection.on('connect', () => {
 		statusBar.text = 'Dust: connected';
