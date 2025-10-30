@@ -30,12 +30,17 @@ jobs:
           name: coverage-lcov
           path: coverage/lcov.info
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+      - name: Upload coverage (lcov)
+        uses: actions/upload-artifact@v4
         with:
+          name: coverage-lcov
+          path: coverage/lcov.info
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           files: coverage/lcov.info
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   build-and-test:
     name: build-and-test
