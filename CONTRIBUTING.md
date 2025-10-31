@@ -34,10 +34,10 @@ We follow a lightweight trunk-based / GitHub Flow workflow:
 
 - Keep `main` always releasable and protected by branch rules (require PRs and passing CI).
 - Work in short-lived branches with descriptive names:
-  - `feat/<short-description>` for features
-  - `fix/<short-description>` for bugfixes
-  - `chore/<short-description>` for housekeeping
-  - `docs/<short-description>` for documentation
+  - `feature/<short-description>` for features
+    - `fix/<short-description>` for bugfixes
+    - `chore/<short-description>` for housekeeping
+    - `docs/<short-description>` for documentation
 - Keep branches small and focused; rebase or merge from `main` frequently to avoid large conflicts.
 
 ## PR checklist
@@ -101,6 +101,25 @@ For more developer-focused details (CI, tests, coverage, releases) see `docs/dev
 
 - The repository includes a Husky pre-commit hook at `.husky/pre-commit` that runs `lint-staged`.
 - After running `npm ci`, run `npm run prepare` to install the hooks locally. The hook file in the repo is executable so Git will run it on commits.
+
+### Branch naming & helper scripts
+
+We enforce a branch-per-piece workflow and provide small helper scripts to get started and finish a branch:
+
+- Start a feature branch locally and push it to origin:
+
+```bash
+# create and push feature/my-change and checkout
+npm run branch:start my-change
+```
+
+- Finish a feature branch (attempt to merge the PR using `gh` if available, delete remote and local branch, and return to `main`):
+
+```bash
+npm run branch:finish
+```
+
+The CI enforces that PR source branches follow the allowed prefixes (for example `feature/`, `fix/`, `chore/`, `hotfix/`, `docs/`, `release/`, or `dependabot/`). Use the helper scripts to stay consistent.
 
 ## Built artifacts
 
