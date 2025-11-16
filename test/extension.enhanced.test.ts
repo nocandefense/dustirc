@@ -32,7 +32,12 @@ const fakeVscode: any = {
         },
         registerTreeDataProvider: (id: string, provider: any) => {
             treeDataProvider = provider;
-        }
+        },
+        createStatusBarItem: (align: any, priority?: number) => ({
+            text: '',
+            show: sinon.fake(),
+            dispose: sinon.fake()
+        })
     },
     workspace: {
         workspaceFolders: [{ uri: { fsPath: process.cwd() } }],
@@ -42,29 +47,14 @@ const fakeVscode: any = {
     StatusBarAlignment: { Left: 1 }
 };
 
-// Add status bar item creation
-fakeVscode.window.createStatusBarItem = (align: any, priority?: number) => ({
-    text: '',
-    show: sinon.fake(),
-    dispose: sinon.fake()
-});
-
-// Mock vscode module for ES modules
-const require = createRequire(import.meta.url);
-const Module = require('module');
-const originalLoad = Module._load;
-Module._load = function (request: string, parent: any, isMain: boolean) {
-    if (request === 'vscode') { return fakeVscode; }
-    return originalLoad.apply(this, arguments as any);
-};
-
-// Import extension after mocking vscode
-const ext = require('../src/extension');
+// Store original Module._load to restore later
+let originalLoad: any = null;
 
 suite('Extension Enhanced Features', () => {
     let context: any;
+    let ext: any;
 
-    setup(() => {
+    setup(async () => {
         // Reset fake function call history
         sinon.resetHistory();
         outputChannels.clear();
@@ -73,25 +63,38 @@ suite('Extension Enhanced Features', () => {
         // Clear registered commands
         Object.keys(registeredCommands).forEach(key => delete registeredCommands[key]);
 
+        // Mock vscode module for each test run
+        const require = createRequire(import.meta.url);
+        const Module = require('module');
+
+        // Store original only once
+        if (!originalLoad) {
+            originalLoad = Module._load;
+        }
+
+        Module._load = function (request: string, parent: any, isMain: boolean) {
+            if (request === 'vscode') { return fakeVscode; }
+            return originalLoad.apply(this, arguments as any);
+        };
+
+        // Fresh import of extension for each test
+        delete require.cache[require.resolve('../src/extension')];
+        ext = require('../src/extension');
+
         context = { subscriptions: [] };
     });
 
-    test.skip('activates extension and registers all enhanced commands', async () => {
-        console.log('Extension object:', Object.keys(ext));
-        console.log('Extension activate function:', typeof ext.activate);
-
-        try {
-            const result = await ext.activate(context);
-            console.log('Activation result:', result);
-        } catch (error) {
-            console.log('Activation error:', error);
-            console.log('Error message:', error.message);
-            console.log('Error stack:', error.stack);
-            throw error;
+    teardown(() => {
+        // Restore original Module._load after each test
+        if (originalLoad) {
+            const require = createRequire(import.meta.url);
+            const Module = require('module');
+            Module._load = originalLoad;
         }
+    });
 
-        console.log('Context subscriptions:', context.subscriptions?.length);
-        console.log('Registered commands after activation:', Object.keys(registeredCommands));
+    test('activates extension and registers all enhanced commands', async () => {
+        await ext.activate(context);
 
         // Check that all our enhanced commands are registered
         const expectedCommands = [
@@ -113,7 +116,20 @@ suite('Extension Enhanced Features', () => {
         }
     });
 
-    test.skip('creates main output channel and registers tree data provider', async () => {
+    test('registers ping command and shows RTT', async () => {
+        // This test covers the original extension.commands.test.ts functionality
+        await ext.activate(context);
+
+        // Ensure the ping command was registered
+        assert.ok(registeredCommands['dustirc.ping'], 'dustirc.ping should be registered');
+
+        // Call the ping handler directly and expect it to report a failure (since not connected)
+        await registeredCommands['dustirc.ping']();
+
+        assert.ok(fakeVscode.window.showErrorMessage.called, 'showErrorMessage should be called when ping fails');
+    });
+
+    test('creates main output channel and registers tree data provider', async () => {
         await ext.activate(context);
 
         // Should create main Dust IRC output channel
@@ -123,7 +139,7 @@ suite('Extension Enhanced Features', () => {
         assert.ok(treeDataProvider, 'Tree data provider should be registered');
     });
 
-    test.skip('openRoom command switches channel and shows output', async () => {
+    test('openRoom command switches channel and shows output', async () => {
         await ext.activate(context);
 
         // Mock a channel output being available
@@ -136,7 +152,7 @@ suite('Extension Enhanced Features', () => {
         assert.ok(fakeVscode.window.showInformationMessage.called, 'Should show info message when switching rooms');
     });
 
-    test.skip('say command validates channel membership', async () => {
+    test('say command validates channel membership', async () => {
         await ext.activate(context);
 
         // Mock no input (user cancels)
@@ -149,7 +165,7 @@ suite('Extension Enhanced Features', () => {
         assert.ok(fakeVscode.window.showWarningMessage.called, 'Should warn when no channels joined');
     });
 
-    test.skip('sayTo command shows channel selection', async () => {
+    test('sayTo command shows channel selection', async () => {
         await ext.activate(context);
 
         // Call sayTo command
@@ -159,7 +175,7 @@ suite('Extension Enhanced Features', () => {
         assert.ok(fakeVscode.window.showWarningMessage.called, 'Should warn when no channels available for sayTo');
     });
 
-    test.skip('join command prompts for channel name', async () => {
+    test('join command prompts for channel name', async () => {
         await ext.activate(context);
 
         // Mock channel input
@@ -172,7 +188,7 @@ suite('Extension Enhanced Features', () => {
         assert.ok(fakeVscode.window.showInputBox.called, 'Should prompt for channel name');
     });
 
-    test.skip('part command handles no channels gracefully', async () => {
+    test('part command handles no channels gracefully', async () => {
         await ext.activate(context);
 
         // Call part command when no channels joined
@@ -182,7 +198,7 @@ suite('Extension Enhanced Features', () => {
         assert.ok(fakeVscode.window.showWarningMessage.called, 'Should warn when no channels to leave');
     });
 
-    test.skip('identify command prompts for password', async () => {
+    test('identify command prompts for password', async () => {
         await ext.activate(context);
 
         // Mock password input
@@ -195,7 +211,7 @@ suite('Extension Enhanced Features', () => {
         assert.ok(fakeVscode.window.showInputBox.called, 'Should prompt for NickServ password');
     });
 
-    test.skip('disconnect command provides user feedback', async () => {
+    test('disconnect command provides user feedback', async () => {
         await ext.activate(context);
 
         // Call disconnect command
@@ -221,9 +237,5 @@ suite('Extension Enhanced Features', () => {
         // Should dispose output channels (we can't easily test this without more complex mocking)
         assert.ok(true, 'Cleanup should complete without errors');
     });
-
-    teardown(() => {
-        // Restore Module._load to avoid side effects
-        Module._load = originalLoad;
-    });
 });
+// End of suite - teardown() will restore Module._load
