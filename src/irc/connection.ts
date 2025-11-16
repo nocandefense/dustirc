@@ -403,6 +403,14 @@ export class IrcConnection {
         }
     }
 
+    /**
+     * Send IDENTIFY command to NickServ to authenticate registered nickname
+     */
+    sendIdentify(password: string): void {
+        if (!this.connected) { throw new Error('Not connected'); }
+        this.enqueueRaw(`PRIVMSG NickServ :IDENTIFY ${password}`);
+    }
+
     /** Get list of joined channels */
     getJoinedChannels(): string[] {
         return Array.from(this.joinedChannels);
@@ -461,9 +469,11 @@ export class IrcConnection {
     handleInboundLine(line: string) {
         // emit raw
         this.emitter.emit('raw', line);
+        console.log('[DEBUG] Raw IRC line:', line);
         let msg: IrcMessage;
         try {
             msg = parseLine(line);
+            console.log('[DEBUG] Parsed message:', msg);
         } catch (err) {
             this.emitter.emit('error', err);
             return;
@@ -472,12 +482,14 @@ export class IrcConnection {
         // Handle channel state tracking
         this.updateChannelState(msg);
 
-        // Emit a generic 'message' event for compatibility when it's a PRIVMSG
-        if (msg.type === 'privmsg') {
-            this.emitter.emit('message', { from: msg.from, text: msg.trailing, target: msg.params[0] });
-        }
+        // Debug all message types
+        console.log('[DEBUG] Message type:', msg.type, 'Command:', msg.command);
+
+        // Don't emit legacy 'message' event for incoming PRIVMSG - we handle that separately
+        // Only sendMessage() should emit 'message' events for immediate feedback
 
         // Emit typed event
+        console.log('[DEBUG] Emitting typed event:', msg.type);
         this.emitter.emit(msg.type, msg);
     }
 
