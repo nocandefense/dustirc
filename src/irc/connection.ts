@@ -58,6 +58,10 @@ export class IrcConnection {
     // Buffer for incoming data when using sockets
     private recvBuffer = '';
 
+    // Channel state tracking
+    private joinedChannels = new Set<string>();
+    private currentChannel: string | null = null;
+
     // outbound queue for rate-limiting (not strictly enforced for tests)
     private sendQueue: string[] = [];
     private sendInterval: NodeJS.Timeout | null = null;
@@ -307,13 +311,19 @@ export class IrcConnection {
      * (keeps existing behavior for the UI) and enqueues a raw PRIVMSG for the send
      * pump which would write to the socket in a real implementation.
      */
-    sendMessage(text: string): void {
+    sendMessage(text: string, target?: string): void {
         if (!this.connected) { throw new Error('Not connected'); }
+
+        // Use provided target, current channel, or error if neither available
+        const channelName = target || this.currentChannel;
+        if (!channelName) {
+            throw new Error('No target specified and no current channel. Use JOIN to join a channel first.');
+        }
+
         // legacy immediate UI event
-        this.emitter.emit('message', { from: this.nick ?? 'me', text });
+        this.emitter.emit('message', { from: this.nick ?? 'me', text, target: channelName });
         // enqueue raw PRIVMSG to be sent (simulated)
-        const target = '#local';
-        const raw = `PRIVMSG ${target} :${text}`;
+        const raw = `PRIVMSG ${channelName} :${text}`;
         this.enqueueRaw(raw);
     }
 
@@ -359,6 +369,53 @@ export class IrcConnection {
         if (opts.user) {
             this.sendUser(opts.user, opts.realname ?? '');
         }
+    }
+
+    /** Join an IRC channel */
+    sendJoin(channel: string, key?: string): void {
+        if (!this.connected) { throw new Error('Not connected'); }
+        if (!channel) { throw new Error('Channel is required'); }
+
+        // Ensure channel starts with #
+        const channelName = channel.startsWith('#') ? channel : `#${channel}`;
+
+        if (key) {
+            this.enqueueRaw(`JOIN ${channelName} ${key}`);
+        } else {
+            this.enqueueRaw(`JOIN ${channelName}`);
+        }
+    }
+
+    /** Leave an IRC channel */
+    sendPart(channel?: string, message?: string): void {
+        if (!this.connected) { throw new Error('Not connected'); }
+
+        // Use current channel if none specified
+        const channelName = channel || this.currentChannel;
+        if (!channelName) {
+            throw new Error('No channel specified and no current channel');
+        }
+
+        if (message) {
+            this.enqueueRaw(`PART ${channelName} :${message}`);
+        } else {
+            this.enqueueRaw(`PART ${channelName}`);
+        }
+    }
+
+    /** Get list of joined channels */
+    getJoinedChannels(): string[] {
+        return Array.from(this.joinedChannels);
+    }
+
+    /** Get current active channel */
+    getCurrentChannel(): string | null {
+        return this.currentChannel;
+    }
+
+    /** Set current active channel (for sending messages) */
+    setCurrentChannel(channel: string | null): void {
+        this.currentChannel = channel;
     }
 
     /** Enqueue a raw line to the outbound queue */
@@ -412,6 +469,9 @@ export class IrcConnection {
             return;
         }
 
+        // Handle channel state tracking
+        this.updateChannelState(msg);
+
         // Emit a generic 'message' event for compatibility when it's a PRIVMSG
         if (msg.type === 'privmsg') {
             this.emitter.emit('message', { from: msg.from, text: msg.trailing, target: msg.params[0] });
@@ -419,6 +479,29 @@ export class IrcConnection {
 
         // Emit typed event
         this.emitter.emit(msg.type, msg);
+    }
+
+    private updateChannelState(msg: IrcMessage) {
+        // Track our own JOIN/PART events
+        if (msg.from === this.nick) {
+            if (msg.type === 'join' && msg.params[0]) {
+                const channel = msg.params[0];
+                this.joinedChannels.add(channel);
+                // Set as current channel if we don't have one
+                if (!this.currentChannel) {
+                    this.currentChannel = channel;
+                }
+            } else if (msg.type === 'part' && msg.params[0]) {
+                const channel = msg.params[0];
+                this.joinedChannels.delete(channel);
+                // Clear current channel if we left it
+                if (this.currentChannel === channel) {
+                    // Set to another joined channel or null
+                    const remaining = Array.from(this.joinedChannels);
+                    this.currentChannel = remaining.length > 0 ? remaining[0] : null;
+                }
+            }
+        }
     }
 
     isConnected(): boolean {

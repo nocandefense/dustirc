@@ -67,6 +67,25 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
+	// Update status bar when joining/leaving channels
+	connection.on('join', (m: IrcMessage) => {
+		if (m.from === connection.getInfo().nick) {
+			const channel = m.params[0];
+			statusBar.text = `Dust: ${channel}`;
+		}
+	});
+
+	connection.on('part', (m: IrcMessage) => {
+		if (m.from === connection.getInfo().nick) {
+			const currentChannel = connection.getCurrentChannel();
+			if (currentChannel) {
+				statusBar.text = `Dust: ${currentChannel}`;
+			} else {
+				statusBar.text = 'Dust: connected';
+			}
+		}
+	});
+
 	// Listen for configuration changes so users can toggle autoReconnect
 	vscode.workspace.onDidChangeConfiguration((e) => {
 		if (e.affectsConfiguration && (e.affectsConfiguration('dustirc.autoReconnect'))) {
@@ -118,10 +137,19 @@ export function activate(context: vscode.ExtensionContext) {
 		const portInput = await vscode.window.showInputBox({ prompt: 'Port', value: '6667' });
 		const port = portInput ? parseInt(portInput, 10) : 6667;
 		const nick = await vscode.window.showInputBox({ prompt: 'Nickname', value: 'dust' });
+		const user = await vscode.window.showInputBox({ prompt: 'Username', value: nick || 'dust' });
 
 		try {
-			await connection.connect(host, port, nick || 'dust');
-			vscode.window.showInformationMessage(`Connected to ${host}:${port} as ${nick}`);
+			// Use real network connections with auto-registration
+			const useTls = port === 6697 || port === 6670; // Common SSL ports
+			await connection.connect(host, port, nick || 'dust', {
+				real: true,
+				tls: useTls,
+				autoRegister: true,
+				user: user || nick || 'dust',
+				realname: `Dust IRC User`
+			});
+			vscode.window.showInformationMessage(`Connected to ${host}:${port} as ${nick}${useTls ? ' (TLS)' : ''}`);
 		} catch (err: any) {
 			vscode.window.showErrorMessage(`Connection failed: ${err?.message ?? err}`);
 		}
@@ -136,6 +164,48 @@ export function activate(context: vscode.ExtensionContext) {
 			import('./logging.js').then((m) => m.appendOutgoingMessage(workspaceRoot, text));
 		} catch (err: any) {
 			vscode.window.showErrorMessage(`Send failed: ${err?.message ?? err}`);
+		}
+	});
+
+	const joinDisposable = vscode.commands.registerCommand('dustirc.join', async () => {
+		const channel = await vscode.window.showInputBox({
+			prompt: 'Channel to join',
+			placeHolder: '#example'
+		});
+		if (!channel) { return; }
+		try {
+			connection.sendJoin(channel);
+			vscode.window.showInformationMessage(`Joining ${channel}...`);
+		} catch (err: any) {
+			vscode.window.showErrorMessage(`Join failed: ${err?.message ?? err}`);
+		}
+	});
+
+	const partDisposable = vscode.commands.registerCommand('dustirc.part', async () => {
+		const currentChannel = connection.getCurrentChannel();
+		const joinedChannels = connection.getJoinedChannels();
+
+		let channelToLeave: string | undefined;
+
+		if (joinedChannels.length === 0) {
+			vscode.window.showWarningMessage('Not joined to any channels');
+			return;
+		} else if (joinedChannels.length === 1) {
+			channelToLeave = joinedChannels[0];
+		} else {
+			// Show quick pick if multiple channels
+			channelToLeave = await vscode.window.showQuickPick(joinedChannels, {
+				placeHolder: currentChannel ? `Leave channel (current: ${currentChannel})` : 'Select channel to leave'
+			});
+		}
+
+		if (!channelToLeave) { return; }
+
+		try {
+			connection.sendPart(channelToLeave);
+			vscode.window.showInformationMessage(`Left ${channelToLeave}`);
+		} catch (err: any) {
+			vscode.window.showErrorMessage(`Part failed: ${err?.message ?? err}`);
 		}
 	});
 
@@ -164,6 +234,8 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(connectDisposable);
 	context.subscriptions.push(sayDisposable);
+	context.subscriptions.push(joinDisposable);
+	context.subscriptions.push(partDisposable);
 	context.subscriptions.push(pingDisposable);
 	context.subscriptions.push(reconnectDisposable);
 	context.subscriptions.push(openOutputDisposable);

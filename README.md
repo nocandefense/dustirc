@@ -1,11 +1,69 @@
 # [![CI](https://github.com/nocandefense/dustirc/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/nocandefense/dustirc/actions/workflows/ci.yml) [![Codecov](https://codecov.io/gh/nocandefense/dustirc/branch/main/graph/badge.svg)](https://codecov.io/gh/nocandefense/dustirc)
 
-Dust is an IRC client for Visual Studio Code.
+Dust is a functional IRC client for Visual Studio Code that provides essential IRC functionality with a focus on simplicity and integration with your coding workflow.
 
 ## Features
 
-- Basic command to connect to an IRC server (scaffold)
-- Status bar indicating connection state
+- **Real IRC connectivity** with TLS support for secure connections
+- **Channel management** - join, leave, and navigate IRC channels
+- **Message sending** with proper channel targeting
+- **Auto-registration** with IRC servers using NICK/USER commands
+- **Connection management** with auto-reconnect capability
+- **Status bar integration** showing connection state and current channel
+- **Message logging** with structured output and workspace file logging
+- **Ping/RTT monitoring** for connection health
+
+## Quick Start
+
+1. Install the extension in VS Code
+2. Open the Command Palette (`Cmd/Ctrl+Shift+P`)
+3. Run `Dust: Connect` to connect to an IRC server
+4. Use `Dust: Join Channel` to join a channel (e.g., `#general`)
+5. Use `Dust: Say...` to send messages to the current channel
+6. Use `Dust: Open Output` to view IRC activity
+
+## Available Commands
+
+All commands are available through the Command Palette (`Cmd/Ctrl+Shift+P`):
+
+- **`Dust: Connect`** - Connect to an IRC server (prompts for host, port, nickname, username)
+- **`Dust: Join Channel`** - Join an IRC channel (e.g., `#example`)
+- **`Dust: Leave Channel`** - Leave the current channel or select from joined channels
+- **`Dust: Say...`** - Send a message to the current channel
+- **`Dust: Ping`** - Check connection health with round-trip time
+- **`Dust: Reconnect`** - Manually reconnect to the last server
+- **`Dust: Open Output`** - View the IRC activity log
+
+## Connection Details
+
+When connecting, you'll be prompted for:
+
+- **Host**: IRC server hostname (e.g., `irc.libera.chat`)
+- **Port**: Server port (`6667` for plaintext, `6697` for TLS)
+- **Nickname**: Your IRC nickname
+- **Username**: Your IRC username (defaults to nickname)
+
+The client automatically detects TLS requirements for common SSL ports (6697, 6670) and handles server registration automatically.
+
+## Status Bar
+
+The status bar shows your connection state:
+
+- `Dust: disconnected` - Not connected to any server
+- `Dust: connected` - Connected but not in any channels  
+- `Dust: #channelname` - Connected and active in a channel
+
+## Settings
+
+- **`dustirc.autoReconnect`** (boolean): Automatically reconnect when connection is lost (default: false)
+
+## Message Flow
+
+1. Connect to an IRC server using `Dust: Connect`
+2. Join a channel with `Dust: Join Channel` - this becomes your "current channel"
+3. Send messages with `Dust: Say...` - messages go to your current channel
+4. View all IRC activity in the Output panel via `Dust: Open Output`
+5. Outgoing messages are logged to `.vscode/dust-outgoing.log` in your workspace
 
 ## Development setup
 
