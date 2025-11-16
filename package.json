@@ -36,6 +36,14 @@
         "title": "Dust: Say..."
       },
       {
+        "command": "dustirc.join",
+        "title": "Dust: Join Channel"
+      },
+      {
+        "command": "dustirc.part",
+        "title": "Dust: Leave Channel"
+      },
+      {
         "command": "dustirc.ping",
         "title": "Dust: Ping"
       },

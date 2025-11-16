@@ -29,17 +29,18 @@ suite('IrcConnection events', () => {
             c.on('privmsg', (m: any) => resolve(m));
         });
 
-        c.sendMessage('hi there');
+        c.sendMessage('hi there', '#test');
 
         // legacy message should be emitted synchronously
         assert.ok(legacy, 'expected legacy message event');
         assert.strictEqual(legacy.from, 'tester');
         assert.strictEqual(legacy.text, 'hi there');
+        assert.strictEqual(legacy.target, '#test');
 
         // processed privmsg should arrive via pump
         const msg = await Promise.race([processed, new Promise((_r, rej) => setTimeout(() => rej(new Error('timeout')), 1000))]);
         assert.strictEqual(msg.trailing, 'hi there');
-        assert.strictEqual(msg.params[0], '#local');
+        assert.strictEqual(msg.params[0], '#test');
 
         c.disconnect();
     });

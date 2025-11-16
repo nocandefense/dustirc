@@ -61,7 +61,7 @@ suite('IrcConnection', () => {
 
         // When disconnected, sendMessage should throw
         assert.throws(() => {
-            (c as any).sendMessage('hello');
+            (c as any).sendMessage('hello', '#test');
         }, /Not connected/);
 
         // Connect and listen for message event
@@ -73,7 +73,7 @@ suite('IrcConnection', () => {
         });
 
         // send a message and expect an event
-        (c as any).sendMessage('hi there');
+        (c as any).sendMessage('hi there', '#test');
         // event is synchronous in this implementation, but wait a tick to be safe
         await new Promise((r) => setTimeout(r, 10));
 
