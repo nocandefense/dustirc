@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import { RoomsProvider } from '../src/views/roomsProvider';
+import { RoomsProvider } from '../views/roomsProvider';
 
 // Mock IrcConnection for testing
 const mockConnection = {

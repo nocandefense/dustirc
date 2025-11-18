@@ -1,4 +1,5 @@
 import type * as vscode from 'vscode';
+import type { IrcConnection } from '../irc/connection';
 
 // Lightweight emitter so this module can be unit-tested outside of VS Code.
 class Emitter<T> {
@@ -17,6 +18,17 @@ export class RoomsProvider implements vscode.TreeDataProvider<string> {
     readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
 
     private rooms: Set<string> = new Set();
+    private connection: IrcConnection | null = null;
+
+    constructor(connection?: IrcConnection) {
+        if (connection) {
+            this.connection = connection;
+        }
+    }
+
+    setConnection(connection: IrcConnection) {
+        this.connection = connection;
+    }
 
     addRoom(name: string) {
         if (!name) { return; }
@@ -36,12 +48,21 @@ export class RoomsProvider implements vscode.TreeDataProvider<string> {
     }
 
     getTreeItem(element: string): vscode.TreeItem {
+        const currentChannel = this.connection?.getCurrentChannel();
+        const isCurrent = currentChannel === element;
+
         // Return a minimal TreeItem-like object. Type assertion keeps the API shape
         const item: any = {
-            label: element,
+            label: isCurrent ? `● ${element}` : element,
             collapsibleState: 0,
             contextValue: 'dustirc.room',
-            iconPath: undefined
+            iconPath: undefined,
+            tooltip: isCurrent ? `${element} (current channel)` : element,
+            command: {
+                command: 'dustirc.openRoom',
+                title: 'Open Room',
+                arguments: [element]
+            }
         };
         return item as vscode.TreeItem;
     }
