@@ -43,6 +43,10 @@
         "title": "Dust: Say..."
       },
       {
+        "command": "dustirc.sayTo",
+        "title": "Dust: Say to Channel..."
+      },
+      {
         "command": "dustirc.join",
         "title": "Dust: Join Channel"
       },
@@ -57,6 +61,14 @@
       {
         "command": "dustirc.reconnect",
         "title": "Dust: Reconnect"
+      },
+      {
+        "command": "dustirc.disconnect",
+        "title": "Dust: Disconnect"
+      },
+      {
+        "command": "dustirc.identify",
+        "title": "Dust: Identify with NickServ"
       },
       {
         "command": "dustirc.openOutput",

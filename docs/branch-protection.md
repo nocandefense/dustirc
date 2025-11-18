@@ -1,4 +1,4 @@
-# Branch protection checklist
+;;;;;# Branch protection checklist
 
 This document lists recommended repository settings and a brief how-to for enabling branch protection on GitHub for the `main` branch. Enforcing these rules prevents accidental direct pushes and helps protect release and CI integrity.
 
