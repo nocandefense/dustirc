@@ -2,6 +2,23 @@ import * as assert from 'assert';
 import IrcConnection from '../src/irc/connection';
 
 suite('IrcConnection events', () => {
+    let conn: IrcConnection;
+
+    setup(() => {
+        conn = new IrcConnection();
+    });
+
+    teardown(() => {
+        // Ensure connection is properly cleaned up after each test
+        if (conn && typeof conn.disconnect === 'function') {
+            try {
+                conn.disconnect();
+            } catch (err) {
+                // Ignore errors during cleanup
+            }
+        }
+    });
+
     test('handleInboundLine emits raw and privmsg', () => {
         const c = new IrcConnection();
         const line = ':nick!user@host PRIVMSG #chan :hello world';
@@ -37,11 +54,14 @@ suite('IrcConnection events', () => {
         assert.strictEqual(legacy.text, 'hi there');
         assert.strictEqual(legacy.target, '#test');
 
-        // processed privmsg should arrive via pump
-        const msg = await Promise.race([processed, new Promise((_r, rej) => setTimeout(() => rej(new Error('timeout')), 1000))]);
-        assert.strictEqual(msg.trailing, 'hi there');
-        assert.strictEqual(msg.params[0], '#test');
-
-        c.disconnect();
+        try {
+            // processed privmsg should arrive via pump
+            const msg = await Promise.race([processed, new Promise((_r, rej) => setTimeout(() => rej(new Error('timeout')), 1000))]);
+            assert.strictEqual(msg.trailing, 'hi there');
+            assert.strictEqual(msg.params[0], '#test');
+        } finally {
+            // Always disconnect, even if test fails
+            c.disconnect();
+        }
     });
 });

@@ -9,6 +9,17 @@ suite('IrcConnection Enhanced Features', () => {
         conn = new IrcConnection();
     });
 
+    teardown(() => {
+        // Ensure connection is properly cleaned up after each test
+        if (conn && typeof conn.disconnect === 'function') {
+            try {
+                conn.disconnect();
+            } catch (err) {
+                // Ignore errors during cleanup
+            }
+        }
+    });
+
     test('sendIdentify enqueues NickServ IDENTIFY command', async () => {
         // Connect first and await the connection
         await conn.connect('test.irc', 6667, 'testnick');
