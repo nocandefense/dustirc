@@ -1,0 +1,12 @@
+{
+    "ui": "tdd",
+    "require": [
+        "ts-node/register"
+    ],
+    "spec": [
+        "test/**/*.test.ts"
+    ],
+    "timeout": 5000,
+    "reporter": "spec",
+    "exit": true
+}
