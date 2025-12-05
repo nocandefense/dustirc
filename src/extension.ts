@@ -5,6 +5,53 @@ import { IrcConnection } from './irc/connection';
 import type { IrcMessage } from './irc/types';
 import { RoomsProvider } from './views/roomsProvider';
 
+// Settings helper functions
+function getConfig() {
+	return vscode.workspace.getConfiguration('dustirc');
+}
+
+function getConnectionDefaults() {
+	const config = getConfig();
+	return {
+		host: config.get<string>('connection.defaultHost', ''),
+		port: config.get<number>('connection.defaultPort', 6697),
+		nickname: config.get<string>('connection.defaultNickname', ''),
+		username: config.get<string>('connection.defaultUsername', ''),
+		timeout: config.get<number>('connection.timeout', 10000),
+		forceTLS: config.get<boolean>('connection.forceTLS', false)
+	};
+}
+
+function getReconnectSettings() {
+	const config = getConfig();
+	return {
+		maxAttempts: config.get<number>('reconnect.maxAttempts', 5),
+		delay: config.get<number>('reconnect.delay', 5000)
+	};
+}
+
+function getUISettings() {
+	const config = getConfig();
+	return {
+		showInStatusBar: config.get<boolean>('ui.showInStatusBar', true),
+		createOutputChannels: config.get<boolean>('ui.createOutputChannels', true),
+		autoOpenOutput: config.get<boolean>('ui.autoOpenOutput', true)
+	};
+}
+
+function getMessagingSettings() {
+	const config = getConfig();
+	return {
+		logToFile: config.get<boolean>('messaging.logToFile', true),
+		sendRateLimit: config.get<number>('messaging.sendRateLimit', 200)
+	};
+}
+
+function getAutoJoinChannels(): string[] {
+	const config = getConfig();
+	return config.get<string[]>('channels.autoJoin', []);
+}
+
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -12,15 +59,6 @@ export function activate(context: vscode.ExtensionContext) {
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "dustirc" is now active!');
-
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	const disposable = vscode.commands.registerCommand('dustirc.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from dust!');
-	});
 
 	const connection = new IrcConnection();
 
@@ -35,7 +73,11 @@ export function activate(context: vscode.ExtensionContext) {
 
 	const statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
 	statusBar.text = 'Dust: disconnected';
-	statusBar.show();
+	// Show status bar based on settings
+	const uiSettings = getUISettings();
+	if (uiSettings.showInStatusBar) {
+		statusBar.show();
+	}
 
 	// Rooms side panel (guarded so tests running in Node won't fail)
 	const roomsProvider = new RoomsProvider(connection);
@@ -72,20 +114,44 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Helper function to get or create channel-specific output channel
 	const getOrCreateChannelOutput = (channel: string): vscode.OutputChannel => {
+		console.log('[DEBUG] getOrCreateChannelOutput called for:', channel);
+		const uiSettings = getUISettings();
+		if (!uiSettings.createOutputChannels) {
+			console.log('[DEBUG] createOutputChannels disabled, returning main output');
+			// Return main output if separate channel outputs are disabled
+			return output;
+		}
+
 		let channelOutput = channelOutputs.get(channel);
 		if (!channelOutput) {
+			console.log('[DEBUG] Creating new output channel for:', channel);
 			channelOutput = vscode.window.createOutputChannel(`Dust IRC: ${channel}`);
 			channelOutputs.set(channel, channelOutput);
+		} else {
+			console.log('[DEBUG] Reusing existing output channel for:', channel);
 		}
 		return channelOutput;
 	};
 
-	connection.on('connect', () => {
-		statusBar.text = 'Dust: connected';
+	// Debug: Log ALL raw IRC lines from server
+	connection.on('raw', (line: string) => {
+		if (line.includes('PRIVMSG')) {
+			console.log('[DEBUG] RAW PRIVMSG LINE:', line);
+		}
+	});
+
+	// Automatically respond to server PINGs with PONG
+	connection.on('ping', (m: IrcMessage) => {
+		const server = m.params[0] || m.trailing || '';
+		console.log('[DEBUG] Received PING from server, responding with PONG:', server);
+		connection.enqueueRaw(`PONG :${server}`);
 	});
 
 	connection.on('disconnect', () => {
-		statusBar.text = 'Dust: disconnected';
+		const uiSettings = getUISettings();
+		if (uiSettings.showInStatusBar) {
+			statusBar.text = 'Dust: disconnected';
+		}
 		roomsProvider.clear();
 
 		// Clean up all channel output channels
@@ -95,28 +161,158 @@ export function activate(context: vscode.ExtensionContext) {
 		channelOutputs.clear();
 
 		// Auto-reconnect if enabled in settings
-		const cfg = vscode.workspace.getConfiguration();
-		const auto = !!cfg.get('dustirc.autoReconnect');
+		const config = getConfig();
+		const auto = config.get<boolean>('autoReconnect', true);
 		if (auto) {
-			// fire-and-forget
-			connection.reconnect().then((ok) => {
-				if (ok) { vscode.window.showInformationMessage('Reconnected (auto)'); }
-			}).catch(() => { });
+			const reconnectSettings = getReconnectSettings();
+			// Implement retry logic with delay and max attempts
+			let attempts = 0;
+			const attemptReconnect = () => {
+				if (reconnectSettings.maxAttempts > 0 && attempts >= reconnectSettings.maxAttempts) {
+					vscode.window.showWarningMessage(`Couldn't reconnect after ${attempts} attempts`);
+					return;
+				}
+				attempts++;
+				setTimeout(() => {
+					connection.reconnect().then((ok) => {
+						if (ok) {
+							vscode.window.showInformationMessage(`Reconnected (auto, attempt ${attempts})`);
+							attempts = 0; // Reset on successful reconnect
+						} else {
+							attemptReconnect(); // Try again
+						}
+					}).catch(() => {
+						attemptReconnect(); // Try again on error
+					});
+				}, reconnectSettings.delay);
+			};
+			attemptReconnect();
 		}
 	});
 
-	// Update status bar when joining/leaving channels
+
+
+
+
+	// Listen for configuration changes so users can toggle autoReconnect
+	vscode.workspace.onDidChangeConfiguration((e) => {
+		if (e.affectsConfiguration && (e.affectsConfiguration('dustirc.autoReconnect'))) {
+			// no-op for now; behavior reads configuration on disconnect
+		}
+	});
+
+	// Handle our own sent messages (immediate feedback)
+	connection.on('message', (m: any) => {
+		const target = m.target || 'unknown';
+		const nick = m.from || 'me';
+		console.log('[DEBUG] Own message event:', { target, from: nick, text: m.text });
+
+		const uiSettings = getUISettings();
+		// Route to appropriate output channel
+		if (target.startsWith('#')) {
+			// Channel message - route to channel-specific output
+			const channelOutput = getOrCreateChannelOutput(target);
+			channelOutput.appendLine(`${nick}: ${m.text}`);
+
+			// Auto-open output if enabled
+			if (uiSettings.autoOpenOutput) {
+				channelOutput.show(true);
+			}
+		} else {
+			// Private message - route to main output
+			output.appendLine(`[SENT] ${nick} → ${target}: ${m.text}`);
+
+			if (uiSettings.autoOpenOutput) {
+				output.show(true);
+			}
+		}
+	});
+
+	// Handle incoming messages from IRC (from others)
+	connection.on('privmsg', (m: IrcMessage) => {
+		const target = m.params[0] ?? '';
+		const nick = m.from || m.prefix?.split('!')[0] || 'unknown';
+		console.log('[DEBUG] PRIVMSG event received:', { target, from: nick, message: m.trailing, params: m.params, prefix: m.prefix });
+
+		const uiSettings = getUISettings();
+		console.log('[DEBUG] UI Settings:', { createOutputChannels: uiSettings.createOutputChannels, autoOpenOutput: uiSettings.autoOpenOutput });
+
+		// Route to appropriate output channel
+		if (target.startsWith('#')) {
+			// Channel message - route to channel-specific output
+			console.log('[DEBUG] Routing to channel-specific output for:', target);
+			const channelOutput = getOrCreateChannelOutput(target);
+			console.log('[DEBUG] Got output channel, appending message');
+			channelOutput.appendLine(`${nick}: ${m.trailing}`);
+
+			// Auto-open output if enabled
+			if (uiSettings.autoOpenOutput) {
+				channelOutput.show(true);
+			}
+		} else {
+			// Private message - route to main output with special formatting
+			output.appendLine(`[PRIVATE] ${nick}: ${m.trailing}`);
+
+			// Auto-open output if enabled
+			if (uiSettings.autoOpenOutput) {
+				output.show(true);
+			}
+		}
+	});
+
 	connection.on('join', (m: IrcMessage) => {
-		if (m.from === connection.getInfo().nick) {
-			const channel = m.params[0];
-			statusBar.text = `Dust: ${channel}`;
+		const target = m.params[0] ?? '';
+		const nick = m.from || m.prefix?.split('!')[0] || 'unknown';
+
+		// Log join event to main output and channel-specific output
+		const joinMessage = `${nick} joined ${target}`;
+		output.appendLine(joinMessage);
+
+		// Also log to the channel-specific output if it's a channel
+		if (target.startsWith('#')) {
+			const channelOutput = getOrCreateChannelOutput(target);
+			channelOutput.appendLine(joinMessage);
+		}
+
+		roomsProvider.addRoom(target);
+
+		// Update status bar if it was us who joined
+		if (nick === connection.getInfo().nick) {
+			const uiSettings = getUISettings();
+			if (uiSettings.showInStatusBar) {
+				statusBar.text = `Dust: ${target}`;
+			}
 			// Refresh rooms panel to update current channel indicator
 			roomsProvider.refresh();
 		}
 	});
 
 	connection.on('part', (m: IrcMessage) => {
-		if (m.from === connection.getInfo().nick) {
+		const target = m.params[0] ?? '';
+		const nick = m.from || m.prefix?.split('!')[0] || 'unknown';
+
+		// Log part event to main output and channel-specific output
+		const partMessage = `${nick} left ${target}`;
+		output.appendLine(partMessage);
+
+		// Also log to the channel-specific output if it's a channel
+		if (target.startsWith('#')) {
+			const channelOutput = channelOutputs.get(target);
+			if (channelOutput) {
+				channelOutput.appendLine(partMessage);
+
+				// Clean up channel output if we left the channel
+				if (nick === connection.getInfo().nick) {
+					channelOutput.dispose();
+					channelOutputs.delete(target);
+				}
+			}
+		}
+
+		roomsProvider.removeRoom(target);
+
+		// Update status bar if it was us who left
+		if (nick === connection.getInfo().nick) {
 			const currentChannel = connection.getCurrentChannel();
 			if (currentChannel) {
 				statusBar.text = `Dust: ${currentChannel}`;
@@ -128,92 +324,42 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
-	// Listen for configuration changes so users can toggle autoReconnect
-	vscode.workspace.onDidChangeConfiguration((e) => {
-		if (e.affectsConfiguration && (e.affectsConfiguration('dustirc.autoReconnect'))) {
-			// no-op for now; behavior reads configuration on disconnect
-		}
-	});
-
-	// Handle your own sent messages (immediate feedback)
-	connection.on('message', (m: any) => {
-		console.log('[DEBUG] Legacy message event:', m);
-		const target = m.target || 'unknown';
-
-		// Route to appropriate output channel
-		if (target.startsWith('#')) {
-			// Channel message - route to channel-specific output
-			const channelOutput = getOrCreateChannelOutput(target);
-			channelOutput.appendLine(`${m.from}: ${m.text}`);
-		} else {
-			// Private message or unknown target - route to main output
-			output.appendLine(`[${target}] ${m.from}: ${m.text}`);
-		}
-	});
-
-	// Handle incoming messages from others
-	connection.on('privmsg', (m: IrcMessage) => {
-		const target = m.params[0] ?? '';
-		console.log('[DEBUG] PRIVMSG event:', { target, from: m.from, message: m.trailing });
-
-		// Route to appropriate output channel
-		if (target.startsWith('#')) {
-			// Channel message - route to channel-specific output
-			const channelOutput = getOrCreateChannelOutput(target);
-			channelOutput.appendLine(`${m.from}: ${m.trailing}`);
-		} else {
-			// Private message - route to main output with special formatting
-			output.appendLine(`[PRIVATE] ${m.from}: ${m.trailing}`);
-		}
-	});
-
-	connection.on('join', (m: IrcMessage) => {
-		const target = m.params[0] ?? '';
-
-		// Log join event to main output and channel-specific output
-		const joinMessage = `${m.from} joined ${target}`;
-		output.appendLine(joinMessage);
-
-		// Also log to the channel-specific output if it's a channel
-		if (target.startsWith('#')) {
-			const channelOutput = getOrCreateChannelOutput(target);
-			channelOutput.appendLine(joinMessage);
-		}
-
-		roomsProvider.addRoom(target);
-	});
-
-	connection.on('part', (m: IrcMessage) => {
-		const target = m.params[0] ?? '';
-
-		// Log part event to main output and channel-specific output
-		const partMessage = `${m.from} left ${target}`;
-		output.appendLine(partMessage);
-
-		// Also log to the channel-specific output if it's a channel
-		if (target.startsWith('#')) {
-			const channelOutput = channelOutputs.get(target);
-			if (channelOutput) {
-				channelOutput.appendLine(partMessage);
-
-				// Clean up channel output if we left the channel
-				if (m.from === connection.getInfo().nick) {
-					channelOutput.dispose();
-					channelOutputs.delete(target);
-				}
-			}
-		}
-
-		roomsProvider.removeRoom(target);
-	});
-
 	connection.on('connect', () => {
+		// Update status bar
+		const uiSettings = getUISettings();
+		if (uiSettings.showInStatusBar) {
+			statusBar.text = 'Dust: connected';
+		}
+
+		// Clear state from previous connection
 		roomsProvider.clear();
-		// Clear all channel outputs on new connection
 		for (const [channel, channelOutput] of channelOutputs) {
 			channelOutput.dispose();
 		}
 		channelOutputs.clear();
+
+		// Auto-join channels after connection
+		const autoJoinChannels = getAutoJoinChannels();
+		if (autoJoinChannels.length > 0) {
+			// Limit auto-join to prevent server flooding
+			const safeChannels = autoJoinChannels.slice(0, 10); // Max 10 auto-join channels
+			if (autoJoinChannels.length > 10) {
+				output.appendLine(`Warning: Limited auto-join to first 10 channels (${autoJoinChannels.length} configured)`);
+			}
+
+			// Stagger joins to prevent burst
+			let delay = 2000; // Start after 2 seconds
+			safeChannels.forEach((channel, index) => {
+				setTimeout(() => {
+					try {
+						connection.sendJoin(channel);
+						output.appendLine(`Auto-joining ${channel}`);
+					} catch (err: any) {
+						output.appendLine(`Failed to auto-join ${channel}: ${err?.message ?? err}`);
+					}
+				}, delay + (index * 1000)); // 1 second between each join
+			});
+		}
 	});
 
 	connection.on('notice', (m: IrcMessage) => {
@@ -225,47 +371,77 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	const connectDisposable = vscode.commands.registerCommand('dustirc.connect', async () => {
-		const host = await vscode.window.showInputBox({ prompt: 'IRC host', placeHolder: 'irc.example.com' });
+		const defaults = getConnectionDefaults();
+
+		const host = await vscode.window.showInputBox({
+			prompt: 'Enter IRC server address',
+			placeHolder: 'irc.libera.chat',
+			value: defaults.host,
+			ignoreFocusOut: true,
+			validateInput: (value) => {
+				if (!value || value.trim().length === 0) {
+					return 'Please enter a server address';
+				}
+				if (value.includes(' ') || /[\r\n\t]/.test(value)) {
+					return 'Server address cannot contain spaces';
+				}
+				return null;
+			}
+		});
 		if (!host) {
 			vscode.window.showInformationMessage('Connection cancelled');
 			return;
 		}
-		const portInput = await vscode.window.showInputBox({ prompt: 'Port', value: '6667' });
-		const port = portInput ? parseInt(portInput, 10) : 6667;
-		const nick = await vscode.window.showInputBox({ prompt: 'Nickname', value: 'dust' });
-		const user = await vscode.window.showInputBox({ prompt: 'Username', value: nick || 'dust' });
 
-		// Optional: Ask for NickServ password for registered nicks
-		const needsPassword = await vscode.window.showQuickPick(
-			['No', 'Yes'],
-			{
-				placeHolder: 'Is this a registered nickname that needs NickServ authentication?',
-				ignoreFocusOut: true
+		const portInput = await vscode.window.showInputBox({
+			prompt: 'Port (6697 for TLS, 6667 for plain)',
+			placeHolder: defaults.port.toString(),
+			value: defaults.port.toString(),
+			ignoreFocusOut: true,
+			validateInput: (value) => {
+				if (!value) { return null; } // Allow empty for default
+				const port = parseInt(value, 10);
+				if (isNaN(port) || port < 1 || port > 65535) {
+					return 'Please enter a valid port number';
+				}
+				return null;
 			}
-		);
+		});
+		const port = portInput ? Math.max(1, Math.min(65535, parseInt(portInput, 10))) : defaults.port;
 
-		let nickServPassword: string | undefined;
-		if (needsPassword === 'Yes') {
-			nickServPassword = await vscode.window.showInputBox({
-				prompt: 'NickServ password',
-				placeHolder: 'Enter your registered nickname password',
-				password: true
-			});
-			if (nickServPassword === undefined) {
-				vscode.window.showInformationMessage('Connection cancelled');
-				return;
-			}
-		}
+		const nick = await vscode.window.showInputBox({
+			prompt: 'Choose your nickname',
+			placeHolder: 'mynick',
+			value: defaults.nickname || 'dust',
+			ignoreFocusOut: true
+		});
+
+		const user = await vscode.window.showInputBox({
+			prompt: 'Username (usually same as nickname)',
+			placeHolder: nick || 'myusername',
+			value: defaults.username || nick || 'dust',
+			ignoreFocusOut: true
+		});
+
+		// Optional: Ask for NickServ password (leave blank if not registered)
+		const nickServPassword = await vscode.window.showInputBox({
+			prompt: 'NickServ password (leave blank if not registered)',
+			placeHolder: 'Leave blank to skip',
+			password: true,
+			ignoreFocusOut: true
+		});
 
 		try {
 			// Use real network connections with auto-registration
-			const useTls = port === 6697 || port === 6670; // Common SSL ports
+			const useTls = defaults.forceTLS || port === 6697 || port === 6670; // Common SSL ports or force TLS
 			await connection.connect(host, port, nick || 'dust', {
 				real: true,
 				tls: useTls,
 				autoRegister: true,
 				user: user || nick || 'dust',
-				realname: `Dust IRC User`
+				realname: `Dust IRC User`,
+				timeout: defaults.timeout,
+				rateLimitMs: getMessagingSettings().sendRateLimit
 			});
 
 			// Auto-identify with NickServ if password was provided
@@ -283,7 +459,11 @@ export function activate(context: vscode.ExtensionContext) {
 
 			vscode.window.showInformationMessage(`Connected to ${host}:${port} as ${nick}${useTls ? ' (TLS)' : ''}`);
 		} catch (err: any) {
-			vscode.window.showErrorMessage(`Connection failed: ${err?.message ?? err}`);
+			// Sanitize error messages to prevent information leakage
+			const errorMsg = err?.message?.includes('connect') || err?.message?.includes('timeout')
+				? 'Connection failed. Please check host and port settings.'
+				: 'Connection failed. Please try again.';
+			vscode.window.showErrorMessage(errorMsg);
 		}
 	});
 
@@ -296,16 +476,26 @@ export function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 
-		const promptText = currentChannel
-			? `Message to send to ${currentChannel}`
-			: 'Message to send (no current channel)';
-
-		const text = await vscode.window.showInputBox({ prompt: promptText });
+		const text = await vscode.window.showInputBox({
+			prompt: currentChannel ? `Send message to ${currentChannel}` : 'Send message',
+			placeHolder: 'Type your message...',
+			ignoreFocusOut: true,
+			validateInput: (value) => {
+				if (!value) { return null; } // Allow empty to cancel
+				if (value.length > 450) {
+					return 'Message is too long';
+				}
+				return null;
+			}
+		});
 		if (!text) { return; }
 		try {
 			connection.sendMessage(text);
-			// Log outgoing message to workspace
-			import('./logging.js').then((m) => m.appendOutgoingMessage(workspaceRoot, text));
+			// Log outgoing message to workspace if enabled
+			const messagingSettings = getMessagingSettings();
+			if (messagingSettings.logToFile) {
+				import('./logging.js').then((m) => m.appendOutgoingMessage(workspaceRoot, text));
+			}
 		} catch (err: any) {
 			vscode.window.showErrorMessage(`Send failed: ${err?.message ?? err}`);
 		}
@@ -315,45 +505,67 @@ export function activate(context: vscode.ExtensionContext) {
 		const joinedChannels = connection.getJoinedChannels();
 
 		if (joinedChannels.length === 0) {
-			vscode.window.showWarningMessage('Not joined to any channels. Use "Dust: Join Channel" first.');
+			vscode.window.showWarningMessage('Join a channel first to send messages');
 			return;
 		}
 
 		// Let user pick which channel to send to
 		const targetChannel = await vscode.window.showQuickPick(joinedChannels, {
-			placeHolder: 'Select channel to send message to',
+			placeHolder: 'Choose a channel',
 			ignoreFocusOut: true
 		});
 
 		if (!targetChannel) { return; }
 
 		const text = await vscode.window.showInputBox({
-			prompt: `Message to send to ${targetChannel}`,
-			ignoreFocusOut: true
+			prompt: `Send to ${targetChannel}`,
+			placeHolder: 'Type your message...',
+			ignoreFocusOut: true,
+			validateInput: (value) => {
+				if (!value) { return null; } // Allow empty to cancel
+				if (value.length > 450) {
+					return 'Message is too long';
+				}
+				return null;
+			}
 		});
 
 		if (!text) { return; }
 
 		try {
 			connection.sendMessage(text, targetChannel);
-			// Log outgoing message to workspace
-			import('./logging.js').then((m) => m.appendOutgoingMessage(workspaceRoot, text));
+			// Log outgoing message to workspace if enabled
+			const messagingSettings = getMessagingSettings();
+			if (messagingSettings.logToFile) {
+				import('./logging.js').then((m) => m.appendOutgoingMessage(workspaceRoot, text));
+			}
 		} catch (err: any) {
-			vscode.window.showErrorMessage(`Send failed: ${err?.message ?? err}`);
+			vscode.window.showErrorMessage('Failed to send message. Please check your connection.');
 		}
 	});
 
 	const joinDisposable = vscode.commands.registerCommand('dustirc.join', async () => {
 		const channel = await vscode.window.showInputBox({
-			prompt: 'Channel to join',
-			placeHolder: '#example'
+			prompt: 'Join a channel',
+			placeHolder: '#channel-name',
+			ignoreFocusOut: true,
+			validateInput: (value) => {
+				if (!value) { return null; } // Allow empty to cancel
+				if (value.includes(' ') || /[\r\n\t\x00]/.test(value)) {
+					return 'Channel name cannot contain spaces';
+				}
+				if (value.length > 50) {
+					return 'Channel name is too long';
+				}
+				return null;
+			}
 		});
 		if (!channel) { return; }
 		try {
 			connection.sendJoin(channel);
 			vscode.window.showInformationMessage(`Joining ${channel}...`);
 		} catch (err: any) {
-			vscode.window.showErrorMessage(`Join failed: ${err?.message ?? err}`);
+			vscode.window.showErrorMessage('Failed to join channel. Please check the channel name and try again.');
 		}
 	});
 
@@ -364,7 +576,7 @@ export function activate(context: vscode.ExtensionContext) {
 		let channelToLeave: string | undefined;
 
 		if (joinedChannels.length === 0) {
-			vscode.window.showWarningMessage('Not joined to any channels');
+			vscode.window.showWarningMessage('You haven\'t joined any channels yet');
 			return;
 		} else if (joinedChannels.length === 1) {
 			channelToLeave = joinedChannels[0];
@@ -398,7 +610,7 @@ export function activate(context: vscode.ExtensionContext) {
 		try {
 			const ok = await connection.reconnect();
 			if (ok) { vscode.window.showInformationMessage('Reconnected'); }
-			else { vscode.window.showWarningMessage('Reconnect failed'); }
+			else { vscode.window.showWarningMessage('Couldn\'t reconnect to server'); }
 		} catch (err: any) {
 			vscode.window.showErrorMessage(`Reconnect failed: ${err?.message ?? err}`);
 		}
@@ -415,9 +627,10 @@ export function activate(context: vscode.ExtensionContext) {
 
 	const identifyDisposable = vscode.commands.registerCommand('dustirc.identify', async () => {
 		const password = await vscode.window.showInputBox({
-			prompt: 'NickServ password',
-			placeHolder: 'Enter your registered nickname password',
-			password: true
+			prompt: 'Authenticate with NickServ',
+			placeHolder: 'Password',
+			password: true,
+			ignoreFocusOut: true
 		});
 		if (!password) {
 			vscode.window.showInformationMessage('Identify cancelled');
@@ -445,7 +658,6 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disconnectDisposable);
 	context.subscriptions.push(identifyDisposable);
 	context.subscriptions.push(openOutputDisposable);
-	context.subscriptions.push(disposable);
 
 	// Add cleanup for output channels on extension deactivation
 	context.subscriptions.push({

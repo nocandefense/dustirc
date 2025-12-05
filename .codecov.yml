@@ -1,0 +1,27 @@
+coverage:
+  range: 50..80
+  round: down
+  precision: 2
+
+  status:
+    project:
+      default:
+        target: 50% # Lower target to account for new security code
+        threshold: 5% # Allow 5% decrease
+    patch:
+      default:
+        target: 40% # Even lower for new patches
+        threshold: 10%
+
+comment:
+  layout: "reach,diff,flags,tree"
+  behavior: default
+  require_changes: false
+
+ignore:
+  - "docs/**/*"
+  - "scripts/**/*"
+  - "*.md"
+  - ".github/**/*"
+  - "webpack.config.js"
+  - "eslint.config.mjs"

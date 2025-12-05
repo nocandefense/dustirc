@@ -1,4 +1,6 @@
-# [![CI](https://github.com/nocandefense/dustirc/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/nocandefense/dustirc/actions/workflows/ci.yml) [![Codecov](https://codecov.io/gh/nocandefense/dustirc/branch/main/graph/badge.svg)](https://codecov.io/gh/nocandefense/dustirc)
+# Dust IRC [![CI](https://github.com/nocandefense/dustirc/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/nocandefense/dustirc/actions/workflows/ci.yml) [![Codecov](https://codecov.io/gh/nocandefense/dustirc/branch/main/graph/badge.svg)](https://codecov.io/gh/nocandefense/dustirc)
+
+![Dust IRC Logo](dustirc-logo.png)
 
 Dust is a functional IRC client for Visual Studio Code that provides essential IRC functionality with a focus on simplicity and integration with your coding workflow.
 
@@ -55,7 +57,60 @@ The status bar shows your connection state:
 
 ## Settings
 
-- **`dustirc.autoReconnect`** (boolean): Automatically reconnect when connection is lost (default: false)
+Access these settings through VS Code Settings (`Cmd/Ctrl+,`) or in your `settings.json`:
+
+### Connection Settings
+
+- **`dustirc.autoReconnect`** (boolean, default: `true`): Automatically reconnect when connection is lost
+- **`dustirc.connection.defaultHost`** (string): Default IRC server hostname
+- **`dustirc.connection.defaultPort`** (number, default: `6697`): Default IRC server port
+- **`dustirc.connection.defaultNickname`** (string): Default IRC nickname
+- **`dustirc.connection.defaultUsername`** (string): Default IRC username
+- **`dustirc.connection.timeout`** (number, default: `10000`): Connection timeout in milliseconds
+- **`dustirc.connection.forceTLS`** (boolean, default: `false`): Always use TLS connections
+
+### Reconnection Settings
+
+- **`dustirc.reconnect.maxAttempts`** (number, default: `5`): Maximum auto-reconnect attempts
+- **`dustirc.reconnect.delay`** (number, default: `5000`): Delay between reconnect attempts (ms)
+
+### User Interface Settings
+
+- **`dustirc.ui.showInStatusBar`** (boolean, default: `true`): Show status in status bar
+- **`dustirc.ui.createOutputChannels`** (boolean, default: `true`): Create separate output channels
+- **`dustirc.ui.autoOpenOutput`** (boolean, default: `false`): Auto-open output on messages
+
+### Channel Settings
+
+- **`dustirc.channels.autoJoin`** (array): Channels to auto-join on connect (e.g., `["#general", "#dev"]`)
+
+### Messaging Settings
+
+- **`dustirc.messaging.logToFile`** (boolean, default: `true`): Log messages to workspace file
+- **`dustirc.messaging.sendRateLimit`** (number, default: `200`): Rate limit for sending messages (ms)
+
+### Example Configuration
+
+```json
+{
+  "dustirc.connection.defaultHost": "irc.libera.chat",
+  "dustirc.connection.defaultPort": 6697,
+  "dustirc.connection.defaultNickname": "myuser",
+  "dustirc.autoReconnect": true,
+  "dustirc.channels.autoJoin": ["#general", "#programming"],
+  "dustirc.ui.autoOpenOutput": true
+}
+```
+
+## Features in Action
+
+- ✅ **Settings-driven defaults**: Connection prompts pre-filled with your preferences
+- ✅ **Auto-reconnect with retry logic**: Configurable attempts and delays
+- ✅ **Auto-join channels**: Automatically join your favorite channels on connect
+- ✅ **Customizable UI**: Control status bar display, output channel behavior
+- ✅ **Smart message logging**: Optional file logging with timestamp tracking
+- ✅ **Connection timeout**: Configurable timeout for network connections
+- ✅ **Force TLS**: Override automatic TLS detection
 
 ## Message Flow
 
