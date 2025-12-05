@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 import { IrcConnection } from './irc/connection';
 import type { IrcMessage } from './irc/types';
 import { RoomsProvider } from './views/roomsProvider';
+import { ChatPanel } from './views/chatPanel';
 
 // Settings helper functions
 function getConfig() {
@@ -35,7 +36,8 @@ function getUISettings() {
 	return {
 		showInStatusBar: config.get<boolean>('ui.showInStatusBar', true),
 		createOutputChannels: config.get<boolean>('ui.createOutputChannels', true),
-		autoOpenOutput: config.get<boolean>('ui.autoOpenOutput', true)
+		autoOpenOutput: config.get<boolean>('ui.autoOpenOutput', true),
+		useWebview: config.get<boolean>('ui.useWebview', true)
 	};
 }
 
@@ -331,6 +333,11 @@ export function activate(context: vscode.ExtensionContext) {
 			statusBar.text = 'Dust: connected';
 		}
 
+		// Open webview chat panel if enabled
+		if (uiSettings.useWebview) {
+			ChatPanel.createOrShow(context.extensionUri, connection);
+		}
+
 		// Clear state from previous connection
 		roomsProvider.clear();
 		for (const [channel, channelOutput] of channelOutputs) {
@@ -597,6 +604,10 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
+	const openChatDisposable = vscode.commands.registerCommand('dustirc.openChat', () => {
+		ChatPanel.createOrShow(context.extensionUri, connection);
+	});
+
 	const pingDisposable = vscode.commands.registerCommand('dustirc.ping', async () => {
 		try {
 			const rtt = await connection.ping();
@@ -651,6 +662,7 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(connectDisposable);
 	context.subscriptions.push(sayDisposable);
 	context.subscriptions.push(sayToDisposable);
+	context.subscriptions.push(openChatDisposable);
 	context.subscriptions.push(joinDisposable);
 	context.subscriptions.push(partDisposable);
 	context.subscriptions.push(pingDisposable);

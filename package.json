@@ -107,8 +107,13 @@
         },
         "dustirc.ui.autoOpenOutput": {
           "type": "boolean",
-          "default": false,
+          "default": true,
           "description": "Automatically open output channel when receiving messages"
+        },
+        "dustirc.ui.useWebview": {
+          "type": "boolean",
+          "default": true,
+          "description": "Use webview-based chat interface (disable to use command palette only)"
         },
         "dustirc.channels.autoJoin": {
           "type": "array",
@@ -136,6 +141,10 @@
       {
         "command": "dustirc.connect",
         "title": "Dust: Connect"
+      },
+      {
+        "command": "dustirc.openChat",
+        "title": "IRC: Open Chat"
       },
       {
         "command": "dustirc.say",

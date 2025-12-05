@@ -83,6 +83,13 @@ export class IrcConnection {
     }
 
     /**
+     * Get the current nickname.
+     */
+    getNick(): string | null {
+        return this.nick;
+    }
+
+    /**
      * Connect to an IRC server (mocked async).
      * Throws on invalid args or if already connected.
      */
