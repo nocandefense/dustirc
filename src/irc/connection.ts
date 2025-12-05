@@ -147,10 +147,17 @@ export class IrcConnection {
                 reject(err);
             };
 
+            let timeoutCleared = false;
             const onConnect = () => {
                 this.connected = true;
                 this.socket = socket;
                 this.recvBuffer = '';
+                // Clear connection timeout immediately - socket is successfully connected
+                if (socket && !timeoutCleared) {
+                    timeoutCleared = true;
+                    socket.setTimeout(0);
+                    console.log('[DEBUG] Socket timeout disabled on successful connection');
+                }
                 // start pump and wire socket events
                 this.startSendPump();
                 this.emitter.emit('connect');
@@ -187,6 +194,7 @@ export class IrcConnection {
 
             // socket data handler - buffer until CRLF and parse lines
             socket.on('data', (chunk: string) => {
+                console.log('[DEBUG] Socket received data, length:', chunk.length, 'has PRIVMSG:', chunk.includes('PRIVMSG'));
                 this.recvBuffer += chunk;
                 let idx;
                 while ((idx = this.recvBuffer.indexOf('\n')) !== -1) {
@@ -202,6 +210,7 @@ export class IrcConnection {
 
             socket.on('close', (hadError: boolean) => {
                 // mirror previous simulated disconnect behavior
+                console.log('[DEBUG] Socket closed! hadError:', hadError, 'connected:', this.connected);
                 this.connected = false;
                 this.socket = null;
                 this.emitter.emit('disconnect');
@@ -211,16 +220,25 @@ export class IrcConnection {
 
             socket.on('end', () => {
                 // server closed
+                console.log('[DEBUG] Socket end event! connected:', this.connected);
                 if (this.connected) {
                     this.disconnect();
                 }
             });
 
-            // apply an optional connect timeout
+            // apply an optional connect timeout (only for the initial connection)
+            console.log('[DEBUG] Checking timeout options:', { timeout: options?.timeout, type: typeof (options?.timeout) });
             if (options?.timeout && typeof (options.timeout) === 'number') {
+                console.log('[DEBUG] Setting socket timeout to:', options.timeout, 'ms');
                 socket.setTimeout(options.timeout, () => {
-                    const err = new Error('Connection timeout');
-                    socket.destroy(err);
+                    console.log('[DEBUG] Socket timeout fired! Connected:', this.connected, 'Cleared:', timeoutCleared);
+                    if (!this.connected && !timeoutCleared) {
+                        // Only timeout if we haven't connected yet
+                        console.log('[DEBUG] Not connected yet, destroying socket');
+                        timeoutCleared = true;
+                        const err = new Error('Connection timeout');
+                        socket.destroy(err);
+                    }
                 });
             }
         });
