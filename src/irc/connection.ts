@@ -82,6 +82,10 @@ export class IrcConnection {
         this.emitter.on(event, listener);
     }
 
+    removeListener(event: IrcEvents, listener: (...args: any[]) => void) {
+        this.emitter.removeListener(event, listener);
+    }
+
     /**
      * Get the current nickname.
      */

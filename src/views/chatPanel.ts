@@ -2,6 +2,25 @@ import * as vscode from 'vscode';
 import { IrcConnection } from '../irc/connection';
 import type { IrcMessage } from '../irc/types';
 
+// Message types sent to webview
+interface WebviewMessage {
+    type: 'message' | 'join' | 'part' | 'channelList' | 'channelSwitched' | 'disconnected';
+    channel?: string;
+    nick?: string;
+    text?: string;
+    timestamp?: string;
+    own?: boolean;
+    channels?: string[];
+    current?: string;
+}
+
+// Messages received from webview
+interface WebviewCommand {
+    command: 'sendMessage' | 'switchChannel';
+    text?: string;
+    channel?: string;
+}
+
 export class ChatPanel {
     public static currentPanel: ChatPanel | undefined;
     private readonly _panel: vscode.WebviewPanel;
@@ -10,6 +29,9 @@ export class ChatPanel {
     private _connection: IrcConnection;
     private _currentChannel: string = '';
     private _channels: Set<string> = new Set();
+
+    // Store IRC event listeners for cleanup
+    private _ircListeners: Map<string, (...args: any[]) => void> = new Map();
 
     public static createOrShow(extensionUri: vscode.Uri, connection: IrcConnection) {
         const column = vscode.window.activeTextEditor
@@ -51,13 +73,17 @@ export class ChatPanel {
 
         // Handle messages from the webview
         this._panel.webview.onDidReceiveMessage(
-            message => {
+            (message: WebviewCommand) => {
                 switch (message.command) {
                     case 'sendMessage':
-                        this._handleSendMessage(message.text, message.channel);
+                        if (message.text && message.channel) {
+                            this._handleSendMessage(message.text, message.channel);
+                        }
                         return;
                     case 'switchChannel':
-                        this._handleSwitchChannel(message.channel);
+                        if (message.channel) {
+                            this._handleSwitchChannel(message.channel);
+                        }
                         return;
                 }
             },
@@ -71,7 +97,7 @@ export class ChatPanel {
 
     private _setupIrcListeners() {
         // Handle incoming messages
-        this._connection.on('privmsg', (msg: IrcMessage) => {
+        const privmsgHandler = (msg: IrcMessage) => {
             const channel = msg.params[0] || '';
             const nick = msg.from || msg.prefix?.split('!')[0] || 'unknown';
             const text = msg.trailing || '';
@@ -83,10 +109,12 @@ export class ChatPanel {
                 text,
                 timestamp: new Date().toISOString()
             });
-        });
+        };
+        this._connection.on('privmsg', privmsgHandler);
+        this._ircListeners.set('privmsg', privmsgHandler);
 
         // Handle joins
-        this._connection.on('join', (msg: IrcMessage) => {
+        const joinHandler = (msg: IrcMessage) => {
             const channel = msg.params[0] || msg.trailing || '';
             const nick = msg.from || msg.prefix?.split('!')[0] || 'unknown';
 
@@ -108,10 +136,12 @@ export class ChatPanel {
                 channels: Array.from(this._channels),
                 current: this._currentChannel
             });
-        });
+        };
+        this._connection.on('join', joinHandler);
+        this._ircListeners.set('join', joinHandler);
 
         // Handle parts
-        this._connection.on('part', (msg: IrcMessage) => {
+        const partHandler = (msg: IrcMessage) => {
             const channel = msg.params[0] || '';
             const nick = msg.from || msg.prefix?.split('!')[0] || 'unknown';
 
@@ -121,31 +151,50 @@ export class ChatPanel {
                 nick,
                 timestamp: new Date().toISOString()
             });
-        });
+        };
+        this._connection.on('part', partHandler);
+        this._ircListeners.set('part', partHandler);
 
         // Handle disconnect
-        this._connection.on('disconnect', () => {
+        const disconnectHandler = () => {
             this._sendToWebview({
                 type: 'disconnected'
             });
-        });
+        };
+        this._connection.on('disconnect', disconnectHandler);
+        this._ircListeners.set('disconnect', disconnectHandler);
     }
 
     private _handleSendMessage(text: string, channel: string) {
-        if (!text || !channel) {
+        // Validate inputs
+        const trimmedText = text.trim();
+        if (!trimmedText || !channel) {
             return;
         }
 
-        // Send via IRC connection
-        this._connection.sendMessage(text, channel);        // Echo to webview (for immediate feedback)
-        this._sendToWebview({
-            type: 'message',
-            channel,
-            nick: this._connection.getNick() || 'you',
-            text,
-            timestamp: new Date().toISOString(),
-            own: true
-        });
+        // Enforce reasonable message length (IRC protocol limit is ~510 bytes)
+        if (trimmedText.length > 450) {
+            console.warn('[ChatPanel] Message too long, truncating');
+        }
+        const safeText = trimmedText.substring(0, 450);
+
+        try {
+            // Send via IRC connection
+            this._connection.sendMessage(safeText, channel);
+
+            // Echo to webview (for immediate feedback)
+            this._sendToWebview({
+                type: 'message',
+                channel,
+                nick: this._connection.getNick() || 'you',
+                text: safeText,
+                timestamp: new Date().toISOString(),
+                own: true
+            });
+        } catch (err) {
+            console.error('[ChatPanel] Failed to send message:', err);
+            // Could send error notification to webview here
+        }
     }
 
     private _handleSwitchChannel(channel: string) {
@@ -156,8 +205,12 @@ export class ChatPanel {
         });
     }
 
-    private _sendToWebview(message: any) {
-        this._panel.webview.postMessage(message);
+    private _sendToWebview(message: WebviewMessage) {
+        try {
+            this._panel.webview.postMessage(message);
+        } catch (err) {
+            console.error('[ChatPanel] Failed to send message to webview:', err);
+        }
     }
 
     private _update() {
@@ -450,6 +503,12 @@ export class ChatPanel {
 
     public dispose() {
         ChatPanel.currentPanel = undefined;
+
+        // Remove IRC event listeners to prevent memory leaks
+        for (const [event, handler] of this._ircListeners) {
+            this._connection.removeListener(event as any, handler);
+        }
+        this._ircListeners.clear();
 
         // Clean up our resources
         this._panel.dispose();
