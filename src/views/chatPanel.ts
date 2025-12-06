@@ -1,245 +1,264 @@
 import * as vscode from 'vscode';
 import { IrcConnection } from '../irc/connection';
 import type { IrcMessage } from '../irc/types';
+import { RoomsProvider } from './roomsProvider';
 
 // Message types sent to webview
 interface WebviewMessage {
-    type: 'message' | 'join' | 'part' | 'channelList' | 'channelSwitched' | 'disconnected';
-    channel?: string;
-    nick?: string;
-    text?: string;
-    timestamp?: string;
-    own?: boolean;
-    channels?: string[];
-    current?: string;
+	type: 'message' | 'join' | 'part' | 'channelList' | 'channelSwitched' | 'disconnected';
+	channel?: string;
+	nick?: string;
+	text?: string;
+	timestamp?: string;
+	own?: boolean;
+	channels?: string[];
+	current?: string;
 }
 
 // Messages received from webview
 interface WebviewCommand {
-    command: 'sendMessage' | 'switchChannel';
-    text?: string;
-    channel?: string;
+	command: 'sendMessage' | 'switchChannel';
+	text?: string;
+	channel?: string;
 }
 
 export class ChatPanel {
-    public static currentPanel: ChatPanel | undefined;
-    private readonly _panel: vscode.WebviewPanel;
-    private readonly _extensionUri: vscode.Uri;
-    private _disposables: vscode.Disposable[] = [];
-    private _connection: IrcConnection;
-    private _currentChannel: string = '';
-    private _channels: Set<string> = new Set();
+	public static currentPanel: ChatPanel | undefined;
+	private readonly _panel: vscode.WebviewPanel;
+	private readonly _extensionUri: vscode.Uri;
+	private _disposables: vscode.Disposable[] = [];
+	private _connection: IrcConnection;
+	private _roomsProvider: RoomsProvider;
+	private _currentChannel: string = '';
+	private _channels: Set<string> = new Set();
 
-    // Store IRC event listeners for cleanup
-    private _ircListeners: Map<string, (...args: any[]) => void> = new Map();
+	// Store IRC event listeners for cleanup
+	private _ircListeners: Map<string, (...args: any[]) => void> = new Map();
 
-    // Rate limiting
-    private _msgTimestamps: number[] = [];
-    private readonly _maxBurst = 5;
-    private readonly _burstWindowMs = 2000;
-    private readonly _minIntervalMs = 200;
+	// Rate limiting
+	private _msgTimestamps: number[] = [];
+	private readonly _maxBurst = 5;
+	private readonly _burstWindowMs = 2000;
+	private readonly _minIntervalMs = 200;
 
-    public static createOrShow(extensionUri: vscode.Uri, connection: IrcConnection) {
-        const column = vscode.window.activeTextEditor
-            ? vscode.window.activeTextEditor.viewColumn
-            : undefined;
+	public static createOrShow(extensionUri: vscode.Uri, connection: IrcConnection, roomsProvider: RoomsProvider) {
+		const column = vscode.window.activeTextEditor
+			? vscode.window.activeTextEditor.viewColumn
+			: undefined;
 
-        // If we already have a panel, show it
-        if (ChatPanel.currentPanel) {
-            ChatPanel.currentPanel._panel.reveal(column);
-            return;
-        }
+		// If we already have a panel, show it
+		if (ChatPanel.currentPanel) {
+			ChatPanel.currentPanel._panel.reveal(column);
+			return;
+		}
 
-        // Otherwise, create a new panel
-        const panel = vscode.window.createWebviewPanel(
-            'dustircChat',
-            'Dust IRC',
-            column || vscode.ViewColumn.One,
-            {
-                enableScripts: true,
-                retainContextWhenHidden: true,
-                localResourceRoots: [extensionUri]
-            }
-        );
+		// Otherwise, create a new panel
+		const panel = vscode.window.createWebviewPanel(
+			'dustircChat',
+			'Dust IRC',
+			column || vscode.ViewColumn.One,
+			{
+				enableScripts: true,
+				retainContextWhenHidden: true,
+				localResourceRoots: [extensionUri]
+			}
+		);
 
-        ChatPanel.currentPanel = new ChatPanel(panel, extensionUri, connection);
-    }
+		ChatPanel.currentPanel = new ChatPanel(panel, extensionUri, connection, roomsProvider);
+	}
 
-    private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri, connection: IrcConnection) {
-        this._panel = panel;
-        this._extensionUri = extensionUri;
-        this._connection = connection;
+	private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri, connection: IrcConnection, roomsProvider: RoomsProvider) {
+		this._panel = panel;
+		this._extensionUri = extensionUri;
+		this._connection = connection;
+		this._roomsProvider = roomsProvider;
 
-        // Set the webview's initial html content
-        this._update();
+		// Set the webview's initial html content
+		this._update();
 
-        // Listen for when the panel is disposed
-        // This happens when the user closes the panel or when the panel is closed programmatically
-        this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
+		// Listen for when the panel is disposed
+		// This happens when the user closes the panel or when the panel is closed programmatically
+		this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
 
-        // Handle messages from the webview
-        this._panel.webview.onDidReceiveMessage(
-            (message: WebviewCommand) => {
-                switch (message.command) {
-                    case 'sendMessage':
-                        if (message.text && message.channel) {
-                            this._handleSendMessage(message.text, message.channel);
-                        }
-                        return;
-                    case 'switchChannel':
-                        if (message.channel) {
-                            this._handleSwitchChannel(message.channel);
-                        }
-                        return;
-                }
-            },
-            null,
-            this._disposables
-        );
+		// Handle messages from the webview
+		this._panel.webview.onDidReceiveMessage(
+			(message: WebviewCommand) => {
+				switch (message.command) {
+					case 'sendMessage':
+						if (message.text && message.channel) {
+							this._handleSendMessage(message.text, message.channel);
+						}
+						return;
+					case 'switchChannel':
+						if (message.channel) {
+							this._handleSwitchChannel(message.channel);
+						}
+						return;
+				}
+			},
+			null,
+			this._disposables
+		);
 
-        // Listen for IRC events
-        this._setupIrcListeners();
-    }
+		// Listen for IRC events
+		this._setupIrcListeners();
+	}
 
-    private _setupIrcListeners() {
-        // Handle incoming messages
-        const privmsgHandler = (msg: IrcMessage) => {
-            const channel = msg.params[0] || '';
-            const nick = msg.from || msg.prefix?.split('!')[0] || 'unknown';
-            const text = msg.trailing || '';
+	private _setupIrcListeners() {
+		// Handle incoming messages
+		const privmsgHandler = (msg: IrcMessage) => {
+			const channel = msg.params[0] || '';
+			const nick = msg.from || msg.prefix?.split('!')[0] || 'unknown';
+			const text = msg.trailing || '';
 
-            this._sendToWebview({
-                type: 'message',
-                channel,
-                nick,
-                text,
-                timestamp: new Date().toISOString()
-            });
-        };
-        this._connection.on('privmsg', privmsgHandler);
-        this._ircListeners.set('privmsg', privmsgHandler);
+			this._sendToWebview({
+				type: 'message',
+				channel,
+				nick,
+				text,
+				timestamp: new Date().toISOString()
+			});
+		};
+		this._connection.on('privmsg', privmsgHandler);
+		this._ircListeners.set('privmsg', privmsgHandler);
 
-        // Handle joins
-        const joinHandler = (msg: IrcMessage) => {
-            const channel = msg.params[0] || msg.trailing || '';
-            const nick = msg.from || msg.prefix?.split('!')[0] || 'unknown';
+		// Handle joins
+		const joinHandler = (msg: IrcMessage) => {
+			const channel = msg.params[0] || msg.trailing || '';
+			const nick = msg.from || msg.prefix?.split('!')[0] || 'unknown';
 
-            this._channels.add(channel);
-            if (!this._currentChannel) {
-                this._currentChannel = channel;
-            }
+			this._channels.add(channel);
+			if (!this._currentChannel) {
+				this._currentChannel = channel;
+			}
 
-            this._sendToWebview({
-                type: 'join',
-                channel,
-                nick,
-                timestamp: new Date().toISOString()
-            });
+			this._sendToWebview({
+				type: 'join',
+				channel,
+				nick,
+				timestamp: new Date().toISOString()
+			});
 
-            // Update channel list
-            this._sendToWebview({
-                type: 'channelList',
-                channels: Array.from(this._channels),
-                current: this._currentChannel
-            });
-        };
-        this._connection.on('join', joinHandler);
-        this._ircListeners.set('join', joinHandler);
+			// Update channel list
+			this._sendToWebview({
+				type: 'channelList',
+				channels: Array.from(this._channels),
+				current: this._currentChannel
+			});
+		};
+		this._connection.on('join', joinHandler);
+		this._ircListeners.set('join', joinHandler);
 
-        // Handle parts
-        const partHandler = (msg: IrcMessage) => {
-            const channel = msg.params[0] || '';
-            const nick = msg.from || msg.prefix?.split('!')[0] || 'unknown';
+		// Handle parts
+		const partHandler = (msg: IrcMessage) => {
+			const channel = msg.params[0] || '';
+			const nick = msg.from || msg.prefix?.split('!')[0] || 'unknown';
 
-            this._sendToWebview({
-                type: 'part',
-                channel,
-                nick,
-                timestamp: new Date().toISOString()
-            });
-        };
-        this._connection.on('part', partHandler);
-        this._ircListeners.set('part', partHandler);
+			this._sendToWebview({
+				type: 'part',
+				channel,
+				nick,
+				timestamp: new Date().toISOString()
+			});
+		};
+		this._connection.on('part', partHandler);
+		this._ircListeners.set('part', partHandler);
 
-        // Handle disconnect
-        const disconnectHandler = () => {
-            this._sendToWebview({
-                type: 'disconnected'
-            });
-        };
-        this._connection.on('disconnect', disconnectHandler);
-        this._ircListeners.set('disconnect', disconnectHandler);
-    }
+		// Handle disconnect
+		const disconnectHandler = () => {
+			this._sendToWebview({
+				type: 'disconnected'
+			});
+		};
+		this._connection.on('disconnect', disconnectHandler);
+		this._ircListeners.set('disconnect', disconnectHandler);
+	}
 
-    private _handleSendMessage(text: string, channel: string) {
-        const trimmedText = text.trim();
-        if (!trimmedText || !channel) {
-            return;
-        }
+	private _handleSendMessage(text: string, channel: string) {
+		const trimmedText = text.trim();
+		if (!trimmedText || !channel) {
+			return;
+		}
 
-        if (this._isRateLimited()) {
-            return;
-        }
+		if (this._isRateLimited()) {
+			return;
+		}
 
-        const safeText = trimmedText.substring(0, 450);
-        try {
-            // Send via IRC connection
-            this._connection.sendMessage(safeText, channel);
+		const safeText = trimmedText.substring(0, 450);
+		try {
+			// Send via IRC connection
+			this._connection.sendMessage(safeText, channel);
 
-            // Echo to webview (for immediate feedback)
-            this._sendToWebview({
-                type: 'message',
-                channel,
-                nick: this._connection.getNick() || 'you',
-                text: safeText,
-                timestamp: new Date().toISOString(),
-                own: true
-            });
-        } catch (err) {
-            console.error('[ChatPanel] Failed to send message:', err);
-        }
-    }
+			// Echo to webview (for immediate feedback)
+			this._sendToWebview({
+				type: 'message',
+				channel,
+				nick: this._connection.getNick() || 'you',
+				text: safeText,
+				timestamp: new Date().toISOString(),
+				own: true
+			});
+		} catch (err) {
+			console.error('[ChatPanel] Failed to send message:', err);
+		}
+	}
 
-    private _isRateLimited(): boolean {
-        const now = Date.now();
-        this._msgTimestamps = this._msgTimestamps.filter(t => now - t < this._burstWindowMs);
+	private _isRateLimited(): boolean {
+		const now = Date.now();
+		this._msgTimestamps = this._msgTimestamps.filter(t => now - t < this._burstWindowMs);
 
-        if (this._msgTimestamps.length >= this._maxBurst) {
-            if (now - this._msgTimestamps[0] < this._burstWindowMs) { return true; }
-        }
+		if (this._msgTimestamps.length >= this._maxBurst) {
+			if (now - this._msgTimestamps[0] < this._burstWindowMs) { return true; }
+		}
 
-        if (this._msgTimestamps.length > 0) {
-            const last = this._msgTimestamps[this._msgTimestamps.length - 1];
-            if (now - last < this._minIntervalMs) { return true; }
-        }
+		if (this._msgTimestamps.length > 0) {
+			const last = this._msgTimestamps[this._msgTimestamps.length - 1];
+			if (now - last < this._minIntervalMs) { return true; }
+		}
 
-        this._msgTimestamps.push(now);
-        return false;
-    }
+		this._msgTimestamps.push(now);
+		return false;
+	}
 
-    private _handleSwitchChannel(channel: string) {
-        this._currentChannel = channel;
-        this._sendToWebview({
-            type: 'channelSwitched',
-            channel
-        });
-    }
+	private _handleSwitchChannel(channel: string) {
+		this._currentChannel = channel;
 
-    private _sendToWebview(message: WebviewMessage) {
-        try {
-            this._panel.webview.postMessage(message);
-        } catch (err) {
-            console.error('[ChatPanel] Failed to send message to webview:', err);
-        }
-    }
+		// Sync with IRC connection's current channel
+		this._connection.setCurrentChannel(channel);
 
-    private _update() {
-        const webview = this._panel.webview;
-        this._panel.webview.html = this._getHtmlForWebview(webview);
-    }
+		// Refresh sidebar to show current channel indicator
+		this._roomsProvider.refresh();
 
-    private _getHtmlForWebview(webview: vscode.Webview) {
-        return `<!DOCTYPE html>
+		this._sendToWebview({
+			type: 'channelSwitched',
+			channel
+		});
+	}
+
+	// Public method to switch channel from external commands (e.g., sidebar clicks)
+	public switchToChannel(channel: string) {
+		this._currentChannel = channel;
+		this._sendToWebview({
+			type: 'channelSwitched',
+			channel
+		});
+	}
+
+	private _sendToWebview(message: WebviewMessage) {
+		try {
+			this._panel.webview.postMessage(message);
+		} catch (err) {
+			console.error('[ChatPanel] Failed to send message to webview:', err);
+		}
+	}
+
+	private _update() {
+		const webview = this._panel.webview;
+		this._panel.webview.html = this._getHtmlForWebview(webview);
+	}
+
+	private _getHtmlForWebview(webview: vscode.Webview) {
+		return `<!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
@@ -527,25 +546,25 @@ export class ChatPanel {
 	</script>
 </body>
 </html>`;
-    }
+	}
 
-    public dispose() {
-        ChatPanel.currentPanel = undefined;
+	public dispose() {
+		ChatPanel.currentPanel = undefined;
 
-        // Remove IRC event listeners to prevent memory leaks
-        for (const [event, handler] of this._ircListeners) {
-            this._connection.removeListener(event as any, handler);
-        }
-        this._ircListeners.clear();
+		// Remove IRC event listeners to prevent memory leaks
+		for (const [event, handler] of this._ircListeners) {
+			this._connection.removeListener(event as any, handler);
+		}
+		this._ircListeners.clear();
 
-        // Clean up our resources
-        this._panel.dispose();
+		// Clean up our resources
+		this._panel.dispose();
 
-        while (this._disposables.length) {
-            const disposable = this._disposables.pop();
-            if (disposable) {
-                disposable.dispose();
-            }
-        }
-    }
+		while (this._disposables.length) {
+			const disposable = this._disposables.pop();
+			if (disposable) {
+				disposable.dispose();
+			}
+		}
+	}
 }

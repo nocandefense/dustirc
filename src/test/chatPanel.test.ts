@@ -2,14 +2,17 @@ import * as assert from 'assert';
 import * as vscode from 'vscode';
 import { ChatPanel } from '../views/chatPanel';
 import { IrcConnection } from '../irc/connection';
+import { RoomsProvider } from '../views/roomsProvider';
 
 suite('ChatPanel Test Suite', () => {
     let connection: IrcConnection;
     let extensionUri: vscode.Uri;
+    let roomsProvider: RoomsProvider;
 
     setup(() => {
         connection = new IrcConnection();
         extensionUri = vscode.Uri.file(__dirname);
+        roomsProvider = new RoomsProvider(connection);
     });
 
     teardown(() => {
@@ -21,22 +24,22 @@ suite('ChatPanel Test Suite', () => {
 
     test('createOrShow creates a new panel if none exists', () => {
         assert.strictEqual(ChatPanel.currentPanel, undefined);
-        ChatPanel.createOrShow(extensionUri, connection);
+        ChatPanel.createOrShow(extensionUri, connection, roomsProvider);
         assert.notStrictEqual(ChatPanel.currentPanel, undefined);
     });
 
     test('createOrShow reuses existing panel', () => {
-        ChatPanel.createOrShow(extensionUri, connection);
+        ChatPanel.createOrShow(extensionUri, connection, roomsProvider);
         const firstPanel = ChatPanel.currentPanel;
 
-        ChatPanel.createOrShow(extensionUri, connection);
+        ChatPanel.createOrShow(extensionUri, connection, roomsProvider);
         const secondPanel = ChatPanel.currentPanel;
 
         assert.strictEqual(firstPanel, secondPanel, 'Should reuse the same panel');
     });
 
     test('dispose clears currentPanel reference', () => {
-        ChatPanel.createOrShow(extensionUri, connection);
+        ChatPanel.createOrShow(extensionUri, connection, roomsProvider);
         assert.notStrictEqual(ChatPanel.currentPanel, undefined);
 
         ChatPanel.currentPanel!.dispose();
@@ -72,14 +75,16 @@ suite('ChatPanel Test Suite', () => {
 suite('ChatPanel Rate Limiting', () => {
     let connection: IrcConnection;
     let extensionUri: vscode.Uri;
+    let roomsProvider: RoomsProvider;
     let panel: ChatPanel;
 
     setup(async function () {
         this.timeout(5000);
         connection = new IrcConnection();
         extensionUri = vscode.Uri.file(__dirname);
+        roomsProvider = new RoomsProvider(connection);
         await connection.connect('test.server', 6667, 'testnick');
-        ChatPanel.createOrShow(extensionUri, connection);
+        ChatPanel.createOrShow(extensionUri, connection, roomsProvider);
         panel = ChatPanel.currentPanel!;
     });
 
