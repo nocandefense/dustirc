@@ -97,13 +97,21 @@ export function activate(context: vscode.ExtensionContext) {
 		// Refresh rooms panel to show current channel indicator
 		roomsProvider.refresh();
 
-		// Show the specific channel's output if it exists, otherwise show main output
-		const channelOutput = channelOutputs.get(room);
-		if (channelOutput) {
-			channelOutput.show(true);
-		} else {
-			output.show(true);
-			output.appendLine(`Opened room: ${room} (no messages yet)`);
+		// Notify webview of channel switch if it's open
+		if (ChatPanel.currentPanel) {
+			ChatPanel.currentPanel.switchToChannel(room);
+		}
+
+		const uiSettings = getUISettings();
+		// Show output only if not using webview
+		if (!uiSettings.useWebview) {
+			const channelOutput = channelOutputs.get(room);
+			if (channelOutput) {
+				channelOutput.show(true);
+			} else {
+				output.show(true);
+				output.appendLine(`Opened room: ${room} (no messages yet)`);
+			}
 		}
 
 		// Provide user feedback
@@ -205,15 +213,15 @@ export function activate(context: vscode.ExtensionContext) {
 			const channelOutput = getOrCreateChannelOutput(target);
 			channelOutput.appendLine(`${nick}: ${m.text}`);
 
-			// Auto-open output if enabled
-			if (uiSettings.autoOpenOutput) {
+			// Auto-open output if enabled and webview is not being used
+			if (uiSettings.autoOpenOutput && !uiSettings.useWebview) {
 				channelOutput.show(true);
 			}
 		} else {
 			// Private message - route to main output
 			output.appendLine(`[SENT] ${nick} → ${target}: ${m.text}`);
 
-			if (uiSettings.autoOpenOutput) {
+			if (uiSettings.autoOpenOutput && !uiSettings.useWebview) {
 				output.show(true);
 			}
 		}
@@ -232,16 +240,16 @@ export function activate(context: vscode.ExtensionContext) {
 			const channelOutput = getOrCreateChannelOutput(target);
 			channelOutput.appendLine(`${nick}: ${m.trailing}`);
 
-			// Auto-open output if enabled
-			if (uiSettings.autoOpenOutput) {
+			// Auto-open output if enabled and webview is not being used
+			if (uiSettings.autoOpenOutput && !uiSettings.useWebview) {
 				channelOutput.show(true);
 			}
 		} else {
 			// Private message - route to main output with special formatting
 			output.appendLine(`[PRIVATE] ${nick}: ${m.trailing}`);
 
-			// Auto-open output if enabled
-			if (uiSettings.autoOpenOutput) {
+			// Auto-open output if enabled and webview is not being used
+			if (uiSettings.autoOpenOutput && !uiSettings.useWebview) {
 				output.show(true);
 			}
 		}
@@ -320,7 +328,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 		// Open webview chat panel if enabled
 		if (uiSettings.useWebview) {
-			ChatPanel.createOrShow(context.extensionUri, connection);
+			ChatPanel.createOrShow(context.extensionUri, connection, roomsProvider);
 		}
 
 		// Clear state from previous connection
@@ -590,7 +598,7 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	const openChatDisposable = vscode.commands.registerCommand('dustirc.openChat', () => {
-		ChatPanel.createOrShow(context.extensionUri, connection);
+		ChatPanel.createOrShow(context.extensionUri, connection, roomsProvider);
 	});
 
 	const pingDisposable = vscode.commands.registerCommand('dustirc.ping', async () => {

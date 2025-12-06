@@ -107,8 +107,8 @@
         },
         "dustirc.ui.autoOpenOutput": {
           "type": "boolean",
-          "default": true,
-          "description": "Automatically open output channel when receiving messages"
+          "default": false,
+          "description": "Automatically open output channel when receiving messages (not needed when using webview)"
         },
         "dustirc.ui.useWebview": {
           "type": "boolean",

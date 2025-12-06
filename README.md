@@ -83,7 +83,7 @@ Access these settings through VS Code Settings (`Cmd/Ctrl+,`) or in your `settin
 - **`dustirc.ui.useWebview`** (boolean, default: `true`): Use webview chat interface (disable for command palette only)
 - **`dustirc.ui.showInStatusBar`** (boolean, default: `true`): Show status in status bar
 - **`dustirc.ui.createOutputChannels`** (boolean, default: `true`): Create separate output channels
-- **`dustirc.ui.autoOpenOutput`** (boolean, default: `true`): Auto-open output on messages
+- **`dustirc.ui.autoOpenOutput`** (boolean, default: `false`): Auto-open output on messages (not needed when using webview)
 
 ### Channel Settings
 
