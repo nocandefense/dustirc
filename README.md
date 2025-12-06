@@ -85,12 +85,6 @@ Access these settings through VS Code Settings (`Cmd/Ctrl+,`) or in your `settin
 - **`dustirc.ui.createOutputChannels`** (boolean, default: `true`): Create separate output channels
 - **`dustirc.ui.autoOpenOutput`** (boolean, default: `true`): Auto-open output on messages
 
-### User Interface Settings
-
-- **`dustirc.ui.showInStatusBar`** (boolean, default: `true`): Show status in status bar
-- **`dustirc.ui.createOutputChannels`** (boolean, default: `true`): Create separate output channels
-- **`dustirc.ui.autoOpenOutput`** (boolean, default: `false`): Auto-open output on messages
-
 ### Channel Settings
 
 - **`dustirc.channels.autoJoin`** (array): Channels to auto-join on connect (e.g., `["#general", "#dev"]`)
