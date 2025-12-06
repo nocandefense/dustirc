@@ -322,8 +322,17 @@ export class ChatPanel {
 			background-color: var(--vscode-button-background);
 			color: var(--vscode-button-foreground);
 		}
-		#messages {
+		#contentArea {
 			flex: 1;
+			position: relative;
+			overflow: hidden;
+		}
+		#messages {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
 			overflow-y: auto;
 			padding: 12px;
 			scroll-behavior: smooth;
@@ -394,10 +403,14 @@ export class ChatPanel {
 		}
 		#emptyState {
 			display: none;
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
 			flex-direction: column;
 			align-items: center;
 			justify-content: center;
-			height: 100%;
 			padding: 40px;
 			text-align: center;
 			color: var(--vscode-descriptionForeground);
@@ -433,14 +446,16 @@ export class ChatPanel {
 		<div id="channelTabs"></div>
 		<span id="statusIndicator"></span>
 	</div>
-	<div id="emptyState">
-		<h2>No Channels Joined</h2>
-		<p>You haven't joined any IRC channels yet.</p>
-		<p>To join a channel:</p>
-		<p class="shortcut">Press Cmd+Shift+P (Mac) or Ctrl+Shift+P (Windows/Linux)</p>
-		<p>Then run: <code>IRC: Join Channel</code></p>
+	<div id="contentArea">
+		<div id="emptyState">
+			<h2>No Channels Joined</h2>
+			<p>You haven't joined any IRC channels yet.</p>
+			<p>To join a channel:</p>
+			<p class="shortcut">Press Cmd+Shift+P (Mac) or Ctrl+Shift+P (Windows/Linux)</p>
+			<p>Then run: <code>IRC: Join Channel</code></p>
+		</div>
+		<div id="messages"></div>
 	</div>
-	<div id="messages"></div>
 	<div id="inputArea">
 		<input type="text" id="messageInput" placeholder="Type a message..." />
 		<button id="sendButton">Send</button>
