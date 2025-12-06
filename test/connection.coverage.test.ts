@@ -37,36 +37,18 @@ suite('IrcConnection Coverage Tests', () => {
         await conn.connect('test.irc', 6667, 'testnick');
 
         // Mock console.log to capture debug output
-        const originalLog = console.log;
-        const logSpy = sinon.fake();
-        console.log = logSpy;
+        // Verify message handling works correctly (debug logs have been removed)
+        let privmsgReceived = false;
+        
+        conn.on('privmsg', () => {
+            privmsgReceived = true;
+        });
 
-        try {
-            // Test debug logging in handleInboundLine
-            conn.handleInboundLine(':testnick!user@host PRIVMSG #test :hello world');
+        // Test message handling in handleInboundLine
+        conn.handleInboundLine(':testnick!user@host PRIVMSG #test :hello world');
 
-            // Should have debug logs
-            assert.ok(logSpy.called, 'Should have debug logs');
-
-            // Check for specific debug messages
-            const debugCalls = logSpy.getCalls();
-            const hasRawLog = debugCalls.some(call =>
-                call.args[0]?.includes('[DEBUG] Raw IRC line:'));
-            const hasParsedLog = debugCalls.some(call =>
-                call.args[0]?.includes('[DEBUG] Parsed message:'));
-            const hasTypeLog = debugCalls.some(call =>
-                call.args[0]?.includes('[DEBUG] Message type:'));
-            const hasEmitLog = debugCalls.some(call =>
-                call.args[0]?.includes('[DEBUG] Emitting typed event:'));
-
-            assert.ok(hasRawLog, 'Should log raw IRC line');
-            assert.ok(hasParsedLog, 'Should log parsed message');
-            assert.ok(hasTypeLog, 'Should log message type');
-            assert.ok(hasEmitLog, 'Should log event emission');
-
-        } finally {
-            console.log = originalLog;
-        }
+        // Verify events were emitted correctly
+        assert.ok(privmsgReceived, 'Should emit privmsg event and parse message correctly');
     });
 
     test('message handling with various message types', async () => {
