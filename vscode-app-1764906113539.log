@@ -1,0 +1,428 @@
+log.ts:440  INFO Started local extension host with pid 53109.
+log.ts:440  INFO [Continue.continue]: Command `continue.focusContinueInput` already registered by Continue - open-source AI code agent (Continue.continue)
+console.ts:139 [Extension Host] Congratulations, your extension "dustirc" is now active!
+log.ts:460   ERR Cannot read properties of undefined (reading 'extensionId'): TypeError: Cannot read properties of undefined (reading 'extensionId')
+    at t (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:4125:2745)
+    at _Dt.recommendRemoteExtensionIfNeeded (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:4125:3497)
+error @ log.ts:460
+log.ts:450  WARN Authentication provider continue was not declared in the Extension Manifest.
+warn @ log.ts:450
+log.ts:460   ERR [Extension Host] (node:53109) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `VSCodium Helper (Plugin) --trace-deprecation ...` to show where the warning was created)
+error @ log.ts:460
+console.ts:139 [Extension Host] (node:53109) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `VSCodium Helper (Plugin) --trace-deprecation ...` to show where the warning was created)
+uws @ console.ts:139
+log.ts:460   ERR [Extension Host] Failed to register Continue config.yaml schema, most likely, YAML extension is not installed CodeExpectedError: Unable to write to User Settings because yaml.schemas is not a registered configuration.
+    at Fxt.toConfigurationEditingError (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:3825:8351)
+    at Fxt.validate (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:3825:11157)
+    at Fxt.doWriteConfiguration (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:3825:4720)
+    at Object.factory (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:3825:4576)
+    at J_.consume (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:30:77696)
+    at vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:30:77511
+    at new Promise (<anonymous>)
+    at J_.queue (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:30:77435)
+    at Fxt.writeConfiguration (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:3825:4545)
+    at ivn.writeConfigurationValue (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:3825:61506)
+error @ log.ts:460
+console.ts:139 [Extension Host] Failed to register Continue config.yaml schema, most likely, YAML extension is not installed CodeExpectedError: Unable to write to User Settings because yaml.schemas is not a registered configuration.
+    at Fxt.toConfigurationEditingError (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:3825:8351)
+    at Fxt.validate (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:3825:11157)
+    at Fxt.doWriteConfiguration (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:3825:4720)
+    at Object.factory (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:3825:4576)
+    at J_.consume (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:30:77696)
+    at vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:30:77511
+    at new Promise (<anonymous>)
+    at J_.queue (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:30:77435)
+    at Fxt.writeConfiguration (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:3825:4545)
+    at ivn.writeConfigurationValue (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:3825:61506)
+uws @ console.ts:139
+log.ts:440  INFO [perf] Render performance baseline is 14ms
+open-vsx.org/vscode/gallery/nocandefense/dustirc/latest:1  Failed to load resource: the server responded with a status of 404 ()
+log.ts:460   ERR [Extension Host] Document untitled:Untitled-1 not found in AST tracker
+error @ log.ts:460
+console.ts:139 [Extension Host] Document untitled:Untitled-1 not found in AST tracker
+uws @ console.ts:139
+log.ts:460   ERR [Extension Host] Document untitled:Untitled-1 not found in AST tracker
+error @ log.ts:460
+console.ts:139 [Extension Host] Document untitled:Untitled-1 not found in AST tracker
+uws @ console.ts:139
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 113 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat NOTICE * :*** Checking Ident
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: notice Command: NOTICE
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: notice
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat NOTICE * :*** Looking up your hostname...
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: notice Command: NOTICE
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: notice
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 66 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat NOTICE * :*** Couldn't look up your hostname
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: notice Command: NOTICE
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: notice
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 53 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat NOTICE * :*** No Ident response
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: notice Command: NOTICE
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: notice
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 220 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 001 agentfife :Welcome to the Libera.Chat Internet Relay Chat Network agentfife
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 001
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 002 agentfife :Your host is erbium.libera.chat[82.96.96.60/6697], running version solanum-1.0-dev
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 002
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 224 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 003 agentfife :This server was created Mon Sep 22 2025 at 09:30:47 UTC
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 003
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 004 agentfife erbium.libera.chat solanum-1.0-dev DGIMQRSZaghilopsuwz CFILMPQRSTbcefgijklmnopqrstuvz bkloveqjfI
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 004
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 173 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 005 agentfife ACCOUNTEXTBAN=a SAFELIST ELIST=CMNTU MONITOR=100 FNC WHOX ETRACE KNOCK CALLERID=g CHANTYPES=# EXCEPTS INVEX :are supported by this server
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 005
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 267 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 005 agentfife CHANMODES=eIbq,k,flj,CFLMPQRSTcgimnprstuz CHANLIMIT=#:250 PREFIX=(ov)@+ MAXLIST=bqeI:100 MODES=4 NETWORK=Libera.Chat STATUSMSG=@+ CASEMAPPING=rfc1459 NICKLEN=16 MAXNICKLEN=16 CHANNELLEN=50 TOPICLEN=390 :are supported by this server
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 005
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 251 has PRIVMSG: true
+console.ts:139 [Extension Host] [DEBUG] RAW PRIVMSG LINE: :erbium.libera.chat 005 agentfife DEAF=D TARGMAX=NAMES:1,LIST:1,KICK:1,WHOIS:1,PRIVMSG:4,NOTICE:4,ACCEPT:,MONITOR: EXTBAN=$,agjrxz :are supported by this server
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 005 agentfife DEAF=D TARGMAX=NAMES:1,LIST:1,KICK:1,WHOIS:1,PRIVMSG:4,NOTICE:4,ACCEPT:,MONITOR: EXTBAN=$,agjrxz :are supported by this server
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 005
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 251 agentfife :There are 56 users and 30559 invisible on 28 servers
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 251
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 121 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 252 agentfife 37 :IRC Operators online
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 252
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 253 agentfife 73 :unknown connection(s)
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 253
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 928 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 254 agentfife 22273 :channels formed
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 254
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 255 agentfife :I have 1895 clients and 1 servers
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 255
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 265 agentfife 1895 4930 :Current local users 1895, max 4930
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 265
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 266 agentfife 30615 40235 :Current global users 30615, max 40235
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 266
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 250 agentfife :Highest connection count: 4931 (4930 clients) (173087 connections received)
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 250
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 375 agentfife :- erbium.libera.chat Message of the Day - 
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 375
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 372 agentfife :- Welcome to Libera Chat, the IRC network for
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 372
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 372 agentfife :- free & open-source software and peer directed projects.
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 372
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 372 agentfife :-  
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 372
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 372 agentfife :- Use of Libera Chat is governed by our network policies.
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 372
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 372 agentfife :-  
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 372
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 372 agentfife :- To reduce network abuses we perform open proxy checks
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 372
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 510 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 372 agentfife :- on hosts at connection time.
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 372
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 372 agentfife :-  
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 372
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 372 agentfife :- Please visit us in #libera for questions and support.
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 372
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 372 agentfife :-  
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 372
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 372 agentfife :- Website and documentation:  https://libera.chat
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 372
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 372 agentfife :- Webchat:                    https://web.libera.chat
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 372
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 372 agentfife :- Network policies:           https://libera.chat/policies
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 372
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 177 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 372 agentfife :- Email:                      support@libera.chat
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 372
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 376 agentfife :End of /MOTD command.
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 376
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :agentfife MODE agentfife :+Ziw
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: other Command: MODE
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: other
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 186 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :NickServ!NickServ@services.libera.chat NOTICE agentfife :This nickname is registered. Please choose a different nickname, or identify via /msg NickServ IDENTIFY agentfife <password>
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: notice Command: NOTICE
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: notice
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 234 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :NickServ!NickServ@services.libera.chat NOTICE agentfife :You are now identified for agentfife.
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: notice Command: NOTICE
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: notice
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :NickServ!NickServ@services.libera.chat NOTICE agentfife :Last login from: ~agentfife@172.56.229.247 on Dec 05 03:31:13 2025 +0000.
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: notice Command: NOTICE
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: notice
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 117 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 900 agentfife agentfife!~agentfife@172.56.229.247 agentfife :You are now logged in as agentfife
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 900
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 141 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 470 agentfife #politics ##politics :Forwarding to another channel
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 470
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :agentfife!~agentfife@172.56.229.247 JOIN ##politics
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: join Command: JOIN
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: join
+console.ts:139 [Extension Host] [DEBUG] getOrCreateChannelOutput called for: ##politics
+console.ts:139 [Extension Host] [DEBUG] Creating new output channel for: ##politics
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 1024 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 332 agentfife ##politics :welcome to ##politics, please be civil & mindful of disinformation | channel policies/ops list: https://bit.ly/3I2DwLz | banned? oh no! join ##politics-appeals | X, FB, IG = ban | advent of code leaderboard: 746697-9ad26b9a | AoC sucks lol
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 332
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 333 agentfife ##politics plank!~plank@user/plankers 1764550805
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 333
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife = ##politics :agentfife +mondale_ Alexandr08 +pickledegg mosesofmason el3ctron Shruubi +mondale _qw eqw stopfive chrrreeeeesss +snake zora ublxi +frelleck powermail deepSleep zerosouls +cloeee +w2r5 cspanfan Anasko +Jardie +Ebert ecbrown +donky vitaliy Pixi +Tylak bodhgaya notanerd AbleBacon freebird nolsen Famine- LibertyDillo iusr TheDcoder +cornduck chiselfuse +svito DetourNetworkUK delthas d42 BGL Croran axz arandombit FreeRangeDillo NeXeN Guest rj plank onLSD
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 363 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife = ##politics :justache +Nachlader pastinaak Gooberpatrol66 skum tronexte +kmh smitty sura_zal chapien70 Cashlin llh +cloe avu grumb Panther ErrantEgo areographe Birosso death916 chalcedony posixlycorrect apathor muffindrake crossby1004 buck_mansion dunkincoder rosalind nonsane HEGEMON Scrooge +InPhase nshire peepsalot jessicant +phenom +hays frostybrew +Delf Atari8guy pinnerup +yno opencircuit_ yoharnu +mason +xeno +rinzewind +sscout wodencafe swebb akaSorin3759363 +Catty
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 507 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife = ##politics :nsrxn nash zariok7 Brons lazymina rmdes trashbird6 slondr hedy deglebe lane derfj halikular +earlybird kto456dog fendur strive GnuYawk1 Trashlord +notzmv +guideX rj1 fivehundredcc xtvl juntao bernard__ psydroid Ergo11 reight Chex audy yamada +CommunistWolf mlock ZLima12 Denn1s squeaktoy eric yano remexre nullified lucid rotten_egg GrantN05 +Byteflux +title armin itachiuchiha ddadestroija +Macer +misspwn ralfwause stivo sheep +PattyCakes wildrob viewp0rt
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 1024 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife = ##politics :+hexnewbie anteye \mSg poorboy somone77 onymous burrows mercxry +DOMF Fufu +hmw[at] fossdd frx KindOne dxrt +tethroar +gurrr +macrobat timefractal7 [_________] z8z ulmo Raithmir +CruxSerpentines berkchops +sprout bhays avrak +LjL fauxpride +tuxick Ripcord highrate +synx hrvstr explorier55 +Atque +Nelluk +dTal dostoyevsky2 makhno brian- +[ moonmoon wbewl LexFerenda stefen Spydar007 glider katia el +babyrus CalimeroTeknik Naleksuh onsails +mnemon Moyst
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife = ##politics :DuckGeneral ksliberal Sario litharge Erebus WhizzWr leahey FLHerne +ginandramen38 +wordsToLiveBy SysGhost frogleg_ Mombius LMZ Bob hella +argentum The_Blode cryptodan_mobile MillerBOSS +corwin EyeOfJupiter sanderp +aruns gAy_Dragon +s1gyn JohnMH keithn nckx MAGA tomengland opus jess_ incentive fcser theRealAlexz +Revan nsh +Noisytoot She defect farfalhudo +jbwncster +Marz Glorfinde1 ra4king +dumpster zooom DumbDog jekb spinningCat j0lol
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 37 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 366 agentfife ##politics :End of /NAMES list.
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 366
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 94 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 396 agentfife user/agentfife :is now your hidden host (set by services.)
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 396
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 196 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :ChanServ!ChanServ@services.libera.chat NOTICE agentfife :[##politics] please read & abide by the channel policies: https://gist.github.com/libbies/df692ee09ff4a3e841a402ae9131b124 | x.com = ban
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: notice Command: NOTICE
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: notice
+log.ts:460   ERR TreeError [DebugRepl] Tree input not set: Error: TreeError [DebugRepl] Tree input not set
+    at qp._updateChildren (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:434:33637)
+    at qp.updateChildren (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:434:33314)
+    at Mle.value (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:2628:40573)
+    at x._deliver (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:29:2956)
+    at x._deliverQueue (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:29:3047)
+    at x.fire (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:29:3384)
+    at PDe.setVisible (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:570:3720)
+    at vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:596:17547
+    at Array.map (<anonymous>)
+    at Rh.setVisible (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:596:17538)
+error @ log.ts:460
+console.ts:139 [Extension Host] deleteChain called from onDidChangeVisibleTextEditors
+console.ts:139 [Extension Host] deleteChain called from onDidChangeVisibleTextEditors
+console.ts:139 [Extension Host] deleteChain called from onDidChangeVisibleTextEditors
+console.ts:139 [Extension Host] deleteChain called from onDidChangeVisibleTextEditors
+console.ts:139 [Extension Host] deleteChain called from onDidChangeVisibleTextEditors
+console.ts:139 [Extension Host] deleteChain called from onDidChangeVisibleTextEditors
+console.ts:139 [Extension Host] deleteChain called from onDidChangeVisibleTextEditors
+console.ts:139 [Extension Host] deleteChain called from onDidChangeVisibleTextEditors
+console.ts:139 [Extension Host] deleteChain called from onDidChangeVisibleTextEditors
+console.ts:139 [Extension Host] deleteChain called from onDidChangeVisibleTextEditors
+log.ts:460   ERR [Extension Host] Document output:exthost not found in AST tracker
+error @ log.ts:460
+console.ts:139 [Extension Host] Document output:exthost not found in AST tracker
+uws @ console.ts:139
+log.ts:460   ERR [Extension Host] Document output:exthost not found in AST tracker
+error @ log.ts:460
+console.ts:139 [Extension Host] Document output:exthost not found in AST tracker
+uws @ console.ts:139
+log.ts:460   ERR [Extension Host] Document output:exthost not found in AST tracker
+error @ log.ts:460
+console.ts:139 [Extension Host] Document output:exthost not found in AST tracker
+uws @ console.ts:139
+log.ts:460   ERR [Extension Host] Document output:exthost not found in AST tracker
+error @ log.ts:460
+console.ts:139 [Extension Host] Document output:exthost not found in AST tracker
+uws @ console.ts:139
+log.ts:460   ERR [Extension Host] Document output:exthost not found in AST tracker
+error @ log.ts:460
+console.ts:139 [Extension Host] Document output:exthost not found in AST tracker
+uws @ console.ts:139
+log.ts:460   ERR [Extension Host] Document output:exthost not found in AST tracker
+error @ log.ts:460
+console.ts:139 [Extension Host] Document output:exthost not found in AST tracker
+uws @ console.ts:139
+log.ts:460   ERR [Extension Host] Document output:exthost not found in AST tracker
+error @ log.ts:460
+console.ts:139 [Extension Host] Document output:exthost not found in AST tracker
+uws @ console.ts:139
+log.ts:460   ERR [Extension Host] Document output:exthost not found in AST tracker
+error @ log.ts:460
+console.ts:139 [Extension Host] Document output:exthost not found in AST tracker
+uws @ console.ts:139
+log.ts:460   ERR [Extension Host] Document output:exthost not found in AST tracker
+error @ log.ts:460
+console.ts:139 [Extension Host] Document output:exthost not found in AST tracker
+uws @ console.ts:139
+log.ts:460   ERR [Extension Host] Document output:exthost not found in AST tracker
+error @ log.ts:460
+console.ts:139 [Extension Host] Document output:exthost not found in AST tracker
+uws @ console.ts:139
+log.ts:460   ERR [Extension Host] Document output:exthost not found in AST tracker
+error @ log.ts:460
+console.ts:139 [Extension Host] Document output:exthost not found in AST tracker
+uws @ console.ts:139
+log.ts:460   ERR [Extension Host] Document output:exthost not found in AST tracker
+error @ log.ts:460
+console.ts:139 [Extension Host] Document output:exthost not found in AST tracker
+uws @ console.ts:139
+log.ts:460   ERR [Extension Host] Document output:exthost not found in AST tracker
+error @ log.ts:460
+console.ts:139 [Extension Host] Document output:exthost not found in AST tracker
+uws @ console.ts:139
+log.ts:460   ERR [Extension Host] Document output:exthost not found in AST tracker
+error @ log.ts:460
+console.ts:139 [Extension Host] Document output:exthost not found in AST tracker
+uws @ console.ts:139
+log.ts:460   ERR [Extension Host] Document output:exthost not found in AST tracker
+error @ log.ts:460
+console.ts:139 [Extension Host] Document output:exthost not found in AST tracker
+uws @ console.ts:139
+log.ts:460   ERR [Extension Host] Document output:exthost not found in AST tracker
+error @ log.ts:460
+console.ts:139 [Extension Host] Document output:exthost not found in AST tracker
+uws @ console.ts:139
+log.ts:460   ERR [Extension Host] Document output:exthost not found in AST tracker
+error @ log.ts:460
+console.ts:139 [Extension Host] Document output:exthost not found in AST tracker
+uws @ console.ts:139
+log.ts:460   ERR [Extension Host] Document output:exthost not found in AST tracker
+error @ log.ts:460
+console.ts:139 [Extension Host] Document output:exthost not found in AST tracker
+uws @ console.ts:139
+log.ts:460   ERR [Extension Host] Document output:exthost not found in AST tracker
+error @ log.ts:460
+console.ts:139 [Extension Host] Document output:exthost not found in AST tracker
+uws @ console.ts:139
+log.ts:460   ERR [Extension Host] Document output:exthost not found in AST tracker
+error @ log.ts:460
+console.ts:139 [Extension Host] Document output:exthost not found in AST tracker
+uws @ console.ts:139
+log.ts:460   ERR [Extension Host] Document output:exthost not found in AST tracker
+error @ log.ts:460
+console.ts:139 [Extension Host] Document output:exthost not found in AST tracker
+uws @ console.ts:139
+log.ts:460   ERR [Extension Host] Document output:exthost not found in AST tracker
+error @ log.ts:460
+console.ts:139 [Extension Host] Document output:exthost not found in AST tracker
+uws @ console.ts:139
+log.ts:460   ERR [Extension Host] Document output:exthost not found in AST tracker
+error @ log.ts:460
+console.ts:139 [Extension Host] Document output:exthost not found in AST tracker
+uws @ console.ts:139
+log.ts:460   ERR [Extension Host] Document output:exthost not found in AST tracker
+error @ log.ts:460
+console.ts:139 [Extension Host] Document output:exthost not found in AST tracker
+uws @ console.ts:139
+log.ts:460   ERR [Extension Host] Document output:exthost not found in AST tracker
+error @ log.ts:460
+console.ts:139 [Extension Host] Document output:exthost not found in AST tracker
+uws @ console.ts:139
+log.ts:460   ERR [Extension Host] Document output:exthost not found in AST tracker
+error @ log.ts:460
+console.ts:139 [Extension Host] Document output:exthost not found in AST tracker
+uws @ console.ts:139
+log.ts:460   ERR [Extension Host] Document output:exthost not found in AST tracker
+error @ log.ts:460
+console.ts:139 [Extension Host] Document output:exthost not found in AST tracker
+uws @ console.ts:139
+log.ts:460   ERR [Extension Host] Document output:exthost not found in AST tracker
+error @ log.ts:460
+console.ts:139 [Extension Host] Document output:exthost not found in AST tracker
+uws @ console.ts:139
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 26 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: PING :erbium.libera.chat
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: ping Command: PING
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: ping
+console.ts:139 [Extension Host] deleteChain called from onDidChangeVisibleTextEditors
+console.ts:139 [Extension Host] deleteChain called from onDidChangeVisibleTextEditors
+console.ts:139 [Extension Host] deleteChain called from onDidChangeVisibleTextEditors
+console.ts:139 [Extension Host] deleteChain called from onDidChangeVisibleTextEditors
+console.ts:139 [Extension Host] deleteChain called from onDidChangeVisibleTextEditors
+console.ts:139 [Extension Host] deleteChain called from onDidChangeVisibleTextEditors

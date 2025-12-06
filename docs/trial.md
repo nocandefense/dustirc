@@ -134,6 +134,26 @@ After following this guide, you should be able to:
 - ✅ View all activity in the IRC Output channel
 - ✅ Reconnect automatically or manually when connection drops
 
+## Feature Requests
+
+### Status Command
+
+TODO: Add a "Dust: Status" command that provides:
+
+- Current connection state (connected/disconnected/connecting)
+- Server and port information
+- Current nickname
+- List of joined channels
+- Active/current channel for sending messages
+- Relevant configuration settings overview:
+  - Rate limiting settings (enabled/disabled, rate limit ms)
+  - Auto-reconnect configuration (enabled, max attempts, delay)
+  - TLS/SSL status
+  - Connection timeout
+  - Auto-join channels configuration
+
+This would provide users with a comprehensive view of their IRC session state and configuration at a glance.
+
 ## Next Steps
 
 Once you're comfortable with basic IRC usage:
@@ -142,3 +162,4 @@ Once you're comfortable with basic IRC usage:
 2. Configure auto-reconnect for persistent connections
 3. Use the ping command to monitor connection quality
 4. Check the workspace log file for message history
+5. Try the `Dust: Status` command (when implemented) to view connection details

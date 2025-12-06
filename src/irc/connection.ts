@@ -31,6 +31,8 @@ export interface ConnectOptions {
     user?: string;
     realname?: string;
     password?: string;
+    // Rate limiting configuration (milliseconds between messages)
+    rateLimitMs?: number;
 }
 
 export type IrcEvents =
@@ -62,12 +64,33 @@ export class IrcConnection {
     private joinedChannels = new Set<string>();
     private currentChannel: string | null = null;
 
-    // outbound queue for rate-limiting (not strictly enforced for tests)
+    // outbound queue for rate-limiting
     private sendQueue: string[] = [];
     private sendInterval: NodeJS.Timeout | null = null;
+    private rateLimitMs: number = 200; // Default 200ms between messages (5 msg/sec)
+
+    /**
+     * Sanitize IRC parameters to prevent protocol injection.
+     * Removes IRC line terminators and control characters.
+     */
+    private sanitizeIrcParam(param: string): string {
+        if (!param) { return ''; }
+        return param.replace(/[\r\n\x00-\x1f]/g, '');
+    }
 
     on(event: IrcEvents, listener: (...args: any[]) => void) {
         this.emitter.on(event, listener);
+    }
+
+    removeListener(event: IrcEvents, listener: (...args: any[]) => void) {
+        this.emitter.removeListener(event, listener);
+    }
+
+    /**
+     * Get the current nickname.
+     */
+    getNick(): string | null {
+        return this.nick;
     }
 
     /**
@@ -95,6 +118,11 @@ export class IrcConnection {
         this.host = host;
         this.port = port;
         this.nick = nick;
+
+        // Save connection options for rate limiting
+        if (options?.rateLimitMs !== undefined) {
+            this.rateLimitMs = Math.max(50, Math.min(5000, options.rateLimitMs));
+        }
 
         const useReal = options?.real === true;
 
@@ -130,10 +158,16 @@ export class IrcConnection {
                 reject(err);
             };
 
+            let timeoutCleared = false;
             const onConnect = () => {
                 this.connected = true;
                 this.socket = socket;
                 this.recvBuffer = '';
+                // Clear connection timeout immediately - socket is successfully connected
+                if (socket && !timeoutCleared) {
+                    timeoutCleared = true;
+                    socket.setTimeout(0);
+                }
                 // start pump and wire socket events
                 this.startSendPump();
                 this.emitter.emit('connect');
@@ -199,11 +233,15 @@ export class IrcConnection {
                 }
             });
 
-            // apply an optional connect timeout
+            // apply an optional connect timeout (only for the initial connection)
             if (options?.timeout && typeof (options.timeout) === 'number') {
                 socket.setTimeout(options.timeout, () => {
-                    const err = new Error('Connection timeout');
-                    socket.destroy(err);
+                    if (!this.connected && !timeoutCleared) {
+                        // Only timeout if we haven't connected yet
+                        timeoutCleared = true;
+                        const err = new Error('Connection timeout');
+                        socket.destroy(err);
+                    }
                 });
             }
         });
@@ -338,19 +376,29 @@ export class IrcConnection {
     sendNick(nick: string): void {
         if (!this.connected) { throw new Error('Not connected'); }
         if (!nick) { throw new Error('Nick is required'); }
-        this.nick = nick;
-        this.enqueueRaw(`NICK ${nick}`);
-    }
 
-    /** Send USER command. realname may contain spaces. */
+        // Sanitize nickname to prevent protocol injection
+        const cleanNick = this.sanitizeIrcParam(nick);
+        if (cleanNick.length === 0 || cleanNick.length > 30) {
+            throw new Error('Invalid nickname');
+        }
+
+        this.nick = cleanNick;
+        this.enqueueRaw(`NICK ${cleanNick}`);
+    }    /** Send USER command. realname may contain spaces. */
     sendUser(user: string, realname = '', mode = '0', unused = '*'): void {
         if (!this.connected) { throw new Error('Not connected'); }
         if (!user) { throw new Error('User is required'); }
-        // USER <username> <mode> <unused> :<realname>
-        this.enqueueRaw(`USER ${user} ${mode} ${unused} :${realname}`);
-    }
 
-    /**
+        // Sanitize inputs to prevent protocol injection
+        const cleanUser = this.sanitizeIrcParam(user);
+        const cleanRealname = this.sanitizeIrcParam(realname);
+        const cleanMode = this.sanitizeIrcParam(mode);
+        const cleanUnused = this.sanitizeIrcParam(unused);
+
+        // USER <username> <mode> <unused> :<realname>
+        this.enqueueRaw(`USER ${cleanUser} ${cleanMode} ${cleanUnused} :${cleanRealname}`);
+    }    /**
      * Convenience method that sends PASS (optional), NICK and USER in that order.
      * Accepts an options object so callers can register in one call.
      */
@@ -376,17 +424,22 @@ export class IrcConnection {
         if (!this.connected) { throw new Error('Not connected'); }
         if (!channel) { throw new Error('Channel is required'); }
 
+        // Sanitize and validate channel name
+        const cleanChannel = this.sanitizeIrcParam(channel);
+        if (cleanChannel.length === 0 || cleanChannel.length > 50) {
+            throw new Error('Invalid channel name');
+        }
+
         // Ensure channel starts with #
-        const channelName = channel.startsWith('#') ? channel : `#${channel}`;
+        const channelName = cleanChannel.startsWith('#') ? cleanChannel : `#${cleanChannel}`;
 
         if (key) {
-            this.enqueueRaw(`JOIN ${channelName} ${key}`);
+            const cleanKey = this.sanitizeIrcParam(key);
+            this.enqueueRaw(`JOIN ${channelName} ${cleanKey}`);
         } else {
             this.enqueueRaw(`JOIN ${channelName}`);
         }
-    }
-
-    /** Leave an IRC channel */
+    }    /** Leave an IRC channel */
     sendPart(channel?: string, message?: string): void {
         if (!this.connected) { throw new Error('Not connected'); }
 
@@ -426,8 +479,15 @@ export class IrcConnection {
         this.currentChannel = channel;
     }
 
-    /** Enqueue a raw line to the outbound queue */
+    /** Enqueue a raw line to the outbound queue with burst protection */
     enqueueRaw(line: string) {
+        // Prevent command flooding by limiting queue size
+        if (this.sendQueue.length > 100) {
+            // Drop oldest messages to prevent memory issues
+            this.sendQueue.splice(0, 20);
+            console.warn('IRC send queue overflow - dropping old commands');
+        }
+
         // Always queue for rate-limiting. The send pump will write to the socket
         // when in real mode, otherwise it will loop back locally (existing behavior).
         this.sendQueue.push(line);
@@ -435,6 +495,7 @@ export class IrcConnection {
 
     private startSendPump() {
         if (this.sendInterval) { return; }
+        // Use configurable rate limiting (default 200ms = 5 messages/second)
         this.sendInterval = setInterval(() => {
             if (this.sendQueue.length === 0) { return; }
             const line = this.sendQueue.shift()!;
@@ -451,7 +512,7 @@ export class IrcConnection {
                 // simulated loopback for tests
                 this.handleInboundLine(line);
             }
-        }, 200);
+        }, this.rateLimitMs);
     }
 
     private stopSendPump() {
@@ -473,7 +534,6 @@ export class IrcConnection {
         let msg: IrcMessage;
         try {
             msg = parseLine(line);
-            console.log('[DEBUG] Parsed message:', msg);
         } catch (err) {
             this.emitter.emit('error', err);
             return;
@@ -482,14 +542,10 @@ export class IrcConnection {
         // Handle channel state tracking
         this.updateChannelState(msg);
 
-        // Debug all message types
-        console.log('[DEBUG] Message type:', msg.type, 'Command:', msg.command);
-
         // Don't emit legacy 'message' event for incoming PRIVMSG - we handle that separately
         // Only sendMessage() should emit 'message' events for immediate feedback
 
         // Emit typed event
-        console.log('[DEBUG] Emitting typed event:', msg.type);
         this.emitter.emit(msg.type, msg);
     }
 

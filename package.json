@@ -1,42 +1,150 @@
 {
   "name": "dustirc",
-  "displayName": "dust",
-  "description": "An IRC client for Visual Studio Code.",
+  "displayName": "Dust IRC",
+  "description": "A functional IRC client for Visual Studio Code with real network connectivity, channel management, and TLS support.",
   "version": "0.0.1",
+  "license": "MIT",
+  "icon": "dustirc-logo.png",
+  "publisher": "nocandefense",
   "repository": {
     "type": "git",
     "url": "https://github.com/nocandefense/dustirc.git"
   },
+  "bugs": {
+    "url": "https://github.com/nocandefense/dustirc/issues"
+  },
+  "homepage": "https://github.com/nocandefense/dustirc#readme",
   "engines": {
     "node": "22.x",
     "vscode": "^1.105.0"
   },
   "categories": [
-    "Other"
+    "Chat"
   ],
+  "keywords": [
+    "irc",
+    "chat",
+    "messaging",
+    "communication",
+    "network",
+    "channel"
+  ],
+  "galleryBanner": {
+    "color": "#1e1e1e",
+    "theme": "dark"
+  },
   "activationEvents": [
-    "*"
+    "onStartupFinished"
   ],
   "main": "./dist/extension.js",
   "contributes": {
     "configuration": {
       "type": "object",
+      "title": "Dust IRC",
       "properties": {
         "dustirc.autoReconnect": {
           "type": "boolean",
-          "default": false,
+          "default": true,
           "description": "Automatically try to reconnect when the connection is lost."
+        },
+        "dustirc.connection.defaultHost": {
+          "type": "string",
+          "default": "",
+          "description": "Default IRC server hostname (e.g., irc.libera.chat)"
+        },
+        "dustirc.connection.defaultPort": {
+          "type": "number",
+          "default": 6697,
+          "minimum": 1,
+          "maximum": 65535,
+          "description": "Default IRC server port"
+        },
+        "dustirc.connection.defaultNickname": {
+          "type": "string",
+          "default": "",
+          "description": "Default IRC nickname"
+        },
+        "dustirc.connection.defaultUsername": {
+          "type": "string",
+          "default": "",
+          "description": "Default IRC username (leave empty to use nickname)"
+        },
+        "dustirc.connection.timeout": {
+          "type": "number",
+          "default": 10000,
+          "minimum": 1000,
+          "maximum": 60000,
+          "description": "Connection timeout in milliseconds"
+        },
+        "dustirc.connection.forceTLS": {
+          "type": "boolean",
+          "default": false,
+          "description": "Always use TLS connections, regardless of port"
+        },
+        "dustirc.reconnect.maxAttempts": {
+          "type": "number",
+          "default": 5,
+          "minimum": 0,
+          "maximum": 20,
+          "description": "Maximum number of auto-reconnect attempts (0 = unlimited)"
+        },
+        "dustirc.reconnect.delay": {
+          "type": "number",
+          "default": 5000,
+          "minimum": 1000,
+          "maximum": 60000,
+          "description": "Delay between reconnect attempts in milliseconds"
+        },
+        "dustirc.ui.showInStatusBar": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show connection status and current channel in status bar"
+        },
+        "dustirc.ui.createOutputChannels": {
+          "type": "boolean",
+          "default": true,
+          "description": "Create separate output channels for each IRC channel"
+        },
+        "dustirc.ui.autoOpenOutput": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically open output channel when receiving messages"
+        },
+        "dustirc.ui.useWebview": {
+          "type": "boolean",
+          "default": true,
+          "description": "Use webview-based chat interface (disable to use command palette only)"
+        },
+        "dustirc.channels.autoJoin": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "List of channels to automatically join on connect (e.g., ['#general', '#dev'])"
+        },
+        "dustirc.messaging.logToFile": {
+          "type": "boolean",
+          "default": true,
+          "description": "Log outgoing messages to .vscode/dust-outgoing.log"
+        },
+        "dustirc.messaging.sendRateLimit": {
+          "type": "number",
+          "default": 200,
+          "minimum": 50,
+          "maximum": 5000,
+          "description": "Milliseconds between sent messages (rate limiting to prevent server bans)"
         }
       }
     },
     "commands": [
       {
-        "command": "dustirc.helloWorld",
-        "title": "Hello World"
-      },
-      {
         "command": "dustirc.connect",
         "title": "Dust: Connect"
+      },
+      {
+        "command": "dustirc.openChat",
+        "title": "IRC: Open Chat"
       },
       {
         "command": "dustirc.say",
@@ -83,7 +191,8 @@
       "explorer": [
         {
           "id": "dustirc.rooms",
-          "name": "Dust Rooms"
+          "name": "Dust Rooms",
+          "icon": "$(comment-discussion)"
         }
       ]
     }
@@ -95,7 +204,7 @@
     "package": "webpack --mode production --devtool hidden-source-map",
     "compile-tests": "tsc -p tsconfig.tests.json",
     "watch-tests": "tsc -p tsconfig.tests.json -w",
-    "test:unit": "mocha -u tdd -r ts-node/register 'test/**/*.test.ts'",
+    "test:unit": "mocha",
     "test:coverage": "nyc --reporter=lcov --reporter=text npm run test:unit",
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "lint:md": "markdownlint -c .markdownlint.json README.md docs/**/*.md",

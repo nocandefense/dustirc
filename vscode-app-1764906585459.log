@@ -1,0 +1,561 @@
+log.ts:440  INFO Started local extension host with pid 54921.
+log.ts:440  INFO [Continue.continue]: Command `continue.focusContinueInput` already registered by Continue - open-source AI code agent (Continue.continue)
+console.ts:139 [Extension Host] Congratulations, your extension "dustirc" is now active!
+log.ts:460   ERR Cannot read properties of undefined (reading 'extensionId'): TypeError: Cannot read properties of undefined (reading 'extensionId')
+    at t (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:4125:2745)
+    at _Dt.recommendRemoteExtensionIfNeeded (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:4125:3497)
+error @ log.ts:460
+log.ts:450  WARN Authentication provider continue was not declared in the Extension Manifest.
+warn @ log.ts:450
+log.ts:460   ERR [Extension Host] (node:54921) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `VSCodium Helper (Plugin) --trace-deprecation ...` to show where the warning was created)
+error @ log.ts:460
+console.ts:139 [Extension Host] (node:54921) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `VSCodium Helper (Plugin) --trace-deprecation ...` to show where the warning was created)
+uws @ console.ts:139
+log.ts:460   ERR [Extension Host] Failed to register Continue config.yaml schema, most likely, YAML extension is not installed CodeExpectedError: Unable to write to User Settings because yaml.schemas is not a registered configuration.
+    at Fxt.toConfigurationEditingError (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:3825:8351)
+    at Fxt.validate (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:3825:11157)
+    at Fxt.doWriteConfiguration (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:3825:4720)
+    at Object.factory (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:3825:4576)
+    at J_.consume (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:30:77696)
+    at vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:30:77511
+    at new Promise (<anonymous>)
+    at J_.queue (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:30:77435)
+    at Fxt.writeConfiguration (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:3825:4545)
+    at ivn.writeConfigurationValue (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:3825:61506)
+error @ log.ts:460
+console.ts:139 [Extension Host] Failed to register Continue config.yaml schema, most likely, YAML extension is not installed CodeExpectedError: Unable to write to User Settings because yaml.schemas is not a registered configuration.
+    at Fxt.toConfigurationEditingError (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:3825:8351)
+    at Fxt.validate (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:3825:11157)
+    at Fxt.doWriteConfiguration (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:3825:4720)
+    at Object.factory (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:3825:4576)
+    at J_.consume (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:30:77696)
+    at vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:30:77511
+    at new Promise (<anonymous>)
+    at J_.queue (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:30:77435)
+    at Fxt.writeConfiguration (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:3825:4545)
+    at ivn.writeConfigurationValue (vscode-file://vscode-app/Applications/VSCodium.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js:3825:61506)
+uws @ console.ts:139
+log.ts:440  INFO [perf] Render performance baseline is 16ms
+open-vsx.org/vscode/gallery/nocandefense/dustirc/latest:1  Failed to load resource: the server responded with a status of 404 ()
+console.ts:139 [Extension Host] [DEBUG] Setting socket timeout to: 10000 ms
+console.ts:139 [Extension Host] [DEBUG] Socket timeout disabled on successful connection
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 113 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat NOTICE * :*** Checking Ident
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: notice Command: NOTICE
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: notice
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat NOTICE * :*** Looking up your hostname...
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: notice Command: NOTICE
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: notice
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 66 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat NOTICE * :*** Couldn't look up your hostname
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: notice Command: NOTICE
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: notice
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 53 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat NOTICE * :*** No Ident response
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: notice Command: NOTICE
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: notice
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 617 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 001 agentfife :Welcome to the Libera.Chat Internet Relay Chat Network agentfife
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 001
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 002 agentfife :Your host is erbium.libera.chat[82.96.96.60/6697], running version solanum-1.0-dev
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 002
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 003 agentfife :This server was created Mon Sep 22 2025 at 09:30:47 UTC
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 003
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 004 agentfife erbium.libera.chat solanum-1.0-dev DGIMQRSZaghilopsuwz CFILMPQRSTbcefgijklmnopqrstuvz bkloveqjfI
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 004
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 005 agentfife ACCOUNTEXTBAN=a SAFELIST ELIST=CMNTU MONITOR=100 FNC WHOX ETRACE KNOCK CALLERID=g CHANTYPES=# EXCEPTS INVEX :are supported by this server
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 005
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 267 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 005 agentfife CHANMODES=eIbq,k,flj,CFLMPQRSTcgimnprstuz CHANLIMIT=#:250 PREFIX=(ov)@+ MAXLIST=bqeI:100 MODES=4 NETWORK=Libera.Chat STATUSMSG=@+ CASEMAPPING=rfc1459 NICKLEN=16 MAXNICKLEN=16 CHANNELLEN=50 TOPICLEN=390 :are supported by this server
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 005
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 311 has PRIVMSG: true
+console.ts:139 [Extension Host] [DEBUG] RAW PRIVMSG LINE: :erbium.libera.chat 005 agentfife DEAF=D TARGMAX=NAMES:1,LIST:1,KICK:1,WHOIS:1,PRIVMSG:4,NOTICE:4,ACCEPT:,MONITOR: EXTBAN=$,agjrxz :are supported by this server
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 005 agentfife DEAF=D TARGMAX=NAMES:1,LIST:1,KICK:1,WHOIS:1,PRIVMSG:4,NOTICE:4,ACCEPT:,MONITOR: EXTBAN=$,agjrxz :are supported by this server
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 005
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 251 agentfife :There are 56 users and 30526 invisible on 28 servers
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 251
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 252 agentfife 37 :IRC Operators online
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 252
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 119 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 253 agentfife 96 :unknown connection(s)
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 253
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 254 agentfife 22264 :channels formed
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 254
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 604 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 255 agentfife :I have 1922 clients and 1 servers
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 255
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 265 agentfife 1922 4930 :Current local users 1922, max 4930
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 265
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 266 agentfife 30582 40235 :Current global users 30582, max 40235
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 266
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 250 agentfife :Highest connection count: 4931 (4930 clients) (173157 connections received)
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 250
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 375 agentfife :- erbium.libera.chat Message of the Day - 
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 375
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 372 agentfife :- Welcome to Libera Chat, the IRC network for
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 372
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 372 agentfife :- free & open-source software and peer directed projects.
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 372
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 174 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 372 agentfife :-  
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 372
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 372 agentfife :- Use of Libera Chat is governed by our network policies.
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 372
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 372 agentfife :-  
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 372
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 199 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 372 agentfife :- To reduce network abuses we perform open proxy checks
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 372
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 372 agentfife :- on hosts at connection time.
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 372
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 372 agentfife :-  
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 372
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 218 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 372 agentfife :- Please visit us in #libera for questions and support.
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 372
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 372 agentfife :-  
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 372
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 372 agentfife :- Website and documentation:  https://libera.chat
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 372
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 362 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 372 agentfife :- Webchat:                    https://web.libera.chat
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 372
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 372 agentfife :- Network policies:           https://libera.chat/policies
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 372
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 372 agentfife :- Email:                      support@libera.chat
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 372
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 376 agentfife :End of /MOTD command.
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 376
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :agentfife MODE agentfife :+Ziw
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: other Command: MODE
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: other
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 186 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :NickServ!NickServ@services.libera.chat NOTICE agentfife :This nickname is registered. Please choose a different nickname, or identify via /msg NickServ IDENTIFY agentfife <password>
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: notice Command: NOTICE
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: notice
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 234 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :NickServ!NickServ@services.libera.chat NOTICE agentfife :You are now identified for agentfife.
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: notice Command: NOTICE
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: notice
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :NickServ!NickServ@services.libera.chat NOTICE agentfife :Last login from: ~agentfife@172.56.229.247 on Dec 05 03:40:30 2025 +0000.
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: notice Command: NOTICE
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: notice
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 117 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 900 agentfife agentfife!~agentfife@172.56.229.247 agentfife :You are now logged in as agentfife
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 900
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 94 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 396 agentfife user/agentfife :is now your hidden host (set by services.)
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 396
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 141 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 470 agentfife #politics ##politics :Forwarding to another channel
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 470
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :agentfife!~agentfife@user/agentfife JOIN ##politics
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: join Command: JOIN
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: join
+console.ts:139 [Extension Host] [DEBUG] getOrCreateChannelOutput called for: ##politics
+console.ts:139 [Extension Host] [DEBUG] Creating new output channel for: ##politics
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 874 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 332 agentfife ##politics :welcome to ##politics, please be civil & mindful of disinformation | channel policies/ops list: https://bit.ly/3I2DwLz | banned? oh no! join ##politics-appeals | X, FB, IG = ban | advent of code leaderboard: 746697-9ad26b9a | AoC sucks lol
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 332
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 333 agentfife ##politics plank!~plank@user/plankers 1764550805
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 333
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife = ##politics :agentfife +mondale_ Alexandr08 +pickledegg mosesofmason el3ctron Shruubi +mondale _qw eqw stopfive chrrreeeeesss +snake zora ublxi +frelleck powermail deepSleep +cloeee +w2r5 cspanfan Anasko +Jardie +Ebert ecbrown +donky vitaliy Pixi +Tylak bodhgaya notanerd AbleBacon freebird nolsen Famine- LibertyDillo iusr TheDcoder +cornduck chiselfuse +svito DetourNetworkUK delthas d42 BGL Croran axz arandombit FreeRangeDillo NeXeN Guest rj plank onLSD justache
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 509 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife = ##politics :+Nachlader pastinaak Gooberpatrol66 skum tronexte +kmh smitty sura_zal chapien70 Cashlin llh +cloe avu grumb Panther ErrantEgo areographe Birosso death916 chalcedony posixlycorrect apathor muffindrake crossby1004 buck_mansion dunkincoder rosalind nonsane HEGEMON Scrooge +InPhase nshire peepsalot jessicant +phenom +hays frostybrew +Delf Atari8guy pinnerup +yno opencircuit_ yoharnu +mason +xeno +rinzewind +sscout wodencafe swebb akaSorin3759363 +Catty nsrxn
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 512 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife = ##politics :nash zariok7 Brons lazymina rmdes trashbird6 slondr hedy deglebe lane derfj halikular +earlybird kto456dog fendur strive GnuYawk1 Trashlord +notzmv +guideX rj1 fivehundredcc xtvl juntao bernard__ psydroid Ergo11 reight Chex audy yamada +CommunistWolf mlock ZLima12 Denn1s squeaktoy eric yano remexre nullified lucid rotten_egg GrantN05 +Byteflux +title armin itachiuchiha ddadestroija +Macer +misspwn ralfwause stivo sheep +PattyCakes wildrob viewp0rt +hexnewbie
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 505 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife = ##politics :anteye \mSg poorboy somone77 onymous burrows mercxry +DOMF Fufu +hmw[at] fossdd frx KindOne dxrt +tethroar +gurrr +macrobat timefractal7 [_________] z8z ulmo Raithmir +CruxSerpentines berkchops +sprout bhays avrak +LjL fauxpride +tuxick Ripcord highrate +synx hrvstr explorier55 +Atque +Nelluk +dTal dostoyevsky2 makhno brian- +[ moonmoon wbewl LexFerenda stefen Spydar007 glider katia el +babyrus CalimeroTeknik Naleksuh onsails +mnemon Moyst DuckGeneral
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 545 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife = ##politics :ksliberal Sario litharge Erebus WhizzWr leahey FLHerne +ginandramen38 +wordsToLiveBy SysGhost frogleg_ Mombius LMZ Bob hella +argentum The_Blode cryptodan_mobile MillerBOSS +corwin EyeOfJupiter sanderp +aruns gAy_Dragon +s1gyn JohnMH keithn nckx MAGA tomengland opus jess_ incentive fcser theRealAlexz +Revan nsh +Noisytoot She defect farfalhudo +jbwncster +Marz Glorfinde1 ra4king +dumpster zooom DumbDog jekb spinningCat j0lol
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 366 agentfife ##politics :End of /NAMES list.
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 366
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 196 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :ChanServ!ChanServ@services.libera.chat NOTICE agentfife :[##politics] please read & abide by the channel policies: https://gist.github.com/libbies/df692ee09ff4a3e841a402ae9131b124 | x.com = ban
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: notice Command: NOTICE
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: notice
+console.ts:139 [Extension Host] deleteChain called from onDidChangeVisibleTextEditors
+console.ts:139 [Extension Host] deleteChain called from onDidChangeVisibleTextEditors
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 50 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :agentfife!~agentfife@user/agentfife JOIN #linux
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: join Command: JOIN
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: join
+console.ts:139 [Extension Host] [DEBUG] getOrCreateChannelOutput called for: #linux
+console.ts:139 [Extension Host] [DEBUG] Creating new output channel for: #linux
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 1024 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 332 agentfife #linux :Welcome to #linux! New community Code of Conduct and Staff Application form: https://linux.chat/news -- Forum: https://linux.forum -- Pastebin: https://paste.linux.chat/ -- Mastodon: https://linux.social/invite/zc2Gj5r8 -- Need an op? !ops <reason> or join #linux-ops
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 332
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 333 agentfife #linux nkukard 1722815284
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 333
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :agentfife img Tasatir0406 joey5403 Malt761897036123 krabador terrorjack hangint3n vanishingideal edman007_ notarobot72 mrjones HawkinsTheWizard rosella toys chencheng letto billy1 udshu tieinv dc7800_ floturcocantsee pluvialinfusion ronillon memset_ evilscreww tkazi Ex_Marine Ex_Marine_ MeanEYE chuanshi slakmagik MrFakka333 Potpourri phork skitzoidmonk wbooze OlaN cro-mignon Amadiro__ cyberworm54_ GreenRio- jclsn sickdyd JanC sandbag MyTDT TLO06 kuddukan64351170
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 1024 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :pipi meaty el3ctron micielski n4dir edthix waxcatape Crucial Kaylah sunflr tokyoboy blackpenguin Shruubi mrpond5 bloody _qw fstrelok eqw charmitro frostfinn bureindeer jeordie hans_henrik cslr amigojapan vdamewood elkclone szarka Armand|X13s trafficriot_ Lord_of_Life brw bkool peetaur eriedaberrie deepSleep techtruth SecretSauce jacko0 divine avelar ipod420 arcturus ExeciN xkcd986214547539 c0d3ninja Bashing-om emmanuelux dcunit3d jkm netecho iphoneprotein
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :victori ano deutschecanoe nikitosiusis dmthree CrimeWave fuzzy shallowupover Epsilon _likegike_ ubuntu4321 test230117 ingenrelNeoJesus Anasko erizo74 s00pcan Dogfood ibiscus pygar rc schizo Lunatrius boojum Timvb5 Damien waltmck archi7 Prutz parhamm94 AdminZero Fabricio20_ yang3 serialmiller iwannaberoot1645 Michae|Long _BobA_ YUiNA_ THE_GFR2 finsternis luser Anonymous1298 s1b1 Dex2x deicide- jkl Hammdist LtL prussian Jck_true sirphat0n slavfox liberamito
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 1024 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :ozarker Anonamy crankslider Pixi sambot pooyam neocharles mvchtz Hobadee patsagorn bodhgaya phryk mrcheese kariosfox DeepThoughts9891 phoenixz snalty_ b-jazz OobSaco whomsoever nvz tusko notanerd pnikosis44917115 BH23 PokestarFan CaptainNemo dmr104 nolsen garybuckland divlamir jensen1 ced117 testbed_fs Dar_K nb gschanuel0605 ElkMountain Wildfire maknho mkosmo92 zer0bitz- JakLareo bitst0rm a-865 hansa sial Uhfgood stumpflee9 kakwa Palulimpa boombatower Maxa
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :triffid sheff284231 fatfingers TheDcoder patate glind fvllmetal chevy Qual3 Fr4nk uname-a suua uwu EGroen Hackerpcs angik fatal hussein1 ec LevantinLynx zldo79 de-facto cornduck CyprusSocialite fling eniac Czernobog bindu mangowh CableJack DK__ chiselfuse tuxifan colonel genii Pumpezny skered tolip_ydob ZMR housemate boshhead Ging_ monoxane Conra HeadphoneJack simpleauthority genr8eofl arc- Cavedude tanok111 faen backspacesmiling munZe_ gijsberkvens i0f focus
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 1024 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :Igilq KiwiTree kernnk boldi YeTzO keypusher dlh404 cnf84 MeatPupp3t217 realivanjx AshKechummm genera rvalue nixsloth Noktpapilio divya arv stardusts dieggsy Shard5769150 retrofunpl thelounge6897480 aceryz alexandre9099_ DetourNetworkUK Karyon delthas marc_ makara1 dimaguy cstrm TheFatherMind Iamnew peterrooney lieter d42 nicholaus04 kaelrill1 Jackneill_ downtrip axz dubiago ectospasm SuicideShow AllxIO64 bishopl gargantu1 SaitamaQ__ Ximo zhdanov feldim2425
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :hamburgler colin xadammr iluho2uho06 rwxroot ovi uzuri- RootGhost importantblimp3 dancho NeXeN koo5_ myzel39474 menteb fork_ drsn0w tnedor javi404 lusciouslover Jordan lachesis curiousMule eupraxianroses iamwec doc|home _ReVoLt_ mattydubbydubs91 SharpHammer tod skyenet deconfed SpaghettiMonster rj potash1 dgx KiltedTux JMHershey125 dfg tiferrei nawcom runxiyu henryyang wigums emmikat7 SuperJail adavis0 pi3ce foul_owl mven9713 ryusaku luva8236040 vimicito plasma
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 1024 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :powerLien troy2 Game114540 instantp10neer_ korn3r MrBungle Target_Platypus madmax NightMonkey yakabetes FloridaMan Stryyker tricon alucardromero sam113101 ssm_ dblbbl2 umbramalison bn_work szkl NotEickmeyer Lotsen hete Geronimo NightWave xaltsc Xlusive kaotica dualecton qub411 thebeae0732493 asta Namarrgon waowkitty neoncortex sihloo Celelibi Posterdati sv-- krage pastinaak n1bble charutodecarne imbryan pick marcdimarco thedevscave2 jacko Sousapro Guest59237
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :char0 gandhii Nemu64 BKuhl hinderaker arion Gooberpatrol66 ryoskzypu ouilemur skum trekkie1701c yehudajablonski zephyrz4 chicken_m saint_ birdnest ThetaDev thatalexguy mpagano gawen MooFz Ezp blueswan puke InvisibleRasta51 Hyweene tronexte SuperLag x123 sbine iliv extremeexploit rom4ik xofyt RayTracer hyperair netrunner Kn0cky Tonux yin rigid funkymonkey Murray7501 spithash jangho m0v p3n zChris RaptorJesus waffeln23 Ibanez azerov unicorn _MockingMoniker Inline
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 1024 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :veecue ad1m59 Nova369 willnorris cyanide adrubesh SchneeSchwarz spa myspaceisflat AbsolutelyFree Snivy kamil1 simon816 donught tessier berong91 Shyny EriksLV Trenton_3 RohitS5612 WaV JohnTheNerd71816 Omnoid peter_ runeo34146 popiette kepeken_ kyr Fijxu bodeezl marcel674198178 BigShip per1cycle rewgs jfsimon xamindar2 xamindar kplant slip Tom^ goatsinapond B1T etra juhop akiva Coniass linsux noahajac jackal MrPockets Mysoft Mudb0y lkarch joilerv SmokedCube2
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :Netboy3 outoftime elektrinis0 plebe ttoocs SixterBR tmroland NDPZenBook moonwalk22 sting RusticTortoise schan99 llh MrMazda somlis kolla casperstorm Tr1ft0n mccd_ munZe himuraken G5UHKN3B Mikku440 nax_ shady mackal trthomps mechap duude__ immortan chasmo77 LazyOtter43 xandris omibu wyre route53 Urchin mischief TheMakunga bromofo93 rconjoe Nnavd cateye Peuc titus15 moony SantasWiFi redbool inode64 mave ahyattdev vmaloo jra dbasinge Ozymandias42 laz0r catalase
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 1024 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :luna_ Ox7C5 luna Absurdityduck jumpArtifact levitating energizer Aminautf LunaRabbit Birosso Trifton mad_enz death916 pppingme Hunterkll boramalper anotheryou albygt7842 adeliktas barometz dust boroda Milos hathaway lemonzest cpluspunch moo zeropoint46 benaldo bagatur bliminse moebius dastain posixlycorrect Rahoul boycott sysRPL EdFletcher tp hellodub ice9 sefidel bradd apathor HumanG331 EkpyroticFrood jinn6 Libraretor Overpass321389 Paddy_NI Marmar choirboy ti
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :tccki k-man krumelmonster jjakob buck_mansion dunkincoder KashinKoji Unforgiving xgpt random936 dskull uwharrie dstein64 sky- f843d0 luk cmc gt Sabotender froike rex K5HV jh0 juntao dogbert2 Pavot DarkUranium rahl tuxien fgarcia BinaryWar pinemach Schrapnel toric hwspeedy rcombs nonsane Betal mete kode54 Lore jayray jonnie sgolovan passenger365 amdj val launchd markasoftware Scrooge onion onla firewall bnc danieldg JTL sofachillax linuxdaemon FANTOM serxoz
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 1024 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :firestarman ikonia michele Nmzz TMan459 Millicent DasBrain moto th3r00t jessicant HEGEMON p71 nshire lark NaviTheFairy Trel Huntereb frodo bdt bethebe ivn sjalv kris_ taavi rawgreaze Guest35245299 Lehvyn tabakhase teckie1 enix chovy wyatt8740 _0xdd QuadDamage995047 glupshitto13377 linguinegenie ryzendapgh atomik defec7ed arki ryanlol phebus srk very_sneaky mxtw RandomZero mercenary rptr moxie DOGEMEMEGOD_D ana_briated particleflux mefistofeles frostybrew Koopz
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :oxbar ossifrage oxtyped Leftas pelotron goldmund r|d mkoskar xyz111 cryptexx0 ajfriesen164 Atari8guy kiboneu bim9262 Luckless trailside35 kraucrow clarity blank_dvth_ slim Sleepy63 sulahtla bmr usagi-flow8 Pexin bbqnut sm1999 tokaparas theamazi- opencircuit_ triscal- pizza Emmanuel_Chanel wilk noarb chris14 chiptuner unlink2 Simbukka gcd valis2030 ccl ornx tolland2 oxez untitled77 SFaulken oatmealraisin CoJaBo berkay enkrypt doubletwist chmod222 ak77_ snoopy
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 1024 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :kypwny Solitary bfoley wodencafe boggin swebb burakcank_ nitrix attlin cnsvc- xPsycho wantyapps_ kodi- wsgs manuels emilknievel tofran08 akaSorin3759363 nstrs cf70 Tykling lowcrash55 atetraxx bigbl4ckw0lf65 pntaylor MaxHardwood SlimeyX Spiffyman jancoow galegovski rexbinary FippleStone beaglebark moonrei frah2505497646 wez mweckbecker Mister_Magister flyback abby_normal nash Tobbi spacebison Hypfer GoGi kron mtinman ThinkT510 Nitrousoxide Nullifi3d mlu haaks
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :carbolymer j3Z troseman jprjr chrysos349 Me-me bagel johnjaye moonshield2 dz3jar areographe aaro yaneko muty ottermedia6724 bl1tz interdome thelounge3218833 farsten dzejkop970 Brons eruditas SirScott Perflosopher0387 Deneb^ eoli3n valadect lynndotpy6093 cws Rubennn Styrbjorn2 waxfire890161 phlox vital_ dorkbutt skeels lucyy Ankhers slondr brocellous okt rselim hwrd tsujp shreyasminocha wilsonjholmes codebam RetroPunk SusanTheNerd2 lemontree onjen samhza smith42
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 1024 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :rx ursa-major tom5760 jonesv Zenuncl jsvcycling natkin bal-e gbrlsnchs fur MeowKing decobus dfriehs akelly henry raghavgururajan rosewood sherbert hedy ludvig racacoony lh raiaq baraq b0o azzie fcresende ymherklotz Meowbotage Guest9018 casaca srhm mpldr_ olk smiesner orzfly DREADBEEF rafket Spur nagitsu tyhi ity cbondurant klaw ficd aleksrutins epestr stag-enterprises lane tcarrio kindablue jtech-labs cofob jayaura horin miguelbernadi mimry eerie stureplan
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :canteen fputs macleginn bdn jtbx yuiyukihira dooba _0xdelta SusanTheNerd abhi alphatroya osmos midou Cheaterman mthax Fozzworth Corias Erwinstein9543 saitek72364880 idc dontdieych apetresc bldr7- GnarlyBob Muspah _cs6 ayebeesee Feras8753 sams ketas fuwn_ epicure fiet strive KieranXD deetwelve fjavier_ poukman ski MH42069 Tempesta joako MercFredis CompanionCube Fridtjof jim nagua lytedev actioninja fivehundredcc albert7 nullman_ z3uS sake wereii cydox Gry
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 1024 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :TheSilentLink rolling-lambda_ beca jab416171 y0sh_ B4ckBOne gkaply532 hams2 BSaboia phogg VinLor LenPayne Sel_Dan efwe handlebars psydroid vincejv Elladan hatspinion toozej8517926834 Unfixed reight cebor swee ell larslx linux101 summerisle tonyt Lucanis boghan GNU2Linux dnsmcbr millido MrElendig akaWolf tburke gffranco crissdell uwumarie gugah Rounin yurei sopris ZLima12 DrManhattan jramsay Echoz yegor brainScan mosh3k21 rspct pa DarthGandalf bitflip_ gsc azahi
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :MrMagic obtorth0 nafets APic amrit ckb oandrew Norkle vivaldi Coop slackadelic psih0man lockywolf PsychoticBudgie zoltix imajoke thrym solaare nkls82 Nokaji piyuv meingtsla haggertk DocMors mw2 mw3 g tpk950454321 thecatster_ pyropenguin Muzer MakerBlaker103 atraii cybniv squeaktoy ikarikun tomaw andypandy yano twistedline catbyte rewby kline Alix_Cozmo janos aJuvan onu vntsuyo jtj jcarpenter2 happymeal geirha SJrX blaa remexre lightstalker crb aklsh Sayona
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 1024 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :accelarion1 jb3 merp endvra jelly kusanagi chadler Juest dirmaster0 Thymo Paraxial okawari qwerdy cfaber hassoon b0xen daddy Andy gknux wak SoF SlimeDiamond hangq Guest1231 EvalynGoemer untoasted8 Glavata lacroix wwalker caseih krahbah gce108 GrantN05 mmmegeve___ cmcsun almquist_ tardybaker Byteflux Arachnophine syl znh vzq Skyvalley zerotime Adbray cjoly ad__ troyt Slimey asarandi fivestang saumon Catty Jasiu Net147 DPA lazywalker lonjil BarkBarklington
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :ddadestroija s4turn rukusza N1RX Yamakaja ghost64 Black-Wolf Fischmiep grid_conduction anginapectoris muemo ramn Nebraskka ponies slothpaw cr4sh0v3rrid3 Maxxed Bercik donax eagles meattoadjr capuchin buy Furai diogenese fmlatghor fah-adoodle ham5 mikeputnam nanowire kPa brabo Tabmow ml| misspwn blue_lander varighet Nothing4You fzlr6 akyoto cubic samuelhautamaki DarthOreo Pokey Purrl Yonle CosmicExplor retroholicism j1n37 Exdaix zhongfu mpldr Whippersnapper tejr
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 1024 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :squeeb djph Exa ZedHedTed markwdev misanthropos dragonmaster Nobody1212630 secret hoho beepboop dave2F unclassed sheep sloopyjoe thegodsquirrel BelCalm Celeo pet- loezz8771136989 cu viewp0rt nerdcore Joel NoCode juanjocerero hexnewbie insofaras lordvadr GTP benjuntilla izonu kyoji_ ColdKeyboard fakuve guicale lopid jurassicplayer Some_Person nevivurn BlueShark test89_ shoelaces cronos Erisa Smeef bertptrs Tintifax zulutango xanax vegetux t-x HyP3r kzt
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :unixpro1970 acegallagher enthd_ Wotac gun_ wakejagr1 xxysha greenbagels csfore poorboy Xe axsuul_ onizu jedavies luser1 The_Decryptor CookedRamen t7gt7g_ stivo winq m1dnight remedan altendky shoragan hnOsmium0001 siina shodan45 Freakuancy Kristine cachinnate mattx blaze_ simpl_e StickyBear Berry Bonstra_ GeoKM xal steev CoreISP duszek vasuki hvxgr Whiskey patrix5 ringo_ blaszki_ Mardroemmar down200 qman rudds estrogen effprime placebo dschk williu5 Prestige
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 1024 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :PolarWol1 r-ricci leighbb mercxry Guest8576 poptix Skunky metheflea eric Zookfax rbox tarotfied phantomcircuit Sapphirus Fufu d10n Aker fizi Linkoid01 tekkk palkshh teakey BillyZane SpringSprocket apxx ashleydev_ joto joe7057 ananke Raz- fossdd quesker vhuatu xenet dob1 Rubikoid TX1683 TheStormsOfFury mdogg tonsofpcs silkworm641 mccobsta boman xv8 White_Flame abs3nt brushaway____ paddymahoney KindOne metta CRThaze signalhunter yagi post-factum Ganonk unnick
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :blobdog auri n_crm scain colo tronic lord_helmet MrNaz Dude pasiz thib cyphase obyx coruja mp107 kaankeskin CrazyGecko mier_ gecjr_ maxinuxx xing liang leftyfb stairmast0r draq arch-angel osin timefractal7 ghavil xiaomiao puff taco Veri_ losth1ghway ayecee nullptr| yamchah2 PocketKiller z8z ulmo cryosis mzajc anselmo lexYQR _xs MentalExcuse mankoff pkutzner germ moviuro dsa treefrob rapmoc_ TheEggMa1 quitman bleb starr a_west_ Masklin ksampler6 bhutch2954
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 1024 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :Ristovski Ariana69 cim osh MetaNova Southern_Gentlem AshCurry smittix doge-tech gravndal Non-ICE joel135 Leatherface dandels rumo hirish bhays porceylain haetsal_ sem sector_0_ tec42 teapot99 Elluts_ tomreyn seasharp avrak mvt rvault anone LjL frystix Nerdmind hexloc fauxpride elf tranzistor chowbok pviljaka ThawnyRose another| hughrawlinson nukke dustinm` Krelian atticf mz` Arokh Dan39 kilobyte_ch bw tag celphi john_alan kraih openJ ladybug Allie` fatman_
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :firewyre Ckat bindi dmlloyd raulfb yctn Yorick- egy agrecascino zyeri thomas25 denahv cheapie synx Kobaz hrvstr user3 novik_ rcf BrandonArnold2 brutusmcforce_ StrayB1ts quwk_ Gamah void09 ildra jinsun- link-net- lostbeard WhirledNet_ Hobbyboy tonitch Guest6757 scottgy kevr_ TimWolla ElGatoPanzon Max-P vincere emergence kaipee akimbo5334308470 hax404 Lokie wei ishan andrew Kuraokami ndh Kevin` jmcgnh sbach Atque Affliction duckworld Spr0cket worf1337 Deraile-
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 1024 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :peer smarthall DevME Aureus4 isabella dTal emigre beggi Corroddity Z750 amosbird deniska dostoyevsky2 dostoyevsky catte Darkfoe Asynonymous dminuoso gryphus caffeinatedcode sebito91 krushia navi c0ded L-u-c-a CuriosTiger superkuh mathieum2048 LinusCDE lagkage MrLuca Bossi jochumdev distant anpad foxsecu PeGaSuS drew NiKaN majors bobertlo Pingue intruso russell-- koolazer oxbar| moonmoon Ha[M]reh nyany Zewwy rkleef itok yang Gozno_ justaguy tschebyscheff fm- vwmn
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :soifou mcfrdy dcb beto lexandrop seds bebna hiya |macallan| mathu evidlo DarkG nepeat peterrother Manouchehri porksandwich bayaz fs2 dracorex Adran bertiger zeylos gildarts aaronm04 iamsleepy invisiblek gecko voker57 pocketprotector astra atactic_plan farnasirim betsch stefen MrMobius Spydar007 icy_hot Quietus xxb hartzie NeddySeagoon pmc wikidasher mormue8 katia Lightsword gordonfish perotet junyx shak- tk Learath2 el MacGyver babyrus NiceNickName
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 1024 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :CalimeroTeknik lowin NexAdn _rubik Naleksuh debnet breakgimme nonada goto cole lepe raijingami Whiskey` Nei Giaan ISK makano- CBD_ dlunch_ riddle1 pagios enzotib_ nnm- izzyb hexZoN3 bin t4nk_fn norineko brad1 ttl- collut Flexyjerkov h_ BiggieSmalls oj Sario litharge ozone stahl WhizzWr w1kl4s darkdrgn2k starz friedy FLHerne easeout ginandramen38 nickodd xMopx simoneb rodrigo-morales niluje zmotaj jetchisel Xyoff fgcrl someara________ chaser420 Gerlo Znevna lily
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :SponiX Glorfindel_ SysGhost method cespare zxux PhilAlbano GTAXL machinehum Khaytsus klea mega2507 codegirl nero Aleksejs magga- jaska hudo__ rvgate daxy vclol1 resk kingveltrix stefan-_- Guest5727 alip e1z0 skyl4rk Crakila ryan77627 digdilem xxc3ncoredxx aprilwall clemens3 KSaunderson deepend hardtotell sacu AreSee frumious bsdbandit01_ Son_Goku Chewbakka85 electricworry m05sy Foxboron Ahnberg oisota kashoo felco sunyibo rudi_s Fleck Tyrsday eburk grumble
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 1024 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :MPenguin vlt siinus LambdaComplex DiNS mawk Bob Guest4200 Horn_r kanzure Cameron khct Abrax matiss ctfg_ maxel_ AndyCap loofy gothicserpent kuba-orlik03975 jazzy CaptainN BibleStudent mob_lin modin iamgr00t213 nkukard beaky les orangez ryang_ razorz nickle bopadoo op3kkt4r_ boxrick mlee Lvl4Sword MurkyBanana gajus JackyB [twisti] kerm|t lvrp16 pwillard bewbs TheresNoTime ovf M-M_Exp_in_Low_O petris braxas nirojan MPC7500 Terbium crashev tetsuo-cpp Your_Dog
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :jakesyl_____ zifnab The_Blode jposer AntonoiCarpio qxtal fizi[DWBouncers] jesse-s AlexM_ jose atmx KitRedgrave SurfBlueCrab rakka dumpster Oldiesmann dirtydawg MageMinds roguelazer UndeadLeech smashgrab militantorc bene_ leonardus b3nzo jmnbtslsQE Justasic chipps CiaranBE BrianBlaze c4l4m1ty geewiz SleePy znf Ders Schoentoon PsyZeus Madiator2011 Dalvini_ user24037 jwh-018 fluter kujo2 croc cryptodan_mobile CheckMyBrain Artea refactus fdisotto KeyboardCowboy dodo
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 1024 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :n0xx rockzx acidsys DarK-OnE brjl stgl Magrid08 VoidKrypt Penagwin21 SQ9KQS nax gnoirzox1 Thorne ThiefMaster stw Lignan cancername_ gnarchie microfracture hook54321 Moonspell lucerne9 EyeOfJupiter Philonous BinarySavior bsdbandi1 gurki ghostbuster aruns tty0 chaos_Set nani CouchLocked unlucy The_Red_Freak TallonRain devleloper zauberfisch Asterisk Cork gAy_Dragon juwain rud0lf OverCoder coderandy thom_ EdwardIII Synergiance hellstor1 hop sujeet s1gyn neoweb
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :panzeroceania pax_73 rizino bjs dos zwei Mr_MENOU gjvc Doc_X fcser chjj Dabo the_al aefinity IceMichael MAssEy gebra get- tydel Shila td00_ Nick- nckx dev_zero Tibz Night_Elf` Anth0mk talin FamousEccles RootCellar SFaulken[j] sailingfar dayslonger lucius rackoClaus mtrovilho Buliarous bookworm strudl sa Shaun nyaomi zen_desu elichai2 Ogobaga noahmg123 Crofton bkuhl1_ ThatOneRoadie swift110-mobile zups obrut Arcenotas jm18 cybermantid mutsuhito goyangi`` BigBill_
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 1024 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :DangerM bengan PixDeVl__ Daniel scruffyfurn gigamo de-vri-es jaskarth zohas_ LinearArray carrar jdo xous edenist vanfanel64 shan Guest7096 TheLinuxGuy Bladerunner EpicNeo vorteckz Parabellus zeroalpha_ vls javivi computerquip seven3 Titore_ englishm charles05_ fnix bqqnjbrqdo_ spo0n zyme dewwii gshumway_ e36freak Guest4753 cruxeter1us goblin jess_ CypherCat bq Delraich thelounge827 VividMetal r00tobo alexge50 yorick wallabra krator44-- MatthewAllan93 rammstein
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :mort mjones coffeecreature wizadmin cryptic krabrock dlb76 icee bigfoot547 nsh MattEL b0b bigpresh weyhmueller monkeybusiness futurelugia brethil constxd Moon_Rabbit v0lt H4ndy Sphearion Ekho swrz TeodOR cross twainwek thelounge47 Noisytoot nullbite tass yourfate wof Speed2u ic3l0rd Colty bakerst JonathanD Hackintech She jkhsjdhjs nurupo night MollyLucy ComputerTech priime m42uko defect CrazyBird SavageDalek kiruny dag enyc SKull BK- the4oo4 dudz oddie Yorick_
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 1024 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :ws2k3 Rudde adamus1red Khaotic techietrash miklcct CrtxReavr Wouter0100 Owned xcm peac teroshan cryne7973 JamieTech0 kaskal- IceMicha| adct greybyte1 togur_le_ terminaldweller tadeus_brick mjh4386 neko birkoff smeggysmeg eth0p1 Lumn fxaf sf123 storagemonster sourdusk Chai iambear Maxdamantus Arsen gera mlog roboirc NishanthMenon JulaDDR dza ops duracrisis tkoskine Stx isaac- oribellow zalkku_ stephanj meator explodes jonifen Huntyz THE_GFR|WORK Phase
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :flying_sausages Alexer- hodapp modern_pleb_ bishopg_ meinside MattByName_ rbm emteebee pigmoral aku fredrikb schelcj highrate Kaninfrans endre Mindii lcja Swant cnsunyour Takios snowolf miruki pyre Snuupy DLange joyphoy evur elagost zer0pink hcf montar khimaros skoobasteeve83 ozeliurs LDericher_ null_ptr lostbits KDN_Observer cinderblock93 IrishGrinch Gaelan foo_ kylen mags onla_ drocan poutine koala_man graves wckd jiffe ugjka ordine sweatiest zagura SrPx
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 154 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 353 agentfife * #linux :ron_frown_ [code] buzel Jonno_FTW _nderscore indy andreas303 muecke mock altivec Church Dumbfoundde4d m_a_r_k chovy_ yuker predicament tarkah halfwhit arxival waffles cuavas spinningCat jekb ludski girst dylanj monkeystu diwi Mathisen chipps- baloona octav1a plik Henry151 MarsIronPI ShadowJonathan swiftraccoon nickster rascul AciD thaumavorio_ nehal3m Emil j0lol zooom
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 353
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :erbium.libera.chat 366 agentfife #linux :End of /NAMES list.
+console.ts:139 [Extension Host] [DEBUG] Parsed message: Object
+console.ts:139 [Extension Host] [DEBUG] Message type: numeric Command: 366
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: numeric
+console.ts:139 [Extension Host] deleteChain called from onDidChangeVisibleTextEditors
+console.ts:139 [Extension Host] deleteChain called from onDidChangeVisibleTextEditors
+console.ts:139 [Extension Host] deleteChain called from onDidChangeVisibleTextEditors
+console.ts:139 [Extension Host] deleteChain called from onDidChangeVisibleTextEditors
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 75 has PRIVMSG: false
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :BrianG61UK!~BrianG61U@2a02:8010:66b7:bbbb:91e7:4122:7e7:5471 JOIN #linux
+console.ts:139 [Extension Host] [DEBUG] Parsed message: {raw: ':BrianG61UK!~BrianG61U@2a02:8010:66b7:bbbb:91e7:4122:7e7:5471 JOIN #linux', prefix: 'BrianG61UK!~BrianG61U@2a02:8010:66b7:bbbb:91e7:4122:7e7:5471', command: 'JOIN', params: Array(1), type: 'join', …}
+console.ts:139 [Extension Host] [DEBUG] Message type: join Command: JOIN
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: join
+console.ts:139 [Extension Host] [DEBUG] getOrCreateChannelOutput called for: #linux
+console.ts:139 [Extension Host] [DEBUG] Reusing existing output channel for: #linux
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 441 has PRIVMSG: true
+console.ts:139 [Extension Host] [DEBUG] RAW PRIVMSG LINE: :Lore!~Lore@user/Lore PRIVMSG #linux :E.g. Relatively recently, someone I know had issues with OBS, the video recording/streaming suit, and they tried their distro repository, Snap, AppImage, and only Flatpak worked at fully as possible, and the most current version - the Browser plugin, Docks re-attached, recording of VP9 in MP4 and MKV formats etc. Though, they haven't tried building one manually, Flatpak of OBS at Flathub worked the
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :Lore!~Lore@user/Lore PRIVMSG #linux :E.g. Relatively recently, someone I know had issues with OBS, the video recording/streaming suit, and they tried their distro repository, Snap, AppImage, and only Flatpak worked at fully as possible, and the most current version - the Browser plugin, Docks re-attached, recording of VP9 in MP4 and MKV formats etc. Though, they haven't tried building one manually, Flatpak of OBS at Flathub worked the
+console.ts:139 [Extension Host] [DEBUG] Parsed message: {raw: ':Lore!~Lore@user/Lore PRIVMSG #linux :E.g. Relativ…ne manually, Flatpak of OBS at Flathub worked the', prefix: 'Lore!~Lore@user/Lore', command: 'PRIVMSG', params: Array(1), trailing: 'E.g. Relatively recently, someone I know had issue…ne manually, Flatpak of OBS at Flathub worked the', …}
+console.ts:139 [Extension Host] [DEBUG] Message type: privmsg Command: PRIVMSG
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: privmsg
+console.ts:139 [Extension Host] [DEBUG] PRIVMSG event received: {target: '#linux', from: 'Lore', message: 'E.g. Relatively recently, someone I know had issue…ne manually, Flatpak of OBS at Flathub worked the', params: Array(1), prefix: 'Lore!~Lore@user/Lore'}
+console.ts:139 [Extension Host] [DEBUG] UI Settings: {createOutputChannels: true, autoOpenOutput: true}
+console.ts:139 [Extension Host] [DEBUG] Routing to channel-specific output for: #linux
+console.ts:139 [Extension Host] [DEBUG] getOrCreateChannelOutput called for: #linux
+console.ts:139 [Extension Host] [DEBUG] Reusing existing output channel for: #linux
+console.ts:139 [Extension Host] [DEBUG] Got output channel, appending message
+console.ts:139 [Extension Host] deleteChain called from onDidChangeVisibleTextEditors
+console.ts:139 [Extension Host] [DEBUG] Socket received data, length: 54 has PRIVMSG: true
+console.ts:139 [Extension Host] [DEBUG] RAW PRIVMSG LINE: :Lore!~Lore@user/Lore PRIVMSG #linux :best for them.
+console.ts:139 [Extension Host] [DEBUG] Raw IRC line: :Lore!~Lore@user/Lore PRIVMSG #linux :best for them.
+console.ts:139 [Extension Host] [DEBUG] Parsed message: {raw: ':Lore!~Lore@user/Lore PRIVMSG #linux :best for them.', prefix: 'Lore!~Lore@user/Lore', command: 'PRIVMSG', params: Array(1), trailing: 'best for them.', …}
+console.ts:139 [Extension Host] [DEBUG] Message type: privmsg Command: PRIVMSG
+console.ts:139 [Extension Host] [DEBUG] Emitting typed event: privmsg
+console.ts:139 [Extension Host] [DEBUG] PRIVMSG event received: {target: '#linux', from: 'Lore', message: 'best for them.', params: Array(1), prefix: 'Lore!~Lore@user/Lore'}
+console.ts:139 [Extension Host] [DEBUG] UI Settings: {createOutputChannels: true, autoOpenOutput: true}
+console.ts:139 [Extension Host] [DEBUG] Routing to channel-specific output for: #linux
+console.ts:139 [Extension Host] [DEBUG] getOrCreateChannelOutput called for: #linux
+console.ts:139 [Extension Host] [DEBUG] Reusing existing output channel for: #linux
+console.ts:139 [Extension Host] [DEBUG] Got output channel, appending message
+console.ts:139 [Extension Host] deleteChain called from onDidChangeVisibleTextEditors
+log.ts:460   ERR [Extension Host] Document output:extension-output-nocandefense.dustirc-%233-Dust%20IRC%3A%20%23linux not found in AST tracker
+error @ log.ts:460
+error @ log.ts:565
+error @ logService.ts:51
+pws @ remoteConsoleUtil.ts:58
+$logExtensionHostMessage @ mainThreadConsole.ts:38
+_doInvokeHandler @ rpcProtocol.ts:458
+_invokeHandler @ rpcProtocol.ts:443
+_receiveRequest @ rpcProtocol.ts:373
+_receiveOneMessage @ rpcProtocol.ts:299
+(anonymous) @ rpcProtocol.ts:161
+_deliver @ event.ts:1201
+fire @ event.ts:1232
+fire @ ipc.net.ts:652
+l.onmessage @ localProcessExtensionHost.ts:383
+console.ts:139 [Extension Host] Document output:extension-output-nocandefense.dustirc-%233-Dust%20IRC%3A%20%23linux not found in AST tracker
+uws @ console.ts:139
+$logExtensionHostMessage @ mainThreadConsole.ts:39
+_doInvokeHandler @ rpcProtocol.ts:458
+_invokeHandler @ rpcProtocol.ts:443
+_receiveRequest @ rpcProtocol.ts:373
+_receiveOneMessage @ rpcProtocol.ts:299
+(anonymous) @ rpcProtocol.ts:161
+_deliver @ event.ts:1201
+fire @ event.ts:1232
+fire @ ipc.net.ts:652
+l.onmessage @ localProcessExtensionHost.ts:383
+console.ts:139 [Extension Host] deleteChain called from onDidChangeVisibleTextEditors
+console.ts:139 [Extension Host] deleteChain called from onDidChangeVisibleTextEditors
+console.ts:139 [Extension Host] deleteChain called from onDidChangeVisibleTextEditors
+console.ts:139 [Extension Host] deleteChain called from onDidChangeVisibleTextEditors
+ [Extension Host] [DEBUG] Socket received data, length: 69 has PRIVMSG: false
+ [Extension Host] [DEBUG] Raw IRC line: :ExeciN!~ExeciN@user/nicexe QUIT :Remote host closed the connection
+ [Extension Host] [DEBUG] Parsed message: {raw: ':ExeciN!~ExeciN@user/nicexe QUIT :Remote host closed the connection', prefix: 'ExeciN!~ExeciN@user/nicexe', command: 'QUIT', params: Array(0), trailing: 'Remote host closed the connection', …}
+ [Extension Host] [DEBUG] Message type: other Command: QUIT
+ [Extension Host] [DEBUG] Emitting typed event: other
