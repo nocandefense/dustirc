@@ -127,8 +127,15 @@ export class ChatPanel {
 			const channel = msg.params[0] || msg.trailing || '';
 			const nick = msg.from || msg.prefix?.split('!')[0] || 'unknown';
 
+			const isFirstChannel = this._channels.size === 0;
 			this._channels.add(channel);
-			if (!this._currentChannel) {
+
+			// Auto-focus first channel when joined
+			if (isFirstChannel) {
+				this._currentChannel = channel;
+				this._connection.setCurrentChannel(channel);
+				this._roomsProvider.refresh();
+			} else if (!this._currentChannel) {
 				this._currentChannel = channel;
 			}
 
@@ -378,12 +385,53 @@ export class ChatPanel {
 			font-size: 11px;
 			margin-left: auto;
 		}
+		#emptyState {
+			display: none;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			height: 100%;
+			padding: 40px;
+			text-align: center;
+			color: var(--vscode-descriptionForeground);
+		}
+		#emptyState.visible {
+			display: flex;
+		}
+		#emptyState h2 {
+			font-size: 24px;
+			margin-bottom: 16px;
+			color: var(--vscode-foreground);
+		}
+		#emptyState p {
+			font-size: 14px;
+			line-height: 1.6;
+			margin-bottom: 12px;
+			max-width: 500px;
+		}
+		#emptyState code {
+			background-color: var(--vscode-textCodeBlock-background);
+			padding: 2px 6px;
+			border-radius: 3px;
+			font-family: var(--vscode-editor-font-family);
+		}
+		#emptyState .shortcut {
+			font-weight: 600;
+			color: var(--vscode-textLink-foreground);
+		}
 	</style>
 </head>
 <body>
 	<div id="header">
 		<div id="channelTabs"></div>
 		<span id="statusIndicator"></span>
+	</div>
+	<div id="emptyState">
+		<h2>No Channels Joined</h2>
+		<p>You haven't joined any IRC channels yet.</p>
+		<p>To join a channel:</p>
+		<p class="shortcut">Press Cmd+Shift+P (Mac) or Ctrl+Shift+P (Windows/Linux)</p>
+		<p>Then run: <code>IRC: Join Channel</code></p>
 	</div>
 	<div id="messages"></div>
 	<div id="inputArea">
@@ -401,6 +449,7 @@ export class ChatPanel {
 		const sendButton = document.getElementById('sendButton');
 		const channelTabsDiv = document.getElementById('channelTabs');
 		const statusIndicator = document.getElementById('statusIndicator');
+		const emptyState = document.getElementById('emptyState');
 
 		// Handle messages from extension
 		window.addEventListener('message', event => {
@@ -479,6 +528,22 @@ export class ChatPanel {
 
 		function updateChannelTabs() {
 			channelTabsDiv.innerHTML = '';
+			
+			// Show empty state if no channels
+			if (channels.length === 0) {
+				emptyState.classList.add('visible');
+				messagesDiv.style.display = 'none';
+				inputField.disabled = true;
+				sendButton.disabled = true;
+				return;
+			}
+			
+			// Hide empty state when channels exist
+			emptyState.classList.remove('visible');
+			messagesDiv.style.display = 'block';
+			inputField.disabled = false;
+			sendButton.disabled = false;
+			
 			channels.forEach(channel => {
 				const tab = document.createElement('button');
 				tab.className = 'channel-tab' + (channel === currentChannel ? ' active' : '');
