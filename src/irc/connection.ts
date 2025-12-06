@@ -167,7 +167,6 @@ export class IrcConnection {
                 if (socket && !timeoutCleared) {
                     timeoutCleared = true;
                     socket.setTimeout(0);
-                    console.log('[DEBUG] Socket timeout disabled on successful connection');
                 }
                 // start pump and wire socket events
                 this.startSendPump();
@@ -205,7 +204,6 @@ export class IrcConnection {
 
             // socket data handler - buffer until CRLF and parse lines
             socket.on('data', (chunk: string) => {
-                console.log('[DEBUG] Socket received data, length:', chunk.length, 'has PRIVMSG:', chunk.includes('PRIVMSG'));
                 this.recvBuffer += chunk;
                 let idx;
                 while ((idx = this.recvBuffer.indexOf('\n')) !== -1) {
@@ -221,7 +219,6 @@ export class IrcConnection {
 
             socket.on('close', (hadError: boolean) => {
                 // mirror previous simulated disconnect behavior
-                console.log('[DEBUG] Socket closed! hadError:', hadError, 'connected:', this.connected);
                 this.connected = false;
                 this.socket = null;
                 this.emitter.emit('disconnect');
@@ -231,21 +228,16 @@ export class IrcConnection {
 
             socket.on('end', () => {
                 // server closed
-                console.log('[DEBUG] Socket end event! connected:', this.connected);
                 if (this.connected) {
                     this.disconnect();
                 }
             });
 
             // apply an optional connect timeout (only for the initial connection)
-            console.log('[DEBUG] Checking timeout options:', { timeout: options?.timeout, type: typeof (options?.timeout) });
             if (options?.timeout && typeof (options.timeout) === 'number') {
-                console.log('[DEBUG] Setting socket timeout to:', options.timeout, 'ms');
                 socket.setTimeout(options.timeout, () => {
-                    console.log('[DEBUG] Socket timeout fired! Connected:', this.connected, 'Cleared:', timeoutCleared);
                     if (!this.connected && !timeoutCleared) {
                         // Only timeout if we haven't connected yet
-                        console.log('[DEBUG] Not connected yet, destroying socket');
                         timeoutCleared = true;
                         const err = new Error('Connection timeout');
                         socket.destroy(err);
@@ -542,7 +534,6 @@ export class IrcConnection {
         let msg: IrcMessage;
         try {
             msg = parseLine(line);
-            console.log('[DEBUG] Parsed message:', msg);
         } catch (err) {
             this.emitter.emit('error', err);
             return;
@@ -551,14 +542,10 @@ export class IrcConnection {
         // Handle channel state tracking
         this.updateChannelState(msg);
 
-        // Debug all message types
-        console.log('[DEBUG] Message type:', msg.type, 'Command:', msg.command);
-
         // Don't emit legacy 'message' event for incoming PRIVMSG - we handle that separately
         // Only sendMessage() should emit 'message' events for immediate feedback
 
         // Emit typed event
-        console.log('[DEBUG] Emitting typed event:', msg.type);
         this.emitter.emit(msg.type, msg);
     }
 

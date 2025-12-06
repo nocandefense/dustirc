@@ -33,6 +33,12 @@ export class ChatPanel {
     // Store IRC event listeners for cleanup
     private _ircListeners: Map<string, (...args: any[]) => void> = new Map();
 
+    // Rate limiting
+    private _msgTimestamps: number[] = [];
+    private readonly _maxBurst = 5;
+    private readonly _burstWindowMs = 2000;
+    private readonly _minIntervalMs = 200;
+
     public static createOrShow(extensionUri: vscode.Uri, connection: IrcConnection) {
         const column = vscode.window.activeTextEditor
             ? vscode.window.activeTextEditor.viewColumn
@@ -166,18 +172,16 @@ export class ChatPanel {
     }
 
     private _handleSendMessage(text: string, channel: string) {
-        // Validate inputs
         const trimmedText = text.trim();
         if (!trimmedText || !channel) {
             return;
         }
 
-        // Enforce reasonable message length (IRC protocol limit is ~510 bytes)
-        if (trimmedText.length > 450) {
-            console.warn('[ChatPanel] Message too long, truncating');
+        if (this._isRateLimited()) {
+            return;
         }
-        const safeText = trimmedText.substring(0, 450);
 
+        const safeText = trimmedText.substring(0, 450);
         try {
             // Send via IRC connection
             this._connection.sendMessage(safeText, channel);
@@ -193,8 +197,24 @@ export class ChatPanel {
             });
         } catch (err) {
             console.error('[ChatPanel] Failed to send message:', err);
-            // Could send error notification to webview here
         }
+    }
+
+    private _isRateLimited(): boolean {
+        const now = Date.now();
+        this._msgTimestamps = this._msgTimestamps.filter(t => now - t < this._burstWindowMs);
+
+        if (this._msgTimestamps.length >= this._maxBurst) {
+            if (now - this._msgTimestamps[0] < this._burstWindowMs) { return true; }
+        }
+
+        if (this._msgTimestamps.length > 0) {
+            const last = this._msgTimestamps[this._msgTimestamps.length - 1];
+            if (now - last < this._minIntervalMs) { return true; }
+        }
+
+        this._msgTimestamps.push(now);
+        return false;
     }
 
     private _handleSwitchChannel(channel: string) {
@@ -466,9 +486,17 @@ export class ChatPanel {
 			scrollToBottom();
 		}
 
+		let lastSend = 0;
+		const cooldownMs = 300;
+		
 		function sendMessage() {
 			const text = inputField.value.trim();
-			if (!text || !currentChannel) return;
+			const now = Date.now();
+			if (!text || !currentChannel || now - lastSend < cooldownMs) return;
+			
+			lastSend = now;
+			sendButton.disabled = true;
+			setTimeout(() => sendButton.disabled = false, cooldownMs);
 			
 			vscode.postMessage({
 				command: 'sendMessage',

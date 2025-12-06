@@ -58,9 +58,7 @@ function getAutoJoinChannels(): string[] {
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "dustirc" is now active!');
+	// Extension is now active
 
 	const connection = new IrcConnection();
 
@@ -116,36 +114,28 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Helper function to get or create channel-specific output channel
 	const getOrCreateChannelOutput = (channel: string): vscode.OutputChannel => {
-		console.log('[DEBUG] getOrCreateChannelOutput called for:', channel);
 		const uiSettings = getUISettings();
 		if (!uiSettings.createOutputChannels) {
-			console.log('[DEBUG] createOutputChannels disabled, returning main output');
 			// Return main output if separate channel outputs are disabled
 			return output;
 		}
 
 		let channelOutput = channelOutputs.get(channel);
 		if (!channelOutput) {
-			console.log('[DEBUG] Creating new output channel for:', channel);
 			channelOutput = vscode.window.createOutputChannel(`Dust IRC: ${channel}`);
 			channelOutputs.set(channel, channelOutput);
-		} else {
-			console.log('[DEBUG] Reusing existing output channel for:', channel);
 		}
 		return channelOutput;
 	};
 
-	// Debug: Log ALL raw IRC lines from server
+	// Log raw IRC lines to output channel
 	connection.on('raw', (line: string) => {
-		if (line.includes('PRIVMSG')) {
-			console.log('[DEBUG] RAW PRIVMSG LINE:', line);
-		}
+		// Raw lines are already logged via 'line' event
 	});
 
 	// Automatically respond to server PINGs with PONG
 	connection.on('ping', (m: IrcMessage) => {
 		const server = m.params[0] || m.trailing || '';
-		console.log('[DEBUG] Received PING from server, responding with PONG:', server);
 		connection.enqueueRaw(`PONG :${server}`);
 	});
 
@@ -207,7 +197,6 @@ export function activate(context: vscode.ExtensionContext) {
 	connection.on('message', (m: any) => {
 		const target = m.target || 'unknown';
 		const nick = m.from || 'me';
-		console.log('[DEBUG] Own message event:', { target, from: nick, text: m.text });
 
 		const uiSettings = getUISettings();
 		// Route to appropriate output channel
@@ -234,17 +223,13 @@ export function activate(context: vscode.ExtensionContext) {
 	connection.on('privmsg', (m: IrcMessage) => {
 		const target = m.params[0] ?? '';
 		const nick = m.from || m.prefix?.split('!')[0] || 'unknown';
-		console.log('[DEBUG] PRIVMSG event received:', { target, from: nick, message: m.trailing, params: m.params, prefix: m.prefix });
 
 		const uiSettings = getUISettings();
-		console.log('[DEBUG] UI Settings:', { createOutputChannels: uiSettings.createOutputChannels, autoOpenOutput: uiSettings.autoOpenOutput });
 
 		// Route to appropriate output channel
 		if (target.startsWith('#')) {
 			// Channel message - route to channel-specific output
-			console.log('[DEBUG] Routing to channel-specific output for:', target);
 			const channelOutput = getOrCreateChannelOutput(target);
-			console.log('[DEBUG] Got output channel, appending message');
 			channelOutput.appendLine(`${nick}: ${m.trailing}`);
 
 			// Auto-open output if enabled
