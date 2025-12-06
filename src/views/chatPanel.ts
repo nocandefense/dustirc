@@ -102,6 +102,13 @@ export class ChatPanel {
 
 		// Listen for IRC events
 		this._setupIrcListeners();
+
+		// Send initial channel list to webview to trigger empty state check
+		this._sendToWebview({
+			type: 'channelList',
+			channels: Array.from(this._channels),
+			current: this._currentChannel
+		});
 	}
 
 	private _setupIrcListeners() {
@@ -450,6 +457,9 @@ export class ChatPanel {
 		const channelTabsDiv = document.getElementById('channelTabs');
 		const statusIndicator = document.getElementById('statusIndicator');
 		const emptyState = document.getElementById('emptyState');
+		
+		// Initialize empty state on load
+		updateChannelTabs();
 
 		// Handle messages from extension
 		window.addEventListener('message', event => {
