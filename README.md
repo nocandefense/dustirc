@@ -31,7 +31,7 @@ Dust is a functional IRC client for Visual Studio Code that provides essential I
 
 All commands are available through the Command Palette (`Cmd/Ctrl+Shift+P`):
 
-- **`IRC: Open Chat`** - Open the webview chat interface (primary UI)
+- **`Dust: Open Chat`** - Open the webview chat interface (primary UI)
 - **`Dust: Connect`** - Connect to an IRC server (prompts for host, port, nickname, username)
 - **`Dust: Join Channel`** - Join an IRC channel (e.g., `#example`)
 - **`Dust: Leave Channel`** - Leave the current channel or select from joined channels

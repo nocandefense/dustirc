@@ -62,6 +62,9 @@ export function activate(context: vscode.ExtensionContext) {
 
 	const connection = new IrcConnection();
 
+	// Guard to prevent multiple concurrent auto-reconnect loops
+	let autoReconnectInProgress = false;
+
 	// Main output channel for server messages, notices, and general IRC events
 	const output = vscode.window.createOutputChannel('Dust IRC');
 
@@ -114,8 +117,7 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 		}
 
-		// Provide user feedback
-		vscode.window.showInformationMessage(`Switched to ${room} - messages will now be sent here`);
+		// Status bar and sidebar already show the current channel — no toast needed
 	});
 
 	context.subscriptions.push(openRoomDisposable);
@@ -141,10 +143,13 @@ export function activate(context: vscode.ExtensionContext) {
 		// Raw lines are already logged via 'line' event
 	});
 
-	// Automatically respond to server PINGs with PONG
+	// Automatically respond to server PINGs with PONG.
+	// The payload is sanitized inside enqueueRaw, but we also strip it here
+	// so a malicious server cannot embed CRLF + extra commands in the token.
 	connection.on('ping', (m: IrcMessage) => {
-		const server = m.params[0] || m.trailing || '';
-		connection.enqueueRaw(`PONG :${server}`);
+		const rawToken = m.params[0] || m.trailing || '';
+		const safeToken = rawToken.replace(/[\r\n\x00]/g, '');
+		connection.enqueueRaw(`PONG :${safeToken}`);
 	});
 
 	connection.on('disconnect', () => {
@@ -163,25 +168,29 @@ export function activate(context: vscode.ExtensionContext) {
 		// Auto-reconnect if enabled in settings
 		const config = getConfig();
 		const auto = config.get<boolean>('autoReconnect', true);
-		if (auto) {
+		if (auto && !autoReconnectInProgress) {
+			autoReconnectInProgress = true;
 			const reconnectSettings = getReconnectSettings();
 			// Implement retry logic with delay and max attempts
 			let attempts = 0;
 			const attemptReconnect = () => {
 				if (reconnectSettings.maxAttempts > 0 && attempts >= reconnectSettings.maxAttempts) {
 					vscode.window.showWarningMessage(`Couldn't reconnect after ${attempts} attempts`);
+					autoReconnectInProgress = false;
 					return;
 				}
 				attempts++;
 				setTimeout(() => {
 					connection.reconnect().then((ok) => {
+						autoReconnectInProgress = false;
 						if (ok) {
 							vscode.window.showInformationMessage(`Reconnected (auto, attempt ${attempts})`);
-							attempts = 0; // Reset on successful reconnect
 						} else {
+							autoReconnectInProgress = true;
 							attemptReconnect(); // Try again
 						}
 					}).catch(() => {
+						autoReconnectInProgress = true;
 						attemptReconnect(); // Try again on error
 					});
 				}, reconnectSettings.delay);

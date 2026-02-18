@@ -144,7 +144,7 @@
       },
       {
         "command": "dustirc.openChat",
-        "title": "IRC: Open Chat"
+        "title": "Dust: Open Chat"
       },
       {
         "command": "dustirc.say",
