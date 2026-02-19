@@ -12,3 +12,6 @@ test/**/*.js.map
 # Coverage and nyc output
 .nyc_output/
 coverage/
+
+# Generated icon (built from dustirc-vw-icon)
+dustirc-logo.png

@@ -69,6 +69,9 @@ export class IrcConnection {
     private sendInterval: NodeJS.Timeout | null = null;
     private rateLimitMs: number = 200; // Default 200ms between messages (5 msg/sec)
 
+    // Flag to suppress 'disconnect' event during reconnect to prevent infinite loops
+    private _reconnecting = false;
+
     /**
      * Sanitize IRC parameters to prevent protocol injection.
      * Removes IRC line terminators and control characters.
@@ -205,6 +208,17 @@ export class IrcConnection {
             // socket data handler - buffer until CRLF and parse lines
             socket.on('data', (chunk: string) => {
                 this.recvBuffer += chunk;
+
+                // Guard against memory exhaustion if the server never sends a
+                // newline. RFC 2812 limits lines to 512 bytes, so 64 KB is an
+                // extremely generous upper bound for any legitimate buffering.
+                const MAX_RECV_BUFFER = 65536;
+                if (this.recvBuffer.length > MAX_RECV_BUFFER) {
+                    this.emitter.emit('error', new Error('Receive buffer overflow – possible malformed server data'));
+                    this.recvBuffer = '';
+                    return;
+                }
+
                 let idx;
                 while ((idx = this.recvBuffer.indexOf('\n')) !== -1) {
                     // remove trailing CRLF and whitespace
@@ -248,22 +262,35 @@ export class IrcConnection {
     }
 
     /**
-     * Disconnect immediately.
+     * Disconnect cleanly. Sends a QUIT message before closing the socket
+     * so the server and other users see a graceful departure rather than
+     * "Connection reset by peer".
      */
-    disconnect(): void {
+    disconnect(quitMessage?: string): void {
         if (!this.connected && !this.socket) { return; }
         this.connected = false;
-        // If using a real socket, destroy it
+        // If using a real socket, send QUIT before closing
         if (this.socket) {
+            try {
+                const msg = quitMessage ? this.sanitizeIrcParam(quitMessage) : 'Dust IRC';
+                this.socket.write(`QUIT :${msg}\r\n`);
+            } catch (_) { /* ignore – best effort */ }
             try { this.socket.end(); } catch (_) { /* ignore */ }
             try { this.socket.destroy(); } catch (_) { /* ignore */ }
             this.socket = null;
         }
-        // Clear stored connection info
-        this.host = null;
-        this.port = null;
-        this.nick = null;
-        this.emitter.emit('disconnect');
+        // Only clear stored connection info when NOT reconnecting,
+        // so reconnect() can reuse the saved host/port/nick.
+        if (!this._reconnecting) {
+            this.host = null;
+            this.port = null;
+            this.nick = null;
+        }
+        // Suppress the 'disconnect' event during reconnect() to prevent
+        // the extension's auto-reconnect handler from spawning duplicate loops.
+        if (!this._reconnecting) {
+            this.emitter.emit('disconnect');
+        }
         this.stopSendPump();
     }
 
@@ -278,7 +305,12 @@ export class IrcConnection {
         // If we don't have previous connection info, cannot reconnect
         if (!host || !port) { return false; }
 
+        // Set flag so disconnect() won't emit 'disconnect' or clear connection
+        // info, which would trigger the extension's auto-reconnect handler and
+        // create an infinite loop of reconnect attempts.
+        this._reconnecting = true;
         this.disconnect();
+        this._reconnecting = false;
 
         for (let attempt = 0; attempt < retries; attempt++) {
             try {
@@ -358,10 +390,14 @@ export class IrcConnection {
             throw new Error('No target specified and no current channel. Use JOIN to join a channel first.');
         }
 
+        // Sanitize to prevent protocol injection
+        const cleanTarget = this.sanitizeIrcParam(channelName);
+        const cleanText = this.sanitizeIrcParam(text);
+
         // legacy immediate UI event
-        this.emitter.emit('message', { from: this.nick ?? 'me', text, target: channelName });
+        this.emitter.emit('message', { from: this.nick ?? 'me', text: cleanText, target: cleanTarget });
         // enqueue raw PRIVMSG to be sent (simulated)
-        const raw = `PRIVMSG ${channelName} :${text}`;
+        const raw = `PRIVMSG ${cleanTarget} :${cleanText}`;
         this.enqueueRaw(raw);
     }
 
@@ -369,7 +405,9 @@ export class IrcConnection {
     sendPass(password: string): void {
         if (!this.connected) { throw new Error('Not connected'); }
         if (!password) { return; }
-        this.enqueueRaw(`PASS ${password}`);
+        // Sanitize to prevent protocol injection via crafted passwords
+        const cleanPassword = this.sanitizeIrcParam(password);
+        this.enqueueRaw(`PASS ${cleanPassword}`);
     }
 
     /** Send NICK command and update local nick state */
@@ -449,10 +487,14 @@ export class IrcConnection {
             throw new Error('No channel specified and no current channel');
         }
 
+        // Sanitize to prevent protocol injection
+        const cleanChannel = this.sanitizeIrcParam(channelName);
+
         if (message) {
-            this.enqueueRaw(`PART ${channelName} :${message}`);
+            const cleanMessage = this.sanitizeIrcParam(message);
+            this.enqueueRaw(`PART ${cleanChannel} :${cleanMessage}`);
         } else {
-            this.enqueueRaw(`PART ${channelName}`);
+            this.enqueueRaw(`PART ${cleanChannel}`);
         }
     }
 
@@ -461,7 +503,9 @@ export class IrcConnection {
      */
     sendIdentify(password: string): void {
         if (!this.connected) { throw new Error('Not connected'); }
-        this.enqueueRaw(`PRIVMSG NickServ :IDENTIFY ${password}`);
+        // Sanitize to prevent protocol injection via crafted passwords
+        const cleanPassword = this.sanitizeIrcParam(password);
+        this.enqueueRaw(`PRIVMSG NickServ :IDENTIFY ${cleanPassword}`);
     }
 
     /** Get list of joined channels */
@@ -479,6 +523,9 @@ export class IrcConnection {
         this.currentChannel = channel;
     }
 
+    /** Maximum outbound IRC line length per RFC 2812 (including CRLF). */
+    private static readonly MAX_IRC_LINE = 512;
+
     /** Enqueue a raw line to the outbound queue with burst protection */
     enqueueRaw(line: string) {
         // Prevent command flooding by limiting queue size
@@ -488,9 +535,20 @@ export class IrcConnection {
             console.warn('IRC send queue overflow - dropping old commands');
         }
 
+        // Strip any embedded CRLF / control chars to prevent protocol injection,
+        // even from internal callers.
+        const safe = line.replace(/[\r\n\x00]/g, '');
+
+        // Enforce the RFC 2812 line-length limit (512 bytes including CRLF).
+        // Truncate rather than silently sending over-long lines that the server
+        // would reject or truncate unpredictably.
+        const trimmed = safe.length > IrcConnection.MAX_IRC_LINE - 2
+            ? safe.slice(0, IrcConnection.MAX_IRC_LINE - 2)
+            : safe;
+
         // Always queue for rate-limiting. The send pump will write to the socket
         // when in real mode, otherwise it will loop back locally (existing behavior).
-        this.sendQueue.push(line);
+        this.sendQueue.push(trimmed);
     }
 
     private startSendPump() {
@@ -530,7 +588,6 @@ export class IrcConnection {
     handleInboundLine(line: string) {
         // emit raw
         this.emitter.emit('raw', line);
-        console.log('[DEBUG] Raw IRC line:', line);
         let msg: IrcMessage;
         try {
             msg = parseLine(line);

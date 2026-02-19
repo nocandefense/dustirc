@@ -5,7 +5,7 @@ import { RoomsProvider } from './roomsProvider';
 
 // Message types sent to webview
 interface WebviewMessage {
-	type: 'message' | 'join' | 'part' | 'channelList' | 'channelSwitched' | 'disconnected';
+	type: 'message' | 'join' | 'part' | 'channelList' | 'channelSwitched' | 'disconnected' | 'connected' | 'rateLimited';
 	channel?: string;
 	nick?: string;
 	text?: string;
@@ -174,18 +174,61 @@ export class ChatPanel {
 				nick,
 				timestamp: new Date().toISOString()
 			});
+
+			// Remove channel from local set if we left
+			const ownNick = this._connection.getNick();
+			if (nick === ownNick) {
+				this._channels.delete(channel);
+
+				// Switch current channel if we left the active one
+				if (this._currentChannel === channel) {
+					const remaining = Array.from(this._channels);
+					this._currentChannel = remaining.length > 0 ? remaining[0] : '';
+					if (this._currentChannel) {
+						this._connection.setCurrentChannel(this._currentChannel);
+					}
+					this._roomsProvider.refresh();
+				}
+
+				// Update channel list in webview
+				this._sendToWebview({
+					type: 'channelList',
+					channels: Array.from(this._channels),
+					current: this._currentChannel
+				});
+			}
 		};
 		this._connection.on('part', partHandler);
 		this._ircListeners.set('part', partHandler);
 
 		// Handle disconnect
 		const disconnectHandler = () => {
+			// Clear local channel state so reconnect starts fresh
+			this._channels.clear();
+			this._currentChannel = '';
+
 			this._sendToWebview({
 				type: 'disconnected'
+			});
+
+			// Update webview to show empty channel list
+			this._sendToWebview({
+				type: 'channelList',
+				channels: [],
+				current: ''
 			});
 		};
 		this._connection.on('disconnect', disconnectHandler);
 		this._ircListeners.set('disconnect', disconnectHandler);
+
+		// Handle reconnect - reset webview state so it's ready for new joins
+		const connectHandler = () => {
+			this._sendToWebview({
+				type: 'connected'
+			});
+		};
+		this._connection.on('connect', connectHandler);
+		this._ircListeners.set('connect', connectHandler);
 	}
 
 	private _handleSendMessage(text: string, channel: string) {
@@ -222,12 +265,18 @@ export class ChatPanel {
 		this._msgTimestamps = this._msgTimestamps.filter(t => now - t < this._burstWindowMs);
 
 		if (this._msgTimestamps.length >= this._maxBurst) {
-			if (now - this._msgTimestamps[0] < this._burstWindowMs) { return true; }
+			if (now - this._msgTimestamps[0] < this._burstWindowMs) {
+				this._sendToWebview({ type: 'rateLimited' });
+				return true;
+			}
 		}
 
 		if (this._msgTimestamps.length > 0) {
 			const last = this._msgTimestamps[this._msgTimestamps.length - 1];
-			if (now - last < this._minIntervalMs) { return true; }
+			if (now - last < this._minIntervalMs) {
+				this._sendToWebview({ type: 'rateLimited' });
+				return true;
+			}
 		}
 
 		this._msgTimestamps.push(now);
@@ -362,7 +411,7 @@ export class ChatPanel {
 		}
 		#inputArea {
 			padding: 12px;
-			background-color: var(--vscode-input-background);
+			background-color: var(--vscode-editor-background);
 			border-top: 1px solid var(--vscode-panel-border);
 			display: flex;
 			gap: 8px;
@@ -452,7 +501,7 @@ export class ChatPanel {
 			<p>You haven't joined any IRC channels yet.</p>
 			<p>To join a channel:</p>
 			<p class="shortcut">Press Cmd+Shift+P (Mac) or Ctrl+Shift+P (Windows/Linux)</p>
-			<p>Then run: <code>IRC: Join Channel</code></p>
+			<p>Then run: <code>Dust: Join Channel</code></p>
 		</div>
 		<div id="messages"></div>
 	</div>
@@ -505,6 +554,14 @@ export class ChatPanel {
 					statusIndicator.className = 'status-disconnected';
 					inputField.disabled = true;
 					sendButton.disabled = true;
+					break;
+				case 'connected':
+					statusIndicator.textContent = '';
+					statusIndicator.className = '';
+					// Input will be re-enabled when channels are joined
+					break;
+				case 'rateLimited':
+					showRateLimitWarning();
 					break;
 			}
 		});
@@ -624,6 +681,24 @@ export class ChatPanel {
 			const div = document.createElement('div');
 			div.textContent = text;
 			return div.innerHTML;
+		}
+
+		function showRateLimitWarning() {
+			let warning = document.getElementById('rateLimitWarning');
+			if (!warning) {
+				warning = document.createElement('div');
+				warning.id = 'rateLimitWarning';
+				warning.style.cssText = 'position:absolute;bottom:60px;left:12px;right:12px;padding:6px 12px;background:var(--vscode-inputValidation-warningBackground);color:var(--vscode-inputValidation-warningForeground);border:1px solid var(--vscode-inputValidation-warningBorder);border-radius:3px;font-size:12px;text-align:center;z-index:10;opacity:1;transition:opacity 0.3s;';
+				warning.textContent = 'Slow down — messages are being rate-limited';
+				document.body.appendChild(warning);
+			}
+			warning.style.opacity = '1';
+			warning.style.display = 'block';
+			clearTimeout(warning._hideTimeout);
+			warning._hideTimeout = setTimeout(() => {
+				warning.style.opacity = '0';
+				setTimeout(() => { warning.style.display = 'none'; }, 300);
+			}, 2000);
 		}
 
 		// Event listeners
